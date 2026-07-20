@@ -23,17 +23,17 @@ export const ReferralTreeCard: React.FC<{ referralCode: string; referralLink: st
       setCopied(true);
       setTimeout(() => setCopied(false), 3000);
     } catch {
-      // Fallback
+      // Fallback if clipboard API restricted
     }
   };
 
   return (
-    <div className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-tesla space-y-6">
-      <div className="flex flex-col justify-between gap-4 border-b border-[#222226] pb-6 md:flex-row md:items-center">
+    <div className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-2xl space-y-6">
+      <div className="flex flex-col justify-between gap-4 border-b border-gray-800 pb-6 md:flex-row md:items-center">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-brand-blue font-mono">Affiliate Partnership Link</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-gold">Affiliate Partnership Link</span>
           <div className="mt-2 flex flex-wrap items-center gap-2 font-mono text-sm text-white">
-            <span className="rounded-md bg-[#18181b] p-3 text-gray-200 border border-[#27272a] select-all break-all">
+            <span className="rounded bg-black p-2.5 text-gray-300 border border-gray-800 select-all break-all">
               https://{referralLink}
             </span>
           </div>
@@ -48,28 +48,28 @@ export const ReferralTreeCard: React.FC<{ referralCode: string; referralLink: st
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-5 text-center font-mono">
-        <div className="rounded-lg bg-[#18181b] p-4 border border-[#27272a]">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-5 text-center">
+        <div className="rounded-lg bg-gray-900/60 p-3 border border-gray-800">
           <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">Direct (Tier 1 - 5%)</span>
-          <span className="mt-1 block text-2xl font-extrabold text-white">{summary.tier1Count}</span>
+          <span className="mt-1 block text-2xl font-extrabold text-white font-mono">{summary.tier1Count}</span>
         </div>
-        <div className="rounded-lg bg-[#18181b] p-4 border border-[#27272a]">
+        <div className="rounded-lg bg-gray-900/60 p-3 border border-gray-800">
           <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">Sub (Tier 2 - 2%)</span>
-          <span className="mt-1 block text-2xl font-extrabold text-gray-300">{summary.tier2Count}</span>
+          <span className="mt-1 block text-2xl font-extrabold text-gray-300 font-mono">{summary.tier2Count}</span>
         </div>
-        <div className="rounded-lg bg-[#18181b] p-4 border border-[#27272a]">
+        <div className="rounded-lg bg-gray-900/60 p-3 border border-gray-800">
           <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">Extended (Tier 3 - 1%)</span>
-          <span className="mt-1 block text-2xl font-extrabold text-gray-400">{summary.tier3Count}</span>
+          <span className="mt-1 block text-2xl font-extrabold text-gray-400 font-mono">{summary.tier3Count}</span>
         </div>
-        <div className="rounded-lg bg-emerald-950/20 p-4 border border-emerald-500/30">
+        <div className="rounded-lg bg-emerald-950/20 p-3 border border-emerald-500/30">
           <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-400">Credited Volume (`USD`)</span>
-          <span className="mt-1 block text-lg font-extrabold text-emerald-400">
+          <span className="mt-1 block text-lg font-extrabold text-emerald-400 font-mono">
             <CurrencyDisplay amount={summary.totalEarnedUsd} currency="USD" showSymbol={false} />
           </span>
         </div>
-        <div className="rounded-lg bg-amber-950/20 p-4 border border-amber-500/30">
+        <div className="rounded-lg bg-amber-950/20 p-3 border border-amber-500/30">
           <span className="block text-[10px] font-bold uppercase tracking-wider text-amber-400">Pending Vesting (`USD`)</span>
-          <span className="mt-1 block text-lg font-extrabold text-amber-400">
+          <span className="mt-1 block text-lg font-extrabold text-amber-400 font-mono">
             <CurrencyDisplay amount={summary.pendingVestingUsd} currency="USD" showSymbol={false} />
           </span>
         </div>

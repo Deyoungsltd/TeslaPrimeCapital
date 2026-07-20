@@ -35,18 +35,17 @@ export default function AdminOverviewPage() {
 
   if (loading) {
     return (
-      <div className="flex h-96 items-center justify-center font-mono text-xs text-gray-400 uppercase tracking-wider animate-pulse">
-        <span>Aggregating Executive Platform Metrics...</span>
+      <div className="flex h-96 items-center justify-center">
+        <span className="text-xs font-mono uppercase tracking-wider text-gray-400 animate-pulse">Aggregating Executive Platform Metrics...</span>
       </div>
     );
   }
 
   return (
     <div className="space-y-8">
-      <div className="border-b border-[#222226] pb-6">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-brand-blue font-mono">Executive Governance Suite</span>
-        <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">Enterprise Governance Overview</h1>
-        <p className="mt-1.5 text-xs text-gray-400 font-mono">Real-time enterprise metrics across identity, multi-currency wallets, active compounding capital, and treasury queues.</p>
+      <div className="border-b border-gray-800 pb-6">
+        <h1 className="text-2xl font-extrabold text-white sm:text-3xl">Executive Governance Overview</h1>
+        <p className="mt-1 text-xs text-gray-400">Real-time enterprise metrics across identity, multi-currency wallets, active compounding capital, and treasury queues.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
@@ -55,10 +54,10 @@ export default function AdminOverviewPage() {
         <StatCard title="Total Active Plan Capital" amount={metrics?.activeInvestmentsUsd || '0.00'} currency="USD" subtitle="Enforcing: Lump Sum at Plan Maturity" />
       </div>
 
-      <div className="rounded-xl border border-amber-500/40 bg-amber-950/20 p-6 shadow-tesla flex flex-col justify-between gap-4 md:flex-row md:items-center">
+      <div className="rounded-xl border border-amber-500/40 bg-amber-950/20 p-6 shadow-2xl flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h3 className="text-base font-extrabold text-amber-400 uppercase tracking-wider font-mono">Treasury Action Required (`100% Mandatory Review`)</h3>
-          <p className="mt-1 text-xs text-gray-300 font-sans">
+          <h3 className="text-lg font-extrabold text-amber-400 uppercase tracking-wider">Treasury Withdrawal Action Required (`100% Mandatory Review`)</h3>
+          <p className="mt-1 text-xs text-gray-300">
             Currently locking <strong className="text-white font-mono"><CurrencyDisplay amount={metrics?.totalLockedWithdrawalsUsd || '0.00'} currency="USD" /></strong> inside our `PENDING_REVIEW` queue awaiting Two-Factor (`TOTP`) co-signature.
           </p>
         </div>

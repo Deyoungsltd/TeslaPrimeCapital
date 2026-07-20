@@ -26,17 +26,18 @@ export const WalletSummary: React.FC<{ balances: IWalletBalance[] }> = ({ balanc
   };
 
   return (
-    <div className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-tesla">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#222226] pb-5">
+    <div className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-2xl">
+      {/* Currency Tab Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-800 pb-4">
         <div className="flex flex-wrap gap-2">
           {balances.map((w) => (
             <button
               key={w.currency}
               onClick={() => setSelectedCurrency(w.currency)}
-              className={`rounded-md px-4 py-1.5 text-xs font-bold tracking-wider uppercase transition-all duration-150 ${
+              className={`rounded-md px-3.5 py-1.5 text-xs font-bold tracking-wider uppercase transition-all ${
                 selectedCurrency === w.currency
-                  ? 'bg-white text-black shadow-sm'
-                  : 'bg-[#18181b] border border-[#27272a] text-gray-400 hover:bg-[#222226] hover:text-white'
+                  ? 'bg-brand-gold text-black shadow-md'
+                  : 'bg-gray-800/80 text-gray-400 hover:bg-gray-700 hover:text-white'
               }`}
             >
               {w.currency}
@@ -57,29 +58,30 @@ export const WalletSummary: React.FC<{ balances: IWalletBalance[] }> = ({ balanc
         </div>
       </div>
 
+      {/* Main Balance Breakdown */}
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
-        <div className="rounded-lg bg-[#18181b] p-5 border border-[#27272a]">
+        <div className="rounded-lg bg-gray-900/50 p-4 border border-gray-800">
           <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Available Liquid Balance</span>
-          <div className="mt-2 text-2xl font-extrabold tracking-tight text-white">
+          <div className="mt-2 text-2xl font-extrabold text-white">
             <CurrencyDisplay amount={currentWallet.availableBalance} currency={currentWallet.currency} />
           </div>
-          <span className="mt-1 block text-[11px] text-emerald-400 font-medium font-mono">Ready for immediate allocation / withdrawal</span>
+          <span className="mt-1 block text-[11px] text-emerald-400 font-medium">Ready for immediate investment / withdrawal</span>
         </div>
 
-        <div className="rounded-lg bg-[#18181b] p-5 border border-[#27272a]">
+        <div className="rounded-lg bg-gray-900/50 p-4 border border-gray-800">
           <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Encumbered / Locked Balance</span>
-          <div className="mt-2 text-2xl font-extrabold tracking-tight text-amber-400">
+          <div className="mt-2 text-2xl font-extrabold text-amber-400">
             <CurrencyDisplay amount={currentWallet.lockedBalance} currency={currentWallet.currency} />
           </div>
-          <span className="mt-1 block text-[11px] text-amber-400/80 font-medium font-mono">Locked in active allocations / pending review</span>
+          <span className="mt-1 block text-[11px] text-amber-400/80 font-medium">Locked in active allocations / pending review</span>
         </div>
 
-        <div className="rounded-lg bg-[#18181b] p-5 border border-[#27272a]">
+        <div className="rounded-lg bg-gray-900/50 p-4 border border-gray-800">
           <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Total Lifetime Deposited</span>
-          <div className="mt-2 text-2xl font-extrabold tracking-tight text-gray-200">
+          <div className="mt-2 text-2xl font-extrabold text-gray-300">
             <CurrencyDisplay amount={currentWallet.totalDeposited} currency={currentWallet.currency} />
           </div>
-          <span className="mt-1 block text-[11px] text-gray-400 font-medium font-mono">Total Withdrawn: <CurrencyDisplay amount={currentWallet.totalWithdrawn} currency={currentWallet.currency} /></span>
+          <span className="mt-1 block text-[11px] text-gray-400 font-medium">Total Withdrawn: <CurrencyDisplay amount={currentWallet.totalWithdrawn} currency={currentWallet.currency} /></span>
         </div>
       </div>
     </div>

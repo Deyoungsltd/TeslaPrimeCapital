@@ -46,6 +46,7 @@ export const KYCEditor: React.FC<{ documents: IKYCDocumentItem[]; currentTier: s
     setSuccessMsg(null);
 
     try {
+      // 1. Get direct signed upload parameters from backend (`type: authenticated`)
       const sigRes = await fetch('/api/v1/kyc/upload-signature', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -56,8 +57,10 @@ export const KYCEditor: React.FC<{ documents: IKYCDocumentItem[]; currentTier: s
         throw new Error(sigData.error?.message || 'Failed to acquire direct upload credentials.');
       }
 
+      // 2. Simulate upload to Cloudinary authenticated private zone in dev/testing
       const simulatedPublicId = `teslaprime/secure/kyc/user_upload_${Date.now()}`;
 
+      // 3. Record document inside PostgreSQL
       const recRes = await fetch('/api/v1/kyc/record', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -80,11 +83,12 @@ export const KYCEditor: React.FC<{ documents: IKYCDocumentItem[]; currentTier: s
 
   return (
     <div className="space-y-8">
-      <div className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-tesla flex flex-col justify-between gap-4 md:flex-row md:items-center">
+      {/* Tier Status Gate Box */}
+      <div className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-2xl flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-gray-400 font-mono">Active Verification Tier</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Active Verification Tier</span>
           <div className="mt-1 flex items-center gap-3">
-            <span className="text-2xl font-extrabold text-white font-mono tracking-tight">{currentTier}</span>
+            <span className="text-2xl font-extrabold text-white font-mono">{currentTier}</span>
             <Badge status={currentTier} />
           </div>
           <p className="mt-2 text-xs text-gray-400 max-w-xl">
@@ -98,35 +102,36 @@ export const KYCEditor: React.FC<{ documents: IKYCDocumentItem[]; currentTier: s
       {error && <div className="rounded-lg border border-red-500/40 bg-red-950/30 p-4 text-xs font-bold text-red-400">{error}</div>}
       {successMsg && <div className="rounded-lg border border-emerald-500/40 bg-emerald-950/30 p-4 text-xs font-bold text-emerald-400">{successMsg}</div>}
 
-      <form onSubmit={handleUploadSubmit} className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-tesla space-y-6">
-        <div className="border-b border-[#222226] pb-4">
+      {/* Direct Upload Form */}
+      <form onSubmit={handleUploadSubmit} className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-2xl space-y-6">
+        <div className="border-b border-gray-800 pb-4">
           <h3 className="text-base font-extrabold uppercase tracking-wider text-white">Submit Secure Identity Document (`Private Storage`)</h3>
           <p className="text-xs text-gray-400 mt-1">Files are streamed directly to Cloudinary Authenticated Private Folders (`type: authenticated`). Zero public CDN exposure.</p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-300 font-mono">Select Document Category</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300">Select Document Category</label>
             <select
               value={docType}
               onChange={(e) => setDocType(e.target.value as any)}
-              className="mt-2 w-full rounded-md border border-[#27272a] bg-[#18181b] px-3 py-2.5 text-sm text-white focus:border-white focus:outline-none focus:ring-1 focus:ring-white transition"
+              className="mt-2 w-full rounded-md border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-white focus:border-brand-gold focus:outline-none focus:ring-1 focus:ring-brand-gold"
             >
               <option value="PASSPORT">International Passport (Front &amp; Biometric Page)</option>
               <option value="NATIONAL_ID">National Identity Card (Both Sides)</option>
-              <option value="DRIVERS_LICENSE">Driver&apos;s License (Active &amp; Unexpired)</option>
+              <option value="DRIVERS_LICENSE">Driver&#39;s License (Active &amp; Unexpired)</option>
               <option value="PROOF_OF_ADDRESS">Proof of Residential Address (Utility Bill &lt; 3 mo)</option>
               <option value="SELFIE">Liveness Biometric Selfie with Government ID</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-300 font-mono">Select File (`JPG, PNG, PDF &lt; 5MB`)</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300">Select File (`JPG, PNG, PDF &lt; 5MB`)</label>
             <input
               type="file"
               accept=".jpg,.jpeg,.png,.pdf"
               onChange={handleFileChange}
-              className="mt-2 block w-full text-xs text-gray-400 file:mr-4 file:rounded-md file:border-0 file:bg-white file:px-4 file:py-2.5 file:text-xs file:font-bold file:uppercase file:text-black hover:file:bg-gray-200 cursor-pointer bg-[#18181b] rounded-md border border-[#27272a] transition"
+              className="mt-2 block w-full text-xs text-gray-400 file:mr-4 file:rounded-md file:border-0 file:bg-brand-gold file:px-4 file:py-2.5 file:text-xs file:font-bold file:uppercase file:text-black hover:file:bg-brand-goldHover cursor-pointer bg-gray-900 rounded-md border border-gray-700"
             />
           </div>
         </div>
@@ -136,27 +141,28 @@ export const KYCEditor: React.FC<{ documents: IKYCDocumentItem[]; currentTier: s
         </Button>
       </form>
 
-      <div className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-tesla space-y-4">
+      {/* Submitted Documents Table */}
+      <div className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-2xl space-y-4">
         <h3 className="text-base font-extrabold uppercase tracking-wider text-white">Submitted Verification Records</h3>
         {documents.length === 0 ? (
           <p className="text-xs text-gray-400 text-center py-6">No identity documents submitted yet.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-[#222226]">
-              <thead className="bg-[#18181b]">
+            <table className="min-w-full divide-y divide-gray-800">
+              <thead className="bg-gray-900/80">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-400 font-mono">Document Type</th>
-                  <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider text-gray-400">Review Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-400 font-mono">Compliance Notes</th>
-                  <th className="px-4 py-3 text-right text-xs font-bold uppercase tracking-wider text-gray-400 font-mono">Uploaded On</th>
+                  <th className="px-4 py-3 text-left text-xs font-extrabold uppercase tracking-wider text-gray-400">Document Type</th>
+                  <th className="px-4 py-3 text-center text-xs font-extrabold uppercase tracking-wider text-gray-400">Review Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-extrabold uppercase tracking-wider text-gray-400">Compliance Notes</th>
+                  <th className="px-4 py-3 text-right text-xs font-extrabold uppercase tracking-wider text-gray-400">Uploaded On</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#18181b]">
+              <tbody className="divide-y divide-gray-800/60">
                 {documents.map((d) => (
-                  <tr key={d.id} className="transition-colors hover:bg-[#18181b]">
+                  <tr key={d.id}>
                     <td className="whitespace-nowrap px-4 py-3 text-xs font-bold text-white">{d.documentType.replace(/_/g, ' ')}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-center"><Badge status={d.status} /></td>
-                    <td className="px-4 py-3 text-xs text-gray-300 font-mono">{d.reviewNotes || 'Pending inspection via 5-minute signed URL'}</td>
+                    <td className="px-4 py-3 text-xs text-gray-300">{d.reviewNotes || 'Pending inspection via 5-minute signed URL'}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-right text-xs font-mono text-gray-400">{new Date(d.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}
