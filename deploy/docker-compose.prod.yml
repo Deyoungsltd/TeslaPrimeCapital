@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  pgbouncer:
+    image: edoburu/pgbouncer:1.22.1
+    container_name: teslaprime_prod_pgbouncer
+    environment:
+      DATABASE_URL: ${DIRECT_URL}
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 5000
+      DEFAULT_POOL_SIZE: 100
+    ports:
+      - "6432:6432"
+    networks:
+      - teslaprime_prod_net
+
+  app_replica_1:
+    build:
+      context: ../
+      dockerfile: deploy/docker/Dockerfile.next
+    container_name: teslaprime_prod_app_1
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://user:password@pgbouncer:6432/teslaprime?pgbouncer=true
+      DIRECT_URL: ${DIRECT_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      SESSION_MASTER_KEY: ${SESSION_MASTER_KEY}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+    depends_on:
+      - pgbouncer
+    networks:
+      - teslaprime_prod_net
+
+  app_replica_2:
+    build:
+      context: ../
+      dockerfile: deploy/docker/Dockerfile.next
+    container_name: teslaprime_prod_app_2
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://user:password@pgbouncer:6432/teslaprime?pgbouncer=true
+      DIRECT_URL: ${DIRECT_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      SESSION_MASTER_KEY: ${SESSION_MASTER_KEY}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+    depends_on:
+      - pgbouncer
+    networks:
+      - teslaprime_prod_net
+
+networks:
+  teslaprime_prod_net:
+    driver: bridge
