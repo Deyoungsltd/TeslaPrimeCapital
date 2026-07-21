@@ -17,12 +17,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           const body = await res.json();
           if (body.success && body.data?.user) {
             setUserAndToken(body.data.user, body.data.accessToken);
+            return;
           }
-        } else if (res.status === 401) {
+        }
+        // Check if an active session or simulated login is already present in client store/localStorage
+        const state = useSessionStore.getState();
+        if (!state.user || !state.accessToken) {
           window.location.href = '/login?expired=true';
         }
       } catch (err) {
-        // Fallback or offline simulation
+        // Fallback or offline simulation check
+        const state = useSessionStore.getState();
+        if (!state.user || !state.accessToken) {
+          window.location.href = '/login?expired=true';
+        }
       }
     };
     verifyTerminalSession();

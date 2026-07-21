@@ -102,7 +102,7 @@ export class AuthController {
       if (result.refreshToken) {
         headers.set(
           'Set-Cookie',
-          `${AUTH_CONFIG.jwt.cookieName}=${result.refreshToken}; Path=/; HttpOnly; Secure=${process.env.NODE_ENV === 'production'}; SameSite=Strict; Max-Age=${AUTH_CONFIG.jwt.refreshTokenTtlSec}`
+          `${AUTH_CONFIG.jwt.cookieName}=${result.refreshToken}; Path=/; HttpOnly; Secure=${process.env.NODE_ENV === 'production'}; SameSite=Lax; Max-Age=${AUTH_CONFIG.jwt.refreshTokenTtlSec}`
         );
       }
 
@@ -157,7 +157,7 @@ export class AuthController {
       const headers = new Headers();
       headers.set(
         'Set-Cookie',
-        `${AUTH_CONFIG.jwt.cookieName}=${result.refreshToken}; Path=/; HttpOnly; Secure=${process.env.NODE_ENV === 'production'}; SameSite=Strict; Max-Age=${AUTH_CONFIG.jwt.refreshTokenTtlSec}`
+        `${AUTH_CONFIG.jwt.cookieName}=${result.refreshToken}; Path=/; HttpOnly; Secure=${process.env.NODE_ENV === 'production'}; SameSite=Lax; Max-Age=${AUTH_CONFIG.jwt.refreshTokenTtlSec}`
       );
 
       return AuthController.makeEnvelope(true, {
@@ -207,7 +207,7 @@ export class AuthController {
       const headers = new Headers();
       headers.set(
         'Set-Cookie',
-        `${AUTH_CONFIG.jwt.cookieName}=${result.refreshToken}; Path=/; HttpOnly; Secure=${process.env.NODE_ENV === 'production'}; SameSite=Strict; Max-Age=${AUTH_CONFIG.jwt.refreshTokenTtlSec}`
+        `${AUTH_CONFIG.jwt.cookieName}=${result.refreshToken}; Path=/; HttpOnly; Secure=${process.env.NODE_ENV === 'production'}; SameSite=Lax; Max-Age=${AUTH_CONFIG.jwt.refreshTokenTtlSec}`
       );
 
       return AuthController.makeEnvelope(true, {

@@ -18,12 +18,25 @@ export default function AdminPortalLayout({ children }: { children: React.ReactN
           const body = await res.json();
           if (body.success && body.data?.user) {
             setUserAndToken(body.data.user, body.data.accessToken);
+            if (!['SUPER_ADMIN', 'COMPLIANCE_OFFICER', 'FINANCE_MANAGER'].includes(body.data.user.role)) {
+              window.location.href = '/dashboard';
+            }
+            return;
           }
-        } else {
+        }
+        const state = useSessionStore.getState();
+        if (!state.user || !state.accessToken) {
           window.location.href = '/login?admin_auth_required=true';
+        } else if (!['SUPER_ADMIN', 'COMPLIANCE_OFFICER', 'FINANCE_MANAGER'].includes(state.user.role)) {
+          window.location.href = '/dashboard';
         }
       } catch {
-        // Fallback
+        const state = useSessionStore.getState();
+        if (!state.user || !state.accessToken) {
+          window.location.href = '/login?admin_auth_required=true';
+        } else if (!['SUPER_ADMIN', 'COMPLIANCE_OFFICER', 'FINANCE_MANAGER'].includes(state.user.role)) {
+          window.location.href = '/dashboard';
+        }
       }
     };
     verifyExecutiveSession();

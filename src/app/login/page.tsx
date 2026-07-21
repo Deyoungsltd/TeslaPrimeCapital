@@ -41,7 +41,12 @@ export default function LoginPage() {
           }
           return;
         }
+      } else if (res.status >= 400 && res.status < 500 && body?.error?.message) {
+        // If the backend explicitly rejects the credentials (e.g. 401/403/429), show the error accurately
+        setError(body.error.message);
+        return;
       } else {
+        // Offline or fallback simulated login if server/DB is disconnected or status >= 500
         if (email.includes('admin') || email.includes('superadmin')) {
           const simUser = { id: 'admin1', email, firstName: 'System', lastName: 'Executive', role: 'SUPER_ADMIN', status: 'ACTIVE', kycTier: 'TIER_2', twoFactorEnabled: true, referralCode: 'TESLA_ADM' };
           setUserAndToken(simUser as any, 'simulated_jwt_token_admin');
@@ -53,7 +58,7 @@ export default function LoginPage() {
           window.location.href = '/dashboard';
           return;
         }
-        setError(body.error?.message || 'Login attempt failed. Please check your credentials.');
+        setError(body?.error?.message || 'Login attempt failed. Please check your credentials.');
       }
     } catch {
       if (email.includes('admin') || email.includes('superadmin')) {
