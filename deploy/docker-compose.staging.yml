@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ../
+      dockerfile: deploy/docker/Dockerfile.next
+    container_name: teslaprime_staging_app
+    restart: always
+    environment:
+      NODE_ENV: staging
+      PORT: 3000
+      DATABASE_URL: ${DATABASE_URL}
+      DIRECT_URL: ${DIRECT_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      SESSION_MASTER_KEY: ${SESSION_MASTER_KEY}
+    ports:
+      - "3001:3000"
+    networks:
+      - teslaprime_staging_net
+
+networks:
+  teslaprime_staging_net:
+    driver: bridge
