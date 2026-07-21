@@ -244,42 +244,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 6. Solar Panels Section (`IMG_7590.png` match with RED button instead of blue!) */}
-      <section className="relative h-[75vh] w-full overflow-hidden bg-black flex flex-col justify-between pt-16 pb-12 text-center border-t border-b border-[#1E2433]">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/branding/energy-wealth.jpg"
-            alt="Solar Panels & Energy Grid"
-            onError={(e) => { e.currentTarget.src = '/branding/crypto-vault.jpg'; }}
-            className="h-full w-full object-cover object-center opacity-85"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-black/30 to-black/60" />
-        </div>
-
-        <div className="relative z-10 space-y-3 px-4">
-          <h2 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl font-sans">
-            Solar Panels
-          </h2>
-          <p className="text-base sm:text-lg font-medium text-gray-200 max-w-xl mx-auto leading-relaxed font-sans">
-            Power Your Home and Reduce Your Electricity Bill with Sustainable Clean Energy
-          </p>
-        </div>
-
-        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4 px-6 max-w-lg mx-auto w-full font-sans">
-          <a href="/register?product=solar" className="w-full sm:flex-1">
-            <button className="w-full rounded-xl bg-[#EF4444] py-4 text-sm font-extrabold uppercase tracking-wider text-white shadow-red-glow transition hover:bg-[#DC2626] active:scale-[0.98]">
-              Order Now
-            </button>
-          </a>
-          <a href="#portfolios" className="w-full sm:flex-1">
-            <button className="w-full rounded-xl bg-white py-4 text-sm font-extrabold uppercase tracking-wider text-black shadow-md transition hover:bg-gray-200 active:scale-[0.98]">
-              Learn More
-            </button>
-          </a>
-        </div>
-      </section>
-
-      {/* 7. Exact Footer (`IMG_7590.png` match) */}
+      {/* 6. Exact Footer (`IMG_7590.png` match) */}
       <footer className="mx-auto max-w-5xl px-6 pt-16 text-center text-xs font-semibold text-gray-400 font-sans space-y-6">
         <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
           <span>Tesla &copy; 2026</span>
@@ -293,7 +258,7 @@ export default function LandingPage() {
         </p>
       </footer>
 
-      {/* 8. Fixed Schedule a Drive Bar (`IMG_7587 / 7590` Bottom Bar Match) */}
+      {/* 7. Fixed Schedule a Drive Bar (`IMG_7587 / 7590` Bottom Bar Match) */}
       <div className="fixed bottom-4 left-4 right-4 z-50 flex items-center justify-center max-w-md mx-auto gap-3">
         <a href="/dashboard/support" className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-[#111520] text-white shadow-2xl hover:bg-[#1C2234] transition">
           💬
