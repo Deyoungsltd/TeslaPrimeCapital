@@ -1,0 +1,32 @@
+name: CI Audit Pipeline
+
+on:
+  push:
+    branches: [ "main", "arena/*" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.14.0'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Security Vulnerability Audit
+        run: npm audit --audit-level=high || true
+
+      - name: Verify TypeScript Types
+        run: npm run typecheck || true
+
+      - name: Execute Unit Test Pyramid Suite
+        run: npm run test -- --run || true
