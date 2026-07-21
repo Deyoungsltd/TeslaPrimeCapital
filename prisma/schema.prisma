@@ -1,0 +1,419 @@
+// ==============================================================================
+// TeslaPrimeCapital — Master Relational Database Schema (`schema.prisma`)
+// Phase 3, Milestone 2: Enterprise Database Architecture & Schema Definition
+// Enforces exact NUMERIC(20,8) precision, composite indexes, and strict FK rules.
+// ==============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==============================================================================
+// ENUMS & CONSTANTS
+// ==============================================================================
+
+enum UserRole {
+  SUPER_ADMIN
+  COMPLIANCE_OFFICER
+  FINANCE_MANAGER
+  SUPPORT_AGENT
+  AFFILIATE_PARTNER
+  INVESTOR
+}
+
+enum AccountStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+  LOCKED
+}
+
+enum KycTier {
+  TIER_0 // Starter ($1,000 Limit without KYC per approved policy)
+  TIER_1 // Identity & Selfie Verified ($50,000 limit)
+  TIER_2 // Enhanced Due Diligence / POA (Unlimited)
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  INVESTMENT_LOCK
+  YIELD_PAYOUT
+  COMMISSION
+  PENALTY
+  EXCHANGE
+}
+
+enum TransactionStatus {
+  PENDING_REVIEW // Enforces 100% Mandatory Admin Review rule for withdrawals
+  PROCESSING
+  COMPLETED
+  REJECTED
+  FAILED
+}
+
+enum PayoutPolicy {
+  LUMP_SUM_MATURITY // Strictly locked per Phase 1 & Phase 2 approved policy
+}
+
+enum InvestmentStatus {
+  ACTIVE
+  MATURED
+  CANCELLED
+}
+
+enum CommissionStatus {
+  PENDING_VESTING
+  CREDITED
+  CLAWED_BACK
+}
+
+enum DocumentType {
+  PASSPORT
+  NATIONAL_ID
+  DRIVERS_LICENSE
+  PROOF_OF_ADDRESS
+  SELFIE
+}
+
+enum VerificationStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  SYSTEM
+  TRANSACTION
+  INVESTMENT
+  SECURITY
+  COMMISSION
+  KYC
+}
+
+enum TicketCategory {
+  GENERAL
+  DEPOSIT_WITHDRAWAL
+  INVESTMENT_PLAN
+  KYC_VERIFICATION
+  SECURITY_2FA
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_USER
+  RESOLVED
+  CLOSED
+}
+
+// ==============================================================================
+// CORE IDENTITY & AUTHENTICATION (`users`, `sessions`)
+// ==============================================================================
+
+model User {
+  id               String        @id @default(uuid())
+  email            String        @unique @db.VarChar(255)
+  passwordHash     String        @db.VarChar(255) // Argon2id hash
+  firstName        String        @db.VarChar(100)
+  lastName         String        @db.VarChar(100)
+  phone            String?       @db.VarChar(50)
+  role             UserRole      @default(INVESTOR)
+  status           AccountStatus @default(PENDING_VERIFICATION)
+  kycTier          KycTier       @default(TIER_0)
+  twoFactorEnabled Boolean       @default(false)
+  twoFactorSecret  String?       @db.VarChar(255) // AES-256-GCM encrypted TOTP seed
+  backupCodes      Json?         // Hashed recovery codes array
+
+  referralCode     String        @unique @db.VarChar(50)
+  referredById     String?
+  referredBy       User?         @relation("UserReferrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals        User[]        @relation("UserReferrals")
+
+  sessions                     Session[]
+  wallets                      Wallet[]
+  transactions                 Transaction[]      @relation("UserTransactions")
+  approvedTransactions         Transaction[]      @relation("AdminApprovedTransactions")
+  activeInvestments            ActiveInvestment[]
+  kycDocuments                 KYCDocument[]      @relation("UserKYCDocuments")
+  reviewedKycDocuments         KYCDocument[]      @relation("AdminReviewedKYCDocuments")
+  notifications                Notification[]
+  supportTickets               SupportTicket[]    @relation("UserSupportTickets")
+  assignedTickets              SupportTicket[]    @relation("AgentAssignedTickets")
+  supportMessages              SupportMessage[]
+  referralCommissionsEarned    CommissionLog[]    @relation("ReferrerCommissions")
+  referralCommissionsTriggered CommissionLog[]    @relation("ReferredCommissions")
+  auditLogs                    AuditLog[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  @@index([email, status])
+  @@index([referralCode])
+  @@index([referredById])
+  @@map("users")
+}
+
+model Session {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refreshTokenHash String   @unique @db.VarChar(255) // SHA-256 hash
+  deviceFingerprint String? @db.VarChar(255)
+  ipAddress        String?  @db.VarChar(64)
+  userAgent        String?  @db.Text
+  expiresAt        DateTime @db.Timestamptz()
+  createdAt        DateTime @default(now()) @db.Timestamptz()
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+// ==============================================================================
+// MULTI-CURRENCY WALLET & LEDGER (`wallets`, `transactions`)
+// Enforces exact NUMERIC(20,8) precision and double-entry transaction linking.
+// ==============================================================================
+
+model Wallet {
+  id               String        @id @default(uuid())
+  userId           String
+  user             User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  currency         String        @db.VarChar(10) // 'USD', 'EUR', 'BTC', 'ETH', 'USDT', 'USDC'
+  availableBalance Decimal       @default(0.00000000) @db.Decimal(20, 8)
+  lockedBalance    Decimal       @default(0.00000000) @db.Decimal(20, 8)
+  totalDeposited   Decimal       @default(0.00000000) @db.Decimal(20, 8)
+  totalWithdrawn   Decimal       @default(0.00000000) @db.Decimal(20, 8)
+  transactions     Transaction[]
+  updatedAt        DateTime      @updatedAt @db.Timestamptz()
+
+  @@unique([userId, currency])
+  @@index([userId])
+  @@map("wallets")
+}
+
+model Transaction {
+  id             String            @id @default(uuid())
+  transactionId  String            @unique @db.VarChar(64) // e.g., 'TXN_20260720_001A'
+  userId         String
+  user           User              @relation("UserTransactions", fields: [userId], references: [id], onDelete: Restrict)
+  walletId       String
+  wallet         Wallet            @relation(fields: [walletId], references: [id], onDelete: Restrict)
+  type           TransactionType   @default(DEPOSIT)
+  amount         Decimal           @db.Decimal(20, 8)
+  currency       String            @db.VarChar(10)
+  status         TransactionStatus @default(PENDING_REVIEW)
+  metadata       Json?             // Stores gateway receipt, bank wire ref, or rejection note
+  approvedById   String?
+  approvedBy     User?             @relation("AdminApprovedTransactions", fields: [approvedById], references: [id], onDelete: SetNull)
+  idempotencyKey String            @unique @db.VarChar(128)
+  accrualLogs    AccrualLog[]
+  createdAt      DateTime          @default(now()) @db.Timestamptz()
+
+  @@index([userId, type, status])
+  @@index([walletId, status])
+  @@index([createdAt])
+  @@map("transactions")
+}
+
+// ==============================================================================
+// INVESTMENT MARKETPLACE & COMPASS ACCRUAL ENGINE (`plans`, `active_investments`, `accrual_logs`)
+// Implements approved Phase 1 policy: Lump Sum at Plan Maturity.
+// ==============================================================================
+
+model Plan {
+  id                   String             @id @default(uuid())
+  planId               String             @unique @db.VarChar(64) // 'plan-starter-fixed', etc.
+  name                 String             @db.VarChar(100)
+  description          String             @db.Text
+  minDepositUsd        Decimal            @db.Decimal(20, 8)
+  maxDepositUsd        Decimal            @db.Decimal(20, 8)
+  termDays             Int
+  dailyRateNumeric     Decimal            @db.Decimal(20, 8)
+  annualPercentageRate String             @db.VarChar(32)
+  payoutPolicy         PayoutPolicy       @default(LUMP_SUM_MATURITY)
+  compoundingAllowed   Boolean            @default(false)
+  requiresKycTier      KycTier            @default(TIER_0)
+  isActive             Boolean            @default(true)
+  imageUrl             String?            @db.Text // Car picture banner URL or Cloudinary path (`IMG_7582.jpeg` match)
+  profitText           String?            @db.VarChar(50) // e.g. "40% Profit", "$1,000 minimum"
+  features             Json?              // Array e.g. ["Portfolio Access", "Investment Dashboard", "Email Support"]
+  activeInvestments    ActiveInvestment[]
+  createdAt            DateTime           @default(now()) @db.Timestamptz()
+  updatedAt            DateTime           @updatedAt @db.Timestamptz()
+
+  @@index([isActive])
+  @@map("plans")
+}
+
+model ActiveInvestment {
+  id                  String           @id @default(uuid())
+  userId              String
+  user                User             @relation(fields: [userId], references: [id], onDelete: Restrict)
+  planId              String
+  plan                Plan             @relation(fields: [planId], references: [id], onDelete: Restrict)
+  principalAmount     Decimal          @db.Decimal(20, 8)
+  currentAccruedYield Decimal          @default(0.00000000) @db.Decimal(20, 8)
+  status              InvestmentStatus @default(ACTIVE)
+  payoutPolicy        PayoutPolicy     @default(LUMP_SUM_MATURITY)
+  startDate           DateTime         @default(now()) @db.Timestamptz()
+  maturityDate        DateTime         @db.Timestamptz()
+  nextAccrualAt       DateTime         @db.Timestamptz()
+  accrualLogs         AccrualLog[]
+  createdAt           DateTime         @default(now()) @db.Timestamptz()
+  updatedAt           DateTime         @updatedAt @db.Timestamptz()
+
+  @@index([userId, status])
+  @@index([status, maturityDate])
+  @@index([status, nextAccrualAt])
+  @@map("active_investments")
+}
+
+model AccrualLog {
+  id                 String           @id @default(uuid())
+  activeInvestmentId String
+  activeInvestment   ActiveInvestment @relation(fields: [activeInvestmentId], references: [id], onDelete: Cascade)
+  transactionId      String?
+  transaction        Transaction?     @relation(fields: [transactionId], references: [id], onDelete: SetNull)
+  dailyRateApplied   Decimal          @db.Decimal(20, 8)
+  principalSnapshot  Decimal          @db.Decimal(20, 8)
+  yieldEarned        Decimal          @db.Decimal(20, 8)
+  accrualDate        DateTime         @default(now()) @db.Timestamptz()
+
+  @@index([activeInvestmentId])
+  @@index([accrualDate])
+  @@map("accrual_logs")
+}
+
+// ==============================================================================
+// AFFILIATE COMMISSION & REFERRAL ENGINE (`commission_logs`)
+// Implements approved Phase 1 policy: Active Investment Allocation Trigger (`5% / 2% / 1%`).
+// ==============================================================================
+
+model CommissionLog {
+  id                   String           @id @default(uuid())
+  referrerId           String
+  referrer             User             @relation("ReferrerCommissions", fields: [referrerId], references: [id], onDelete: Cascade)
+  referredUserId       String
+  referredUser         User             @relation("ReferredCommissions", fields: [referredUserId], references: [id], onDelete: Cascade)
+  activeInvestmentId   String           @db.VarChar(128)
+  tierLevel            Int              // 1 (5%), 2 (2%), 3 (1%)
+  commissionPercentage Decimal          @db.Decimal(10, 4)
+  qualifyingAmount     Decimal          @db.Decimal(20, 8)
+  commissionEarned     Decimal          @db.Decimal(20, 8)
+  status               CommissionStatus @default(PENDING_VESTING)
+  createdAt            DateTime         @default(now()) @db.Timestamptz()
+
+  @@index([referrerId, status])
+  @@index([referredUserId])
+  @@map("commission_logs")
+}
+
+// ==============================================================================
+// KNOW YOUR CUSTOMER (`kyc_documents`) & AUDIT LOGS (`audit_logs`)
+// Private Cloudinary storage metadata and immutable governance ledger.
+// ==============================================================================
+
+model KYCDocument {
+  id                 String             @id @default(uuid())
+  userId             String
+  user               User               @relation("UserKYCDocuments", fields: [userId], references: [id], onDelete: Cascade)
+  documentType       DocumentType
+  cloudinaryPublicId String             @db.VarChar(255) // '/teslaprime/secure/kyc/...'
+  status             VerificationStatus @default(PENDING_REVIEW)
+  reviewNotes        String?            @db.Text
+  reviewedById       String?
+  reviewedBy         User?              @relation("AdminReviewedKYCDocuments", fields: [reviewedById], references: [id], onDelete: SetNull)
+  createdAt          DateTime           @default(now()) @db.Timestamptz()
+  updatedAt          DateTime           @updatedAt @db.Timestamptz()
+
+  @@index([userId, status])
+  @@index([status])
+  @@map("kyc_documents")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  actorRole  String   @db.VarChar(50)
+  actionType String   @db.VarChar(100)
+  resourceId String?  @db.VarChar(255)
+  oldValue   Json?
+  newValue   Json?
+  ipAddress  String?  @db.VarChar(64)
+  userAgent  String?  @db.Text
+  timestamp  DateTime @default(now()) @db.Timestamptz()
+
+  @@index([userId, actionType])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
+
+// ==============================================================================
+// NOTIFICATIONS (`notifications`) & SUPPORT DESK (`support_tickets`, `support_messages`)
+// ==============================================================================
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType @default(SYSTEM)
+  title     String           @db.VarChar(150)
+  message   String           @db.Text
+  read      Boolean          @default(false)
+  metadata  Json?
+  createdAt DateTime         @default(now()) @db.Timestamptz()
+
+  @@index([userId, read])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model SupportTicket {
+  id              String         @id @default(uuid())
+  ticketNumber    String         @unique @db.VarChar(32) // e.g., 'TKT-20260720-001'
+  userId          String
+  user            User           @relation("UserSupportTickets", fields: [userId], references: [id], onDelete: Cascade)
+  assignedAgentId String?
+  assignedAgent   User?          @relation("AgentAssignedTickets", fields: [assignedAgentId], references: [id], onDelete: SetNull)
+  subject         String         @db.VarChar(200)
+  category        TicketCategory @default(GENERAL)
+  priority        TicketPriority @default(MEDIUM)
+  status          TicketStatus   @default(OPEN)
+  messages        SupportMessage[]
+  createdAt       DateTime       @default(now()) @db.Timestamptz()
+  updatedAt       DateTime       @updatedAt @db.Timestamptz()
+
+  @@index([userId, status])
+  @@index([status, priority])
+  @@map("support_tickets")
+}
+
+model SupportMessage {
+  id        String        @id @default(uuid())
+  ticketId  String
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  message   String        @db.Text
+  isAdmin   Boolean       @default(false)
+  createdAt DateTime      @default(now()) @db.Timestamptz()
+
+  @@index([ticketId])
+  @@index([senderId])
+  @@map("support_messages")
+}
