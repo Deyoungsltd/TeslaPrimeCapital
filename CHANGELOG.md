@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.6.1-production] — 2026-07-20
+
+### Changed — Focus 100% on Vehicles & Investment Plans (`Solar Panels Removed`)
+- **Landing Page (`src/app/page.tsx`):**
+  - Completely removed the `Solar Panels` section (`Power Your Home and Reduce Your Electricity Bill`) per user directive.
+  - The homepage is now strictly and 100% focused on:
+    1. **Model 3 Hero Section (`0.99% APR Available`)** with Red `[ Order Now ]` & White `[ Learn More ]` buttons.
+    2. **Investment Plans Grid (`IMG_7582 Match`)** with horizontal car headers (`Model 3`, `Model Y`, `Model S`, `Cybertruck`), checkmarks (`✔ Portfolio Access`), and Red `[ Get Started ]` buttons linking to `/dashboard/investments/checkout`.
+    3. **Utility Truck CYBERTRUCK Hero (`Lease From $949/mo`)** with Red `[ Order Now ]` & White `[ Learn More ]` buttons.
+    4. **Current Offers & Inventory Section (`Find nearby vehicles`)** with clickable `[ New ]` and `[ Pre-Owned ]` buttons linking to `/register?inventory=...`.
+    5. **Exact Footer & Floating Schedule a Drive Bar**.
+
+---
+
 ## [1.0.0-production] — 2026-07-20
 
 ### Added — Phase 3, Milestone 13: Final QA Suite, Concurrency Stress Testing & Production Go-Live
