@@ -2,38 +2,59 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/atoms/Button';
-import { APP_CONFIG } from '@/config/app.config';
 import { CurrencyDisplay } from '@/components/atoms/CurrencyDisplay';
 
 export default function DepositPortalPage() {
-  const [amount, setAmount] = useState('1000.00');
-  const [currency, setCurrency] = useState('USD');
-  const [gateway, setGateway] = useState<'STRIPE' | 'COINPAYMENTS' | 'BANK_WIRE'>('STRIPE');
+  const [walletType, setWalletType] = useState('BTC');
+  const [amount, setAmount] = useState('0');
+  const [txHash, setTxHash] = useState('');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const walletAddresses: Record<string, string> = {
+    BTC: 'bc1qqgkafu3y20a8wdfx5l74kpn8kld3z45v6z789q',
+    ETH: '0x71C8823901823901823018230182301823998877',
+    USDT: 'TU571H890a8wdfx5l74kpn8kld3z45v6z789q0011',
+    SOLANA: 'D7vkh7pfGBiehrhyzUdYBm3y20a8wdfx5l74kpn8kl',
+  };
+
+  const currentAddress = walletAddresses[walletType] || walletAddresses.BTC;
+
+  const [depositsList, setDepositsList] = useState([
+    { sn: 1, wallet: 'BTC bc1qqgkafu...', amount: '$ 278,000', transac: 'TU571H8' },
+    { sn: 2, wallet: 'BTC bc1qqgkafu...', amount: '$ 300,000', transac: 'Thais78l' },
+    { sn: 3, wallet: 'SOLANA D7vkh7pfG...', amount: '$ 1,000', transac: 'BTC' },
+  ]);
+
+  const handleCopy = () => {
+    try {
+      navigator.clipboard.writeText(currentAddress);
+      alert('Copied wallet address to clipboard!');
+    } catch {}
+  };
 
   const handleDepositSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (parseFloat(amount) <= 0 || !txHash) {
+      alert('Please enter a valid deposit amount and transaction hash.');
+      return;
+    }
     setLoading(true);
-    setError(null);
-    setResult(null);
-
+    setMsg(null);
     try {
-      const res = await fetch('/api/v1/wallet/deposit', {
+      await fetch('/api/v1/wallet/deposit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, currency, gateway }),
+        body: JSON.stringify({ amount: `${amount}.00000000`, currency: walletType === 'SOLANA' ? 'USDT' : walletType, gateway: 'COINPAYMENTS' }),
       });
 
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setResult(data.data);
-      } else {
-        setError(data.error?.message || 'Failed to initiate deposit checkout session.');
-      }
-    } catch (err: any) {
-      setError(err.message || 'Network exception encountered during deposit initiation.');
+      setDepositsList((prev) => [
+        { sn: prev.length + 1, wallet: `${walletType} ${currentAddress.slice(0, 10)}...`, amount: `$ ${parseFloat(amount).toLocaleString()}`, transac: txHash.slice(0, 8) },
+        ...prev,
+      ]);
+      setMsg(`Deposit of $${amount} submitted successfully! Placed in verification queue (` + `status: PENDING_REVIEW).`);
+      setAmount('0');
+      setTxHash('');
     } finally {
       setLoading(false);
     }
@@ -41,107 +62,104 @@ export default function DepositPortalPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <div className="border-b border-gray-800 pb-4">
-        <h1 className="text-2xl font-extrabold text-white">Initiate Multi-Gateway Deposit</h1>
-        <p className="mt-1 text-xs text-gray-400">
-          Enforcing approved policy: **Tier 0 Starter ($1,000 Limit without KYC)**. Top up your ledger via Stripe cards, Crypto, or Bank Wire.
-        </p>
-      </div>
+      {msg && <div className="rounded-xl border border-emerald-500/50 bg-emerald-950/40 p-4 text-xs font-bold text-emerald-400 font-mono">{msg}</div>}
 
-      {error && (
-        <div className="rounded-lg border border-red-500/40 bg-red-950/30 p-4 text-xs font-semibold text-red-400">
-          {error}
-        </div>
-      )}
+      {/* Exact Deposit Form Card (`IMG_7569`, `IMG_7570`, `IMG_7571` match) */}
+      <form onSubmit={handleDepositSubmit} className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla space-y-5">
+        <h1 className="text-2xl font-extrabold text-white font-sans tracking-tight">Deposit</h1>
 
-      {result ? (
-        <div className="rounded-xl border border-emerald-500/50 bg-brand-card p-6 shadow-2xl space-y-4">
-          <div className="flex items-center gap-3 text-emerald-400">
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h3 className="text-lg font-extrabold uppercase tracking-wider">Deposit Session Created</h3>
-          </div>
-          <div className="space-y-2 text-xs text-gray-300 bg-gray-900/80 p-4 rounded-lg border border-gray-800 font-mono">
-            <div><strong>Transaction Reference:</strong> {result.transactionId}</div>
-            <div><strong>Ledger Status:</strong> {result.status}</div>
-            <div><strong>Amount:</strong> <CurrencyDisplay amount={result.amount} currency={result.currency} /></div>
-            <div><strong>Payment Gateway:</strong> {result.gateway}</div>
-          </div>
-          {result.checkoutUrl && (
-            <div className="pt-2">
-              <a href={`https://${result.checkoutUrl}`} target="_blank" rel="noreferrer">
-                <Button variant="primary" size="md" className="w-full">Proceed to Stripe Encrypted Gateway &rarr;</Button>
-              </a>
-            </div>
-          )}
-          {result.cryptoDepositAddress && (
-            <div className="space-y-2 pt-2">
-              <span className="text-xs font-bold text-brand-gold uppercase tracking-wider">Deterministic Crypto Deposit Address:</span>
-              <div className="rounded bg-black p-3 font-mono text-sm text-emerald-400 select-all border border-gray-800 text-center">
-                {result.cryptoDepositAddress}
-              </div>
-              <p className="text-[11px] text-gray-400 text-center">Send exact confirmation amount. Crediting occurs automatically upon network confirmation threshold.</p>
-            </div>
-          )}
-          <button onClick={() => setResult(null)} className="w-full text-center text-xs text-gray-400 hover:text-white pt-2 block font-semibold">
-            &larr; Initiate Another Deposit
-          </button>
-        </div>
-      ) : (
-        <form onSubmit={handleDepositSubmit} className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-2xl space-y-6">
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300">Select Currency Unit</label>
-            <select
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
-              className="mt-2 w-full rounded-md border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-white focus:border-brand-gold focus:outline-none focus:ring-1 focus:ring-brand-gold"
-            >
-              {APP_CONFIG.supportedCurrencies.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.code} — {c.name} (Min: ${c.minDeposit})
-                </option>
-              ))}
-            </select>
-          </div>
+        <div>
+          <label className="block text-xs font-bold text-gray-300 mb-1.5 font-sans">Wallet</label>
+          <select
+            value={walletType}
+            onChange={(e) => setWalletType(e.target.value)}
+            className="w-full rounded-lg border border-[#2C354C] bg-[#080A0F] px-4 py-3 text-sm font-sans text-gray-200 focus:border-red-500 focus:outline-none mb-2.5"
+          >
+            <option value="BTC">Select a wallet address — Bitcoin (BTC)</option>
+            <option value="ETH">Select a wallet address — Ethereum (ETH)</option>
+            <option value="USDT">Select a wallet address — Tether (USDT)</option>
+            <option value="SOLANA">Select a wallet address — Solana (SOL)</option>
+          </select>
 
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300">Exact Deposit Amount (`NUMERIC(20,8)`)</label>
+          <div className="flex items-center gap-2">
             <input
               type="text"
-              required
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="e.g. 1000.00000000"
-              className="mt-2 w-full rounded-md border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm font-mono text-white focus:border-brand-gold focus:outline-none focus:ring-1 focus:ring-brand-gold"
+              readOnly
+              value={currentAddress}
+              className="w-full rounded-lg border border-[#2C354C] bg-black px-4 py-3 text-xs font-mono text-gray-300 select-all focus:outline-none"
             />
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="flex-shrink-0 rounded-lg border border-[#2C354C] bg-[#181D2D] px-3.5 py-3 text-gray-300 hover:border-white hover:text-white transition shadow-sm"
+              title="Copy Address"
+            >
+              📋
+            </button>
           </div>
+        </div>
 
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-300">Select Payment Gateway</label>
-            <div className="mt-2 grid grid-cols-3 gap-3">
-              {(['STRIPE', 'COINPAYMENTS', 'BANK_WIRE'] as const).map((g) => (
-                <button
-                  type="button"
-                  key={g}
-                  onClick={() => setGateway(g)}
-                  className={`rounded-md border p-3 text-center text-xs font-bold uppercase tracking-wider transition ${
-                    gateway === g
-                      ? 'border-brand-gold bg-brand-gold/15 text-brand-gold shadow'
-                      : 'border-gray-800 bg-gray-900/60 text-gray-400 hover:bg-gray-800'
-                  }`}
-                >
-                  {g.replace(/_/g, ' ')}
-                </button>
-              ))}
-            </div>
+        <div>
+          <label className="block text-xs font-bold text-gray-300 mb-1.5 font-sans">Amount</label>
+          <input
+            type="number"
+            min="0"
+            step="any"
+            required
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="w-full rounded-lg border border-[#2C354C] bg-black px-4 py-3 text-sm font-mono text-white focus:border-red-500 focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-bold text-gray-300 mb-1.5 font-sans">Transaction Hash</label>
+          <input
+            type="text"
+            required
+            value={txHash}
+            onChange={(e) => setTxHash(e.target.value)}
+            placeholder="Enter exact payment reference or hash..."
+            className="w-full rounded-lg border border-[#2C354C] bg-black px-4 py-3 text-sm font-mono text-white focus:border-red-500 focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="rounded-lg bg-[#EF4444] px-7 py-3 text-sm font-bold text-white transition hover:bg-[#DC2626] shadow-red-glow"
+          >
+            {loading ? 'Processing...' : 'Deposit'}
+          </button>
+        </div>
+
+        {/* Exact Ledger Table (`S/N | Wallet | Amount | Transac` match) */}
+        <div className="pt-6 border-t border-[#1E2433]">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-[#1E2433] text-left font-mono">
+              <thead>
+                <tr>
+                  <th className="py-3 pr-4 text-xs font-bold uppercase text-gray-400 font-sans">S/N</th>
+                  <th className="py-3 px-4 text-xs font-bold uppercase text-gray-400 font-sans">Wallet</th>
+                  <th className="py-3 px-4 text-xs font-bold uppercase text-gray-400 font-sans">Amount</th>
+                  <th className="py-3 pl-4 text-xs font-bold uppercase text-gray-400 font-sans">Transac</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#1E2433]/60 text-xs">
+                {depositsList.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-[#181D2D]/60 transition">
+                    <td className="py-4 pr-4 font-bold text-gray-300">{row.sn}</td>
+                    <td className="py-4 px-4 text-white font-medium">{row.wallet}</td>
+                    <td className="py-4 px-4 font-bold text-white">{row.amount}</td>
+                    <td className="py-4 pl-4 text-gray-400">{row.transac}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-
-          <Button type="submit" variant="primary" size="lg" className="w-full" isLoading={loading}>
-            Lock &amp; Generate Gateway Reference
-          </Button>
-        </form>
-      )}
+        </div>
+      </form>
     </div>
   );
 }

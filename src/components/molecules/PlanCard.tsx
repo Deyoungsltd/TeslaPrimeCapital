@@ -14,6 +14,7 @@ export interface IPlanCardProps {
   annualPercentageRate: string;
   requiresKycTier: string;
   onAllocate: (planId: string, amount: string) => Promise<void>;
+  poolCapacityPct?: number;
 }
 
 export const PlanCard: React.FC<IPlanCardProps> = ({
@@ -27,12 +28,12 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
   annualPercentageRate,
   requiresKycTier,
   onAllocate,
+  poolCapacityPct = 86,
 }) => {
   const [allocationAmount, setAllocationAmount] = useState(minDepositUsd);
   const [isAllocating, setIsAllocating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Calculate projected lump-sum maturity return precisely using DecimalUtil
   const projectedReturn = () => {
     try {
       const dailyRate = DecimalUtil.div(annualPercentageRate.replace('%', ''), '36500');
@@ -57,53 +58,48 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
   };
 
   return (
-    <div className="flex flex-col justify-between rounded-xl border border-brand-border bg-brand-card p-6 shadow-2xl transition-all hover:border-brand-gold/50">
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-gold">
-            {requiresKycTier === 'TIER_0' ? 'Starter Plan (<$1k)' : `Verified ${requiresKycTier}`}
+    <div className="relative overflow-hidden flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla transition-all duration-200 hover:border-gray-600 group">
+      <div className="space-y-4 z-10">
+        <div className="flex items-center justify-between font-mono">
+          <span className="rounded-md border border-[#2F374F] bg-[#1E2433] px-3 py-1 text-xs font-bold text-gray-200">
+            {annualPercentageRate} Target
           </span>
-          <span className="rounded-md bg-gray-800 px-2.5 py-1 text-xs font-semibold text-gray-300">
-            {termDays} Days Term
+          <span className="rounded-md bg-[#181D2D] border border-[#2C354C] px-2.5 py-1 text-xs font-bold text-gray-300">
+            {termDays} Days Duration
           </span>
         </div>
 
         <div>
-          <h3 className="text-xl font-extrabold text-white">{name}</h3>
-          <p className="mt-1 text-xs text-gray-400 leading-relaxed">{description}</p>
+          <h3 className="text-2xl font-extrabold tracking-tight text-white font-sans">{name}</h3>
+          <p className="mt-2 text-xs text-gray-300 leading-relaxed font-sans">{description}</p>
         </div>
       </div>
 
-      <div className="mt-6 border-t border-gray-800 pt-6 space-y-4">
-        <div className="flex justify-between items-baseline">
-          <span className="text-xs font-medium text-gray-400">Target APR</span>
-          <span className="text-2xl font-extrabold text-brand-gold">{annualPercentageRate}</span>
-        </div>
-
-        <div className="space-y-1 text-xs text-gray-400">
+      <div className="mt-6 border-t border-[#1E2433] pt-6 space-y-4 z-10 font-mono">
+        <div className="space-y-1.5 text-xs text-gray-300">
           <div className="flex justify-between">
             <span>Min Capital:</span>
-            <CurrencyDisplay amount={minDepositUsd} currency="USD" className="text-gray-200" />
+            <CurrencyDisplay amount={minDepositUsd} currency="USD" className="text-white font-bold" />
           </div>
           <div className="flex justify-between">
             <span>Max Capital:</span>
-            <CurrencyDisplay amount={maxDepositUsd} currency="USD" className="text-gray-200" />
+            <CurrencyDisplay amount={maxDepositUsd} currency="USD" className="text-white font-bold" />
           </div>
-          <div className="flex justify-between text-brand-gold pt-1 border-t border-gray-800/60 font-semibold">
+          <div className="flex justify-between text-gray-400 pt-1.5 border-t border-[#1E2433]">
             <span>Maturity Payout:</span>
-            <span>Lump Sum at Term End</span>
+            <span className="text-white font-bold">Lump Sum at Term End</span>
           </div>
         </div>
 
         {error && (
-          <div className="rounded border border-red-500/40 bg-red-950/40 p-2 text-[11px] font-semibold text-red-400">
+          <div className="rounded border border-red-500/40 bg-red-950/60 p-2.5 text-[11px] font-semibold text-red-400 font-sans">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleAllocateClick} className="space-y-3 pt-2">
+        <form onSubmit={handleAllocateClick} className="space-y-3 pt-2 font-sans">
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400">
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 font-mono">
               Allocation Amount (`NUMERIC(20,8)`)
             </label>
             <input
@@ -111,18 +107,22 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
               required
               value={allocationAmount}
               onChange={(e) => setAllocationAmount(e.target.value)}
-              className="mt-1 w-full rounded-md border border-gray-700 bg-gray-900 px-3 py-2 text-sm font-mono text-white focus:border-brand-gold focus:outline-none focus:ring-1 focus:ring-brand-gold"
+              className="mt-1.5 w-full rounded-lg border border-[#2C354C] bg-black px-3.5 py-2.5 text-sm font-mono text-white focus:border-red-500 focus:outline-none transition"
             />
           </div>
 
-          <div className="flex justify-between text-xs bg-gray-900/60 p-2.5 rounded border border-gray-800 font-mono">
-            <span className="text-gray-400 font-sans font-medium">Est. Maturity Total:</span>
-            <CurrencyDisplay amount={projectedReturn()} currency="USD" className="text-emerald-400" />
+          <div className="flex justify-between items-center text-xs bg-black/80 p-3 rounded-lg border border-[#1E2433] font-mono">
+            <span className="text-gray-400 font-sans font-medium text-[11px]">Est. Maturity Return:</span>
+            <CurrencyDisplay amount={projectedReturn()} currency="USD" className="text-emerald-400 font-extrabold text-sm" />
           </div>
 
-          <Button type="submit" variant="primary" size="md" className="w-full" isLoading={isAllocating}>
-            Allocate Capital &rarr;
-          </Button>
+          <button
+            type="submit"
+            disabled={isAllocating}
+            className="w-full rounded-lg bg-[#EF4444] py-3.5 text-sm font-bold tracking-wider text-white transition hover:bg-[#DC2626] shadow-red-glow"
+          >
+            {isAllocating ? 'Locking Capital...' : 'Invest Now'}
+          </button>
         </form>
       </div>
     </div>

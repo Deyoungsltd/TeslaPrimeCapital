@@ -26,18 +26,17 @@ export const WalletSummary: React.FC<{ balances: IWalletBalance[] }> = ({ balanc
   };
 
   return (
-    <div className="rounded-xl border border-brand-border bg-brand-card p-6 shadow-2xl">
-      {/* Currency Tab Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-800 pb-4">
-        <div className="flex flex-wrap gap-2">
+    <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla">
+      <div className="flex flex-wrap items-center justify-between gap-5 border-b border-[#1E2433] pb-5 z-10 relative">
+        <div className="flex flex-wrap gap-2.5 font-mono">
           {balances.map((w) => (
             <button
               key={w.currency}
               onClick={() => setSelectedCurrency(w.currency)}
-              className={`rounded-md px-3.5 py-1.5 text-xs font-bold tracking-wider uppercase transition-all ${
+              className={`rounded-lg px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all duration-150 ${
                 selectedCurrency === w.currency
-                  ? 'bg-brand-gold text-black shadow-md'
-                  : 'bg-gray-800/80 text-gray-400 hover:bg-gray-700 hover:text-white'
+                  ? 'bg-[#EF4444] text-white shadow-red-glow font-extrabold'
+                  : 'bg-[#080A0F] border border-[#1E2433] text-gray-400 hover:bg-[#181D2D] hover:text-white'
               }`}
             >
               {w.currency}
@@ -47,7 +46,7 @@ export const WalletSummary: React.FC<{ balances: IWalletBalance[] }> = ({ balanc
 
         <div className="flex gap-3">
           <a href="/dashboard/deposit">
-            <Button variant="primary" size="sm">+ Deposit {currentWallet.currency}</Button>
+            <Button variant="tesla-red" size="sm">+ Deposit {currentWallet.currency}</Button>
           </a>
           <a href="/dashboard/withdraw">
             <Button variant="secondary" size="sm">Withdraw</Button>
@@ -58,30 +57,29 @@ export const WalletSummary: React.FC<{ balances: IWalletBalance[] }> = ({ balanc
         </div>
       </div>
 
-      {/* Main Balance Breakdown */}
-      <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
-        <div className="rounded-lg bg-gray-900/50 p-4 border border-gray-800">
-          <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Available Liquid Balance</span>
-          <div className="mt-2 text-2xl font-extrabold text-white">
+      <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3 font-mono">
+        <div className="rounded-xl bg-[#080A0F] p-5 border border-[#1E2433] shadow-md">
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 font-sans">Available Liquid Balance</span>
+          <div className="mt-2 text-2xl font-extrabold tracking-tight text-white">
             <CurrencyDisplay amount={currentWallet.availableBalance} currency={currentWallet.currency} />
           </div>
-          <span className="mt-1 block text-[11px] text-emerald-400 font-medium">Ready for immediate investment / withdrawal</span>
+          <span className="mt-1 block text-[11px] text-gray-400 font-sans">Ready for instant allocation / withdrawal</span>
         </div>
 
-        <div className="rounded-lg bg-gray-900/50 p-4 border border-gray-800">
-          <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Encumbered / Locked Balance</span>
-          <div className="mt-2 text-2xl font-extrabold text-amber-400">
+        <div className="rounded-xl bg-[#080A0F] p-5 border border-[#1E2433] shadow-md">
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-400 font-sans">Encumbered / Locked Balance</span>
+          <div className="mt-2 text-2xl font-extrabold tracking-tight text-amber-400">
             <CurrencyDisplay amount={currentWallet.lockedBalance} currency={currentWallet.currency} />
           </div>
-          <span className="mt-1 block text-[11px] text-amber-400/80 font-medium">Locked in active allocations / pending review</span>
+          <span className="mt-1 block text-[11px] text-gray-400 font-sans">Locked in active contracts / review</span>
         </div>
 
-        <div className="rounded-lg bg-gray-900/50 p-4 border border-gray-800">
-          <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Total Lifetime Deposited</span>
-          <div className="mt-2 text-2xl font-extrabold text-gray-300">
+        <div className="rounded-xl bg-[#080A0F] p-5 border border-[#1E2433] shadow-md">
+          <span className="text-xs font-bold uppercase tracking-wider text-gray-300 font-sans">Total Lifetime Deposited</span>
+          <div className="mt-2 text-2xl font-extrabold tracking-tight text-white">
             <CurrencyDisplay amount={currentWallet.totalDeposited} currency={currentWallet.currency} />
           </div>
-          <span className="mt-1 block text-[11px] text-gray-400 font-medium">Total Withdrawn: <CurrencyDisplay amount={currentWallet.totalWithdrawn} currency={currentWallet.currency} /></span>
+          <span className="mt-1 block text-[11px] text-gray-400 font-sans">Total Withdrawn: <CurrencyDisplay amount={currentWallet.totalWithdrawn} currency={currentWallet.currency} /></span>
         </div>
       </div>
     </div>

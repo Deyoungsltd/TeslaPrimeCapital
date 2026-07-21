@@ -3,32 +3,35 @@ import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost' | 'electric' | 'emerald' | 'tesla-red';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
 }
 
 export const Button: React.FC<IButtonProps> = ({
   children,
-  variant = 'primary',
+  variant = 'tesla-red',
   size = 'md',
   isLoading = false,
   className,
   disabled,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-bold tracking-wide transition-all focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-dark rounded-md disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'inline-flex items-center justify-center font-bold tracking-wide transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:ring-offset-2 focus:ring-offset-[#080A0F] rounded-lg disabled:opacity-40 disabled:cursor-not-allowed select-none active:scale-[0.98] shadow-md';
 
   const variants = {
-    primary: 'bg-brand-gold text-black hover:bg-brand-goldHover shadow-lg',
-    secondary: 'bg-brand-card text-gray-200 border border-brand-border hover:bg-gray-800 shadow-sm',
-    outline: 'border border-brand-gold/60 text-brand-gold bg-transparent hover:bg-brand-gold hover:text-black',
-    danger: 'bg-brand-rose text-white hover:bg-red-700 shadow-md',
-    ghost: 'bg-transparent text-gray-400 hover:text-white hover:bg-gray-800/50',
+    'tesla-red': 'bg-[#EF4444] text-white hover:bg-[#DC2626] shadow-red-glow font-extrabold border border-red-400/30',
+    primary: 'bg-[#EF4444] text-white hover:bg-[#DC2626] shadow-red-glow font-extrabold border border-red-400/30',
+    electric: 'bg-brand-blue text-white hover:bg-brand-blueHover shadow-md font-bold border border-white/10',
+    emerald: 'bg-brand-emerald text-white hover:bg-emerald-600 shadow-emerald-glow font-bold border border-emerald-400/30',
+    secondary: 'bg-[#161B29] text-gray-200 border border-[#252D3F] hover:bg-[#1C2234] hover:border-gray-400 shadow-sm font-semibold',
+    outline: 'border border-[#2C354C] bg-transparent text-gray-300 hover:border-white hover:bg-white/5 font-semibold',
+    danger: 'bg-[#EF4444] text-white hover:bg-red-700 shadow-red-glow border border-red-400/30',
+    ghost: 'bg-transparent text-gray-400 hover:text-white hover:bg-white/5 shadow-none',
   };
 
   const sizes = {
-    sm: 'px-3 py-1.5 text-xs',
+    sm: 'px-3.5 py-1.5 text-xs',
     md: 'px-5 py-2.5 text-sm',
     lg: 'px-8 py-3.5 text-base',
   };
