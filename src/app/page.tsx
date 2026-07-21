@@ -4,99 +4,207 @@ import { INVESTMENT_PLANS_CONFIG } from '@/config/plans.config';
 
 export default function LandingPage() {
   return (
-    <main className="flex flex-col flex-grow items-center justify-center px-4 py-16 text-center lg:py-24">
-      {/* Brand Header & Tagline */}
-      <div className="max-w-4xl space-y-6">
-        <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/30 bg-brand-gold/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-gold shadow-sm">
-          <span>Institutional Architecture (`v0.3.0-alpha`)</span>
-        </div>
-        <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">
-          {APP_CONFIG.platformName}
-        </h1>
-        <p className="mx-auto max-w-2xl text-lg font-normal text-gray-400 sm:text-xl">
-          {APP_CONFIG.tagline}. Precision multi-currency ledgers (`USD`, `EUR`, `BTC`, `ETH`), verified compliance, and algorithmic structured allocations.
-        </p>
+    <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white">
+      {/* Exact Header (`IMG_7550` match) */}
+      <header className="sticky top-0 z-50 flex h-20 w-full items-center justify-between border-b border-[#1E2433] bg-[#080A0F]/95 px-6 sm:px-12 backdrop-blur-md">
+        <a href="/" className="flex items-center gap-3">
+          <span className="text-xl font-extrabold tracking-[0.35em] text-white uppercase font-sans">
+            T E S L A
+          </span>
+          <span className="rounded border border-[#252D3F] bg-[#111520] px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-gray-300">
+            Equity Pro
+          </span>
+        </a>
 
-        {/* Action Buttons */}
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-          <a
-            href="/register"
-            className="w-full sm:w-auto rounded-md bg-brand-gold px-8 py-3.5 text-sm font-bold tracking-wide text-black shadow-lg transition-all hover:bg-brand-goldHover focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-dark"
-          >
-            Create Institutional Account
-          </a>
+        <nav className="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-gray-300 font-mono">
+          <a href="#portfolios" className="hover:text-white transition">Investment Plans (`IMG_7582 Match`)</a>
+          <a href="#ledgers" className="hover:text-white transition">Double-Entry Ledgers</a>
+          <a href="#governance" className="hover:text-white transition">Compliance Gate</a>
+        </nav>
+
+        <div className="flex items-center gap-4 font-sans">
           <a
             href="/login"
-            className="w-full sm:w-auto rounded-md border border-gray-700 bg-brand-card px-8 py-3.5 text-sm font-semibold tracking-wide text-gray-200 shadow-sm transition-all hover:border-gray-500 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 focus:ring-offset-brand-dark"
+            className="rounded-lg border border-[#2C354C] bg-[#111520] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-gray-200 transition hover:border-white hover:text-white shadow-sm"
           >
-            Access Terminal Login
+            Sign In
+          </a>
+          <a
+            href="/register"
+            className="rounded-lg bg-[#EF4444] px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider text-white transition hover:bg-[#DC2626] shadow-red-glow"
+          >
+            Open Account
           </a>
         </div>
-      </div>
+      </header>
 
-      {/* Plan Showcase Grid */}
-      <section className="mt-20 w-full max-w-6xl">
-        <div className="mb-12 text-center">
-          <h2 className="text-2xl font-bold uppercase tracking-wider text-gray-200 sm:text-3xl">
-            Structured Investment Portfolios
-          </h2>
-          <p className="mt-2 text-sm text-gray-400">
-            All plans enforce our approved policy: **Lump Sum at Plan Maturity**. Zero daily wallet disruption, exact compound maturity execution.
+      {/* Hero Showcase Section */}
+      <main className="flex flex-col items-center justify-center px-6 pt-24 pb-20 text-center sm:pt-32 sm:pb-28">
+        <div className="max-w-4xl space-y-6">
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-red-500/40 bg-red-950/40 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-red-400 font-mono shadow-sm">
+            <span>Algorithmic Compounding &bull; Exact NUMERIC(20,8) Ledgers</span>
+          </div>
+          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-7xl md:text-8xl leading-none font-sans">
+            TESLA EQUITY PRO.
+          </h1>
+          <p className="mx-auto max-w-2xl text-base font-normal text-gray-300 sm:text-lg leading-relaxed font-sans">
+            {APP_CONFIG.tagline}. Engineered for absolute transparency, instantaneous multi-currency settlement (`USD`, `EUR`, `BTC`, `ETH`), and verified double-entry compounding.
           </p>
-        </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {INVESTMENT_PLANS_CONFIG.map((plan) => (
-            <div
-              key={plan.planId}
-              className="flex flex-col justify-between rounded-xl border border-brand-border bg-brand-card p-6 shadow-xl transition-transform hover:-translate-y-1 hover:border-brand-gold/50"
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6 pt-4 font-sans">
+            <a
+              href="/register"
+              className="w-full sm:w-auto rounded-lg bg-[#EF4444] px-9 py-4 text-sm font-extrabold uppercase tracking-wider text-white shadow-red-glow transition hover:bg-[#DC2626]"
             >
-              <div className="space-y-4 text-left">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wider text-brand-gold">
-                    {plan.requiresKycTier === 'TIER_0' ? 'No KYC Required (<$1k)' : `Verified ${plan.requiresKycTier}`}
-                  </span>
-                  <span className="rounded-md bg-gray-800 px-2.5 py-1 text-xs font-semibold text-gray-300">
-                    {plan.termDays} Days Term
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-white">{plan.name}</h3>
-                <p className="text-xs text-gray-400 leading-relaxed">{plan.description}</p>
-              </div>
-
-              <div className="mt-8 border-t border-gray-800 pt-6 text-left space-y-3">
-                <div className="flex justify-between items-baseline">
-                  <span className="text-xs font-medium text-gray-400">Projected APR</span>
-                  <span className="text-2xl font-extrabold text-brand-gold">{plan.annualPercentageRate}</span>
-                </div>
-                <div className="flex justify-between text-xs text-gray-400">
-                  <span>Min Allocation:</span>
-                  <span className="font-semibold text-gray-200">${plan.minDepositUsd} USD</span>
-                </div>
-                <div className="flex justify-between text-xs text-gray-400">
-                  <span>Max Allocation:</span>
-                  <span className="font-semibold text-gray-200">${plan.maxDepositUsd} USD</span>
-                </div>
-                <div className="pt-3">
-                  <a
-                    href="/register"
-                    className="block w-full text-center rounded-md border border-brand-gold/40 bg-brand-gold/10 py-2 text-xs font-bold uppercase tracking-wider text-brand-gold transition hover:bg-brand-gold hover:text-black"
-                  >
-                    Allocate Capital
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
+              Get Started &rarr;
+            </a>
+            <a
+              href="/dashboard"
+              className="w-full sm:w-auto rounded-lg border border-[#2C354C] bg-[#111520] px-9 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:border-white hover:bg-[#181D2D]"
+            >
+              Enter Live Terminal
+            </a>
+          </div>
         </div>
-      </section>
 
-      {/* Footer Disclaimer */}
-      <footer className="mt-24 border-t border-gray-800 pt-8 text-center text-xs text-gray-500 w-full max-w-4xl">
-        <p>
-          &copy; {new Date().getFullYear()} {APP_CONFIG.platformName}. All rights reserved. Enterprise multi-currency ledgers strictly utilize exact fixed-point mathematical verification (`NUMERIC(20,8)`).
-        </p>
-      </footer>
-    </main>
+        {/* Feature Highlights Bar */}
+        <div id="ledgers" className="mt-28 grid grid-cols-1 gap-6 sm:grid-cols-3 max-w-6xl w-full text-left font-mono">
+          <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla transition hover:border-gray-500">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-blue font-sans">Double-Entry Accounting</span>
+            <h3 className="mt-2 text-lg font-extrabold text-white tracking-tight font-sans">Exact NUMERIC(20,8) Precision</h3>
+            <p className="mt-2 text-xs text-gray-300 leading-relaxed font-sans">Zero floating-point rounding drift. Every deposit, yield accrual, and conversion is bound by exact fixed-point mathematics (`DecimalUtil`).</p>
+          </div>
+
+          <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla transition hover:border-gray-500">
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 font-sans">Concurrency Defense</span>
+            <h3 className="mt-2 text-lg font-extrabold text-white tracking-tight font-sans">Redis Redlock Mutex Engine</h3>
+            <p className="mt-2 text-xs text-gray-300 leading-relaxed font-sans">Strict distributed locking (`lock:wallet:usr_{'{ID}'}`) eliminates race conditions and double-spend attempts across simultaneous requests.</p>
+          </div>
+
+          <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla transition hover:border-gray-500">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-400 font-sans">Executive Governance</span>
+            <h3 className="mt-2 text-lg font-extrabold text-white tracking-tight font-sans">100% Mandatory Admin Review</h3>
+            <p className="mt-2 text-xs text-gray-300 leading-relaxed font-sans">Every withdrawal enters our `PENDING_REVIEW` queue. Release strictly requires Two-Factor (`TOTP`) confirmation from treasury officers.</p>
+          </div>
+        </div>
+
+        {/* Investment Plans Showcase Section (`IMG_7582.jpeg` exact match!) */}
+        <section id="portfolios" className="mt-32 w-full max-w-6xl text-left">
+          <div className="mb-12 border-b border-[#1E2433] pb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-widest text-brand-blue font-mono">Portfolio Catalog</span>
+              <h2 className="mt-1 text-3xl font-extrabold tracking-tight text-white sm:text-4xl font-sans">
+                Investment Plans (`IMG_7582 Match`)
+              </h2>
+              <p className="text-xs text-gray-400 font-sans mt-1">
+                Choose the plan that fits your investment goals. Featured vehicles: Model 3, Model Y, Model S Plaid, Cybertruck.
+              </p>
+            </div>
+            <div className="text-right font-sans">
+              <a href="/register">
+                <button className="rounded-lg bg-brand-blue px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blueHover transition shadow-md">
+                  Explore Live Terminal &rarr;
+                </button>
+              </a>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {INVESTMENT_PLANS_CONFIG.map((plan) => (
+              <div
+                key={plan.planId}
+                className="flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] shadow-tesla transition-all duration-300 hover:border-brand-blue/60 group overflow-hidden"
+              >
+                {/* 1. Horizontal Car Image Header (`IMG_7582.jpeg` match!) */}
+                <div className="relative h-48 w-full overflow-hidden bg-black">
+                  <img
+                    src={plan.imageUrl || '/branding/car-bronze.jpg'}
+                    alt={plan.name}
+                    className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110 opacity-95 group-hover:opacity-100"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#111520] via-[#111520]/20 to-transparent" />
+                  
+                  {/* Top Pills */}
+                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between font-mono text-xs">
+                    <span className="rounded-md border border-white/20 bg-black/80 px-2.5 py-1 font-extrabold text-white backdrop-blur-md shadow">
+                      {plan.profitText || '40% Profit'}
+                    </span>
+                    <span className="rounded-md bg-brand-blue px-2.5 py-1 font-bold text-white backdrop-blur-md shadow-blue-glow">
+                      {plan.termDays} Days Term
+                    </span>
+                  </div>
+                </div>
+
+                {/* 2. Card Content & Checkmark Features (`IMG_7582.jpeg` match!) */}
+                <div className="p-6 space-y-4 flex-1 flex flex-col justify-between bg-[#111520]">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-extrabold tracking-tight text-white font-sans group-hover:text-brand-blue transition-colors">
+                        {plan.name}
+                      </h3>
+                      <span className="text-xs font-mono font-bold text-gray-400">
+                        {plan.annualPercentageRate} APR
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-300 leading-relaxed font-sans min-h-[36px]">
+                      {plan.description}
+                    </p>
+                  </div>
+
+                  {/* Min / Max Range */}
+                  <div className="rounded-xl bg-[#080A0F] p-3.5 border border-[#1E2433] space-y-1.5 font-mono text-xs">
+                    <div className="flex justify-between font-bold">
+                      <span className="text-gray-400">Min Capital:</span>
+                      <span className="text-emerald-400 font-extrabold">${parseFloat(plan.minDepositUsd).toLocaleString()} USD</span>
+                    </div>
+                    <div className="flex justify-between font-bold">
+                      <span className="text-gray-400">Max Capital:</span>
+                      <span className="text-white font-extrabold">${parseFloat(plan.maxDepositUsd).toLocaleString()} USD</span>
+                    </div>
+                  </div>
+
+                  {/* Checkmark Features List (`IMG_7582.jpeg` checkmarks match!) */}
+                  <div className="space-y-2.5 pt-2 font-sans text-xs text-gray-200">
+                    {(plan.features && plan.features.length > 0 ? plan.features : ['Portfolio Access', 'Investment Dashboard', 'Email Support']).map((feat, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-blue/20 text-brand-blue font-extrabold text-[11px] border border-brand-blue/40">
+                          ✔
+                        </span>
+                        <span className="font-semibold">{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Action CTA Button (`No modal! Strictly navigates to dedicated checkout or register page!`) */}
+                  <div className="pt-4 font-sans">
+                    <a href={`/dashboard/investments/checkout?planId=${plan.planId}`} className="block w-full">
+                      <button className="w-full rounded-xl bg-brand-blue py-4 text-xs font-extrabold uppercase tracking-wider text-white transition hover:bg-brand-blueHover shadow-blue-glow group-hover:scale-[1.02]">
+                        Get Started &rarr;
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer id="architecture" className="mt-32 border-t border-[#1E2433] pt-10 text-center text-xs text-gray-500 w-full max-w-5xl font-mono leading-relaxed space-y-4">
+          <div className="flex flex-wrap items-center justify-center gap-6 uppercase tracking-wider text-gray-400 font-sans font-semibold">
+            <a href="/login">Terminal Access</a>
+            <span>&bull;</span>
+            <a href="/register">Institutional Registration</a>
+            <span>&bull;</span>
+            <a href="/dashboard/investments">Compounding Simulator</a>
+            <span>&bull;</span>
+            <a href="/dashboard/kyc">AML Verification Gate</a>
+          </div>
+          <p>
+            &copy; {new Date().getFullYear()} {APP_CONFIG.platformName}. All rights reserved. Self-hosted on Coolify / Docker. Exact double-entry accounting (`NUMERIC(20,8)`) and hybrid rotating session security (`15m JWT + 7d Redis Cookie`).
+          </p>
+        </footer>
+      </main>
+    </div>
   );
 }
