@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/atoms/Button';
-import { APP_CONFIG } from '@/config/app.config';
+import { TeslaLogo } from '@/components/atoms/TeslaLogo';
 import { Suspense } from 'react';
 
 function RegisterContent() {
@@ -33,11 +33,9 @@ function RegisterContent() {
 
       const body = await res.json();
       if (res.ok && body.success) {
-        // Redirect cleanly to OTP verification page
         window.location.href = `/verify-otp?email=${encodeURIComponent(email)}&first=${encodeURIComponent(firstName)}${planIdParam ? `&planId=${planIdParam}` : ''}`;
         return;
       } else {
-        // If simulation or fallback
         if (email && password.length >= 12) {
           window.location.href = `/verify-otp?email=${encodeURIComponent(email)}&first=${encodeURIComponent(firstName || 'Investor')}${planIdParam ? `&planId=${planIdParam}` : ''}`;
           return;
@@ -54,19 +52,14 @@ function RegisterContent() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-brand-dark px-4 py-12 text-white font-sans selection:bg-[#EF4444] selection:text-white">
       <div className="mb-8 text-center">
-        <a href="/" className="inline-flex items-center gap-3">
-          <span className="rounded-lg bg-[#F59E0B] px-3 py-1 text-xs font-mono font-extrabold text-black shadow-amber-glow uppercase tracking-wider">
-            LOGO
-          </span>
-          <span className="text-2xl font-extrabold tracking-[0.3em] text-white uppercase font-sans">
-            {APP_CONFIG.platformName}
-          </span>
+        <a href="/">
+          <TeslaLogo size="md" />
         </a>
       </div>
 
       <div className="w-full max-w-xl rounded-3xl border border-[#2A2338] bg-gradient-to-b from-[#1C1628] via-[#16131F] to-[#120E1A] p-8 shadow-tesla space-y-6">
         <div className="text-center border-b border-[#2A2338] pb-5">
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">Open Institutional Account</h1>
+          <h1 className="text-2xl font-extrabold text-white tracking-tight font-sans">Open Institutional Account</h1>
           <p className="mt-1 text-xs text-gray-400 font-mono">Enforcing policy: **Tier 0 Starter ($1,000 Limit without KYC)**</p>
         </div>
 
@@ -163,7 +156,7 @@ function RegisterContent() {
           </div>
         </form>
 
-        <div className="border-t border-[#2A2338] pt-5 text-center text-xs text-gray-400">
+        <div className="border-t border-[#2A2338] pt-5 text-center text-xs text-gray-400 font-sans">
           Already registered on Tesla Equity Pro?{' '}
           <a href="/login" className="font-extrabold text-white hover:text-[#EF4444] transition">
             Sign In to Terminal &rarr;

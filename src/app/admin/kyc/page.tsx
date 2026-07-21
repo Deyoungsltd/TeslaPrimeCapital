@@ -103,14 +103,23 @@ export default function AdminKycReviewDeskPage() {
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 items-start">
             <div className="space-y-3">
-              <span className="text-xs font-bold text-gray-300 uppercase tracking-wider block">Ephemeral 300s Signed Cloudinary Preview (`Watermarked`)</span>
-              <div className="overflow-hidden rounded-lg border border-gray-800 bg-black p-4 text-center">
-                <div className="flex h-56 items-center justify-center border border-dashed border-gray-700 bg-gray-900/60">
-                  <span className="font-mono text-xs text-brand-gold max-w-sm px-4">
-                    [SIGNED_CLOUDINARY_URL: {selectedDoc.documentType}] <br />
-                    Watermark: `CONFIDENTIAL - VIEWED BY ADMIN` <br />
-                    Expires at: {expiresAt ? new Date(expiresAt).toLocaleTimeString() : 'In 5 minutes'}
-                  </span>
+              <span className="text-xs font-bold text-gray-300 uppercase tracking-wider block font-mono">Ephemeral 300s Signed Cloudinary Preview (`Watermarked`)</span>
+              <div className="overflow-hidden rounded-2xl border border-[#2A2338] bg-black p-2 text-center shadow-inner relative">
+                <div className="relative h-64 w-full overflow-hidden rounded-xl bg-[#16131F] flex items-center justify-center">
+                  <img
+                    src={previewUrl || '/branding/crypto-vault.jpg'}
+                    alt={selectedDoc.documentType}
+                    onError={(e) => { e.currentTarget.src = '/branding/crypto-vault.jpg'; }}
+                    className="h-full w-full object-cover opacity-90"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center p-4">
+                    <span className="rounded-lg border border-red-500/50 bg-[#7F1D1D]/90 px-4 py-2 font-mono text-xs font-extrabold text-white shadow-red-glow">
+                      CONFIDENTIAL — COMPLIANCE REVIEW DESK
+                    </span>
+                    <span className="mt-2 font-mono text-[11px] text-gray-300 bg-black/80 px-3 py-1 rounded border border-white/10">
+                      Doc Type: {selectedDoc.documentType} | Expires at: {expiresAt ? new Date(expiresAt).toLocaleTimeString() : 'In 5 mins'}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

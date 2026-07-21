@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { APP_CONFIG } from '@/config/app.config';
 import { INVESTMENT_PLANS_CONFIG } from '@/config/plans.config';
@@ -45,6 +47,7 @@ export default function LandingPage() {
           <img
             src="/branding/hero-bg.jpg"
             alt="Model 3 Showcase"
+            onError={(e) => { e.currentTarget.src = '/branding/car-bronze.jpg'; }}
             className="h-full w-full object-cover object-center opacity-85"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-black/30 to-black/60" />
@@ -100,6 +103,7 @@ export default function LandingPage() {
                   <img
                     src={plan.imageUrl || '/branding/car-bronze.jpg'}
                     alt={plan.name}
+                    onError={(e) => { e.currentTarget.src = '/branding/car-bronze.jpg'; }}
                     className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110 opacity-95"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#111520] via-[#111520]/20 to-transparent" />
@@ -162,6 +166,7 @@ export default function LandingPage() {
           <img
             src="/branding/car-diamond.jpg"
             alt="Cybertruck Utility Truck"
+            onError={(e) => { e.currentTarget.src = '/branding/car-silver.jpg'; }}
             className="h-full w-full object-cover object-center opacity-85"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-black/30 to-black/60" />
@@ -210,7 +215,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="w-full md:w-1/2 h-56 rounded-2xl overflow-hidden border border-[#1E2433] bg-black">
-            <img src="/branding/car-silver.jpg" alt="Current Offers" className="h-full w-full object-cover" />
+            <img src="/branding/car-silver.jpg" alt="Current Offers" onError={(e) => { e.currentTarget.src = '/branding/car-bronze.jpg'; }} className="h-full w-full object-cover" />
           </div>
         </div>
 
@@ -234,7 +239,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="w-full md:w-1/2 h-56 rounded-2xl overflow-hidden border border-[#1E2433] bg-black">
-            <img src="/branding/car-gold.jpg" alt="Inventory" className="h-full w-full object-cover" />
+            <img src="/branding/car-gold.jpg" alt="Inventory" onError={(e) => { e.currentTarget.src = '/branding/car-diamond.jpg'; }} className="h-full w-full object-cover" />
           </div>
         </div>
       </section>
@@ -245,6 +250,7 @@ export default function LandingPage() {
           <img
             src="/branding/energy-wealth.jpg"
             alt="Solar Panels & Energy Grid"
+            onError={(e) => { e.currentTarget.src = '/branding/crypto-vault.jpg'; }}
             className="h-full w-full object-cover object-center opacity-85"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-black/30 to-black/60" />

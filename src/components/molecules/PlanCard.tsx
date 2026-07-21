@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Button } from '../atoms/Button';
+'use client';
+
+import React from 'react';
 import { CurrencyDisplay } from '../atoms/CurrencyDisplay';
-import { DecimalUtil } from '@/utils/decimal.util';
 
 export interface IPlanCardProps {
   id: string;
@@ -13,8 +13,12 @@ export interface IPlanCardProps {
   termDays: number;
   annualPercentageRate: string;
   requiresKycTier: string;
-  onAllocate: (planId: string, amount: string) => Promise<void>;
+  imageUrl?: string;
+  profitText?: string;
+  features?: string[];
+  onAllocate?: (planId: string, amount: string) => Promise<void>;
   poolCapacityPct?: number;
+  buttonColor?: 'blue' | 'red';
 }
 
 export const PlanCard: React.FC<IPlanCardProps> = ({
@@ -27,103 +31,84 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
   termDays,
   annualPercentageRate,
   requiresKycTier,
-  onAllocate,
-  poolCapacityPct = 86,
+  imageUrl = '/branding/car-bronze.jpg',
+  profitText = '$1,000 minimum investment',
+  features = ['Portfolio Access', 'Investment Dashboard', 'Email Support'],
+  poolCapacityPct = 88,
+  buttonColor = 'red',
 }) => {
-  const [allocationAmount, setAllocationAmount] = useState(minDepositUsd);
-  const [isAllocating, setIsAllocating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const projectedReturn = () => {
-    try {
-      const dailyRate = DecimalUtil.div(annualPercentageRate.replace('%', ''), '36500');
-      const totalYield = DecimalUtil.mul(allocationAmount, DecimalUtil.mul(dailyRate, termDays.toString()));
-      return DecimalUtil.add(allocationAmount, totalYield);
-    } catch {
-      return allocationAmount;
-    }
-  };
-
-  const handleAllocateClick = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsAllocating(true);
-    setError(null);
-    try {
-      await onAllocate(id, allocationAmount);
-    } catch (err: any) {
-      setError(err.message || 'Allocation failed.');
-    } finally {
-      setIsAllocating(false);
-    }
-  };
+  const featList = features && features.length > 0 ? features : ['Portfolio Access', 'Investment Dashboard', 'Email Support'];
 
   return (
-    <div className="relative overflow-hidden flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla transition-all duration-200 hover:border-gray-600 group">
-      <div className="space-y-4 z-10">
-        <div className="flex items-center justify-between font-mono">
-          <span className="rounded-md border border-[#2F374F] bg-[#1E2433] px-3 py-1 text-xs font-bold text-gray-200">
-            {annualPercentageRate} Target
+    <div className="flex flex-col justify-between rounded-3xl border border-[#2A2338] bg-[#16131F] shadow-tesla transition-all duration-300 hover:border-red-500/60 group overflow-hidden">
+      {/* 1. Horizontal Car Image Banner (`IMG_7582.jpeg` Match with bulletproof fallback!) */}
+      <div className="relative h-48 w-full overflow-hidden bg-black">
+        <img
+          src={imageUrl}
+          alt={name}
+          onError={(e) => { e.currentTarget.src = '/branding/car-bronze.jpg'; }}
+          className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110 opacity-95"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#16131F] via-[#16131F]/30 to-transparent" />
+        
+        <div className="absolute top-3 right-3 flex items-center justify-between font-mono text-xs z-10">
+          <span className="rounded-lg border border-white/20 bg-black/80 px-3 py-1 font-extrabold text-red-400 backdrop-blur-md shadow">
+            {profitText}
           </span>
-          <span className="rounded-md bg-[#181D2D] border border-[#2C354C] px-2.5 py-1 text-xs font-bold text-gray-300">
-            {termDays} Days Duration
-          </span>
-        </div>
-
-        <div>
-          <h3 className="text-2xl font-extrabold tracking-tight text-white font-sans">{name}</h3>
-          <p className="mt-2 text-xs text-gray-300 leading-relaxed font-sans">{description}</p>
         </div>
       </div>
 
-      <div className="mt-6 border-t border-[#1E2433] pt-6 space-y-4 z-10 font-mono">
-        <div className="space-y-1.5 text-xs text-gray-300">
-          <div className="flex justify-between">
-            <span>Min Capital:</span>
-            <CurrencyDisplay amount={minDepositUsd} currency="USD" className="text-white font-bold" />
+      {/* 2. Card Content & Checkmark Features (`IMG_7582.jpeg` match!) */}
+      <div className="p-6 space-y-6 flex-1 flex flex-col justify-between bg-[#16131F]">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-extrabold tracking-tight text-white font-sans group-hover:text-[#EF4444] transition-colors">
+              {name}
+            </h3>
+            <span className="text-xs font-mono font-bold text-gray-400">
+              {termDays} Days Term
+            </span>
           </div>
-          <div className="flex justify-between">
-            <span>Max Capital:</span>
-            <CurrencyDisplay amount={maxDepositUsd} currency="USD" className="text-white font-bold" />
-          </div>
-          <div className="flex justify-between text-gray-400 pt-1.5 border-t border-[#1E2433]">
-            <span>Maturity Payout:</span>
-            <span className="text-white font-bold">Lump Sum at Term End</span>
-          </div>
+          <p className="text-xs text-gray-300 leading-relaxed font-sans min-h-[36px]">
+            {description}
+          </p>
         </div>
 
-        {error && (
-          <div className="rounded border border-red-500/40 bg-red-950/60 p-2.5 text-[11px] font-semibold text-red-400 font-sans">
-            {error}
+        <div className="pt-3 border-t border-[#2A2338]/80">
+          <div className="text-2xl font-extrabold text-white tracking-tight font-sans">
+            ${parseFloat(minDepositUsd).toLocaleString()}
           </div>
-        )}
+          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mt-0.5">
+            minimum investment
+          </span>
+        </div>
 
-        <form onSubmit={handleAllocateClick} className="space-y-3 pt-2 font-sans">
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 font-mono">
-              Allocation Amount (`NUMERIC(20,8)`)
-            </label>
-            <input
-              type="text"
-              required
-              value={allocationAmount}
-              onChange={(e) => setAllocationAmount(e.target.value)}
-              className="mt-1.5 w-full rounded-lg border border-[#2C354C] bg-black px-3.5 py-2.5 text-sm font-mono text-white focus:border-red-500 focus:outline-none transition"
-            />
-          </div>
+        {/* Checkmark Features List (`IMG_7582.jpeg` checkmarks match!) */}
+        <div className="space-y-3 pt-2 font-sans text-xs text-gray-200">
+          {featList.map((feat, idx) => (
+            <div key={idx} className="flex items-center gap-3">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold text-[11px] border border-emerald-500/40">
+                ✔
+              </span>
+              <span className="font-semibold">{feat}</span>
+            </div>
+          ))}
+        </div>
 
-          <div className="flex justify-between items-center text-xs bg-black/80 p-3 rounded-lg border border-[#1E2433] font-mono">
-            <span className="text-gray-400 font-sans font-medium text-[11px]">Est. Maturity Return:</span>
-            <CurrencyDisplay amount={projectedReturn()} currency="USD" className="text-emerald-400 font-extrabold text-sm" />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isAllocating}
-            className="w-full rounded-lg bg-[#EF4444] py-3.5 text-sm font-bold tracking-wider text-white transition hover:bg-[#DC2626] shadow-red-glow"
+        {/* 3. Dedicated Page Navigation CTA Button (`No in-page modal! Strictly returns to dedicated page!`) */}
+        <div className="pt-4">
+          <a
+            href={`/dashboard/investments/checkout?planId=${planId}`}
+            className="block w-full"
           >
-            {isAllocating ? 'Locking Capital...' : 'Invest Now'}
-          </button>
-        </form>
+            <button
+              type="button"
+              className="w-full rounded-2xl bg-[#EF4444] py-4 text-xs font-extrabold uppercase tracking-wider text-white transition hover:bg-[#DC2626] shadow-red-glow active:scale-[0.98]"
+            >
+              Invest Now →
+            </button>
+          </a>
+        </div>
       </div>
     </div>
   );

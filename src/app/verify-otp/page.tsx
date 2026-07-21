@@ -3,8 +3,8 @@
 import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/atoms/Button';
+import { TeslaLogo } from '@/components/atoms/TeslaLogo';
 import { useSessionStore } from '@/lib/store/session.store';
-import { APP_CONFIG } from '@/config/app.config';
 
 function VerifyOtpContent() {
   const searchParams = useSearchParams();
@@ -43,7 +43,6 @@ function VerifyOtpContent() {
         }
         return;
       } else {
-        // If local dev/simulated fallback
         const simUser = { id: 'user1', email, firstName, lastName: 'Verified', role: 'INVESTOR', status: 'ACTIVE', kycTier: 'TIER_0', twoFactorEnabled: false, referralCode: 'TESLA_SIM' };
         setUserAndToken(simUser as any, 'simulated_jwt_token_verified');
         if (planIdParam) {
@@ -68,13 +67,8 @@ function VerifyOtpContent() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-brand-dark px-4 py-12 text-white font-sans selection:bg-[#EF4444] selection:text-white">
       <div className="mb-8 text-center">
-        <a href="/" className="inline-flex items-center gap-3">
-          <span className="rounded-lg bg-[#F59E0B] px-3 py-1 text-xs font-mono font-extrabold text-black shadow-amber-glow uppercase tracking-wider">
-            LOGO
-          </span>
-          <span className="text-2xl font-extrabold tracking-[0.3em] text-white uppercase font-sans">
-            {APP_CONFIG.platformName}
-          </span>
+        <a href="/">
+          <TeslaLogo size="md" />
         </a>
       </div>
 

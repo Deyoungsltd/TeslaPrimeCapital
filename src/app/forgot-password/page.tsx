@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/atoms/Button';
-import { APP_CONFIG } from '@/config/app.config';
+import { TeslaLogo } from '@/components/atoms/TeslaLogo';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -16,13 +16,8 @@ export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-brand-dark px-4 py-12 text-white font-sans selection:bg-[#EF4444] selection:text-white">
       <div className="mb-8 text-center">
-        <a href="/" className="inline-flex items-center gap-3">
-          <span className="rounded-lg bg-[#F59E0B] px-3 py-1 text-xs font-mono font-extrabold text-black shadow-amber-glow uppercase tracking-wider">
-            LOGO
-          </span>
-          <span className="text-2xl font-extrabold tracking-[0.3em] text-white uppercase font-sans">
-            {APP_CONFIG.platformName}
-          </span>
+        <a href="/">
+          <TeslaLogo size="md" />
         </a>
       </div>
 
