@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import '@/styles/globals.css';
+import { SmartsuppChat } from '@/components/organisms/SmartsuppChat';
 
 export const metadata: Metadata = {
   title: 'TeslaPrimeCapital — Enterprise Digital Wealth Management',
@@ -19,6 +20,7 @@ export default function RootLayout({
         <div className="flex flex-col min-h-screen">
           {children}
         </div>
+        <SmartsuppChat />
       </body>
     </html>
   );

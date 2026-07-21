@@ -5,7 +5,7 @@ import { HeroSwiper } from '@/components/organisms/HeroSwiper';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white pb-24">
+    <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white pb-10">
       
       {/* 1. Exact Top Navbar (`IMG_7582.jpeg` Top Match) */}
       <header className="sticky top-0 z-50 flex h-20 w-full items-center justify-between border-b border-[#1E2433] bg-[#080A0F]/95 px-6 sm:px-12 backdrop-blur-md">
@@ -185,19 +185,6 @@ export default function LandingPage() {
           Price reflects monthly subscription and capital allocation terms. All double-entry accounting ledgers maintain exact fixed-point `NUMERIC(20,8)` database accuracy.
         </p>
       </footer>
-
-      {/* 6. Fixed Schedule a Drive Bar (`IMG_7587 / 7590` Bottom Bar Match) */}
-      <div className="fixed bottom-4 left-4 right-4 z-50 flex items-center justify-center max-w-md mx-auto gap-3">
-        <a href="/dashboard/support" className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-[#111520] text-white shadow-2xl hover:bg-[#1C2234] transition">
-          💬
-        </a>
-        <a href="/register?schedule=testdrive" className="flex-1">
-          <button className="w-full rounded-2xl border border-white/20 bg-[#111520]/95 backdrop-blur-xl py-4 text-sm font-extrabold text-white shadow-2xl hover:bg-[#1C2234] transition flex items-center justify-center gap-2">
-            <span>🚗</span>
-            <span>Schedule a Drive Today</span>
-          </button>
-        </a>
-      </div>
 
     </div>
   );

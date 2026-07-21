@@ -265,13 +265,14 @@ export class InvestmentRepository {
     ];
 
     for (const tier of tiers) {
-      if (!tier.user) continue;
+      const referrer = tier.user;
+      if (!referrer) continue;
 
       const commissionEarned = DecimalUtil.mul(data.allocationAmountUsd, tier.pct);
       const wallet = await prisma.wallet.upsert({
-        where: { userId_currency: { userId: tier.user.id, currency: 'USD' } },
+        where: { userId_currency: { userId: referrer.id, currency: 'USD' } },
         update: {},
-        create: { userId: tier.user.id, currency: 'USD', availableBalance: '0.00000000', lockedBalance: '0.00000000', totalDeposited: '0.00000000', totalWithdrawn: '0.00000000' },
+        create: { userId: referrer.id, currency: 'USD', availableBalance: '0.00000000', lockedBalance: '0.00000000', totalDeposited: '0.00000000', totalWithdrawn: '0.00000000' },
       });
 
       const newAvailable = DecimalUtil.add(wallet.availableBalance.toString(), commissionEarned);
@@ -284,7 +285,7 @@ export class InvestmentRepository {
 
         await tx.commissionLog.create({
           data: {
-            referrerId: tier.user.id,
+            referrerId: referrer.id,
             referredUserId: data.investorUserId,
             activeInvestmentId: data.activeInvestmentId,
             tierLevel: tier.level,
@@ -297,8 +298,8 @@ export class InvestmentRepository {
 
         await tx.transaction.create({
           data: {
-            transactionId: `TXN_COM_${Date.now()}_T${tier.level}_${tier.user.id.slice(0, 4)}`,
-            userId: tier.user.id,
+            transactionId: `TXN_COM_${Date.now()}_T${tier.level}_${referrer.id.slice(0, 4)}`,
+            userId: referrer.id,
             walletId: wallet.id,
             type: TransactionType.COMMISSION,
             amount: commissionEarned,
@@ -310,7 +311,7 @@ export class InvestmentRepository {
               qualifyingAllocation: data.allocationAmountUsd,
               triggerPolicy: 'ACTIVE_INVESTMENT_ALLOCATION_TRIGGER',
             },
-            idempotencyKey: `idemp_com_${tier.user.id}_${data.activeInvestmentId}_t${tier.level}`,
+            idempotencyKey: `idemp_com_${referrer.id}_${data.activeInvestmentId}_t${tier.level}`,
           },
         });
       });
