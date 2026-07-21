@@ -1,5 +1,6 @@
+'use client';
+
 import React from 'react';
-import { Button } from '../atoms/Button';
 import { CurrencyDisplay } from '../atoms/CurrencyDisplay';
 
 export interface IPlanCardProps {
@@ -21,6 +22,7 @@ export interface IPlanCardProps {
 }
 
 export const PlanCard: React.FC<IPlanCardProps> = ({
+  id,
   planId,
   name,
   description,
@@ -28,16 +30,18 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
   maxDepositUsd,
   termDays,
   annualPercentageRate,
+  requiresKycTier,
   imageUrl = '/branding/car-bronze.jpg',
   profitText = '$1,000 minimum investment',
   features = ['Portfolio Access', 'Investment Dashboard', 'Email Support'],
+  poolCapacityPct = 88,
   buttonColor = 'red',
 }) => {
   const featList = features && features.length > 0 ? features : ['Portfolio Access', 'Investment Dashboard', 'Email Support'];
 
   return (
     <div className="flex flex-col justify-between rounded-3xl border border-[#2A2338] bg-[#16131F] shadow-tesla transition-all duration-300 hover:border-red-500/60 group overflow-hidden">
-      {/* Horizontal Car Image Banner (`IMG_7582.jpeg` Match with bulletproof fallback!) */}
+      {/* 1. Horizontal Car Image Banner (`IMG_7582.jpeg` Match with bulletproof fallback!) */}
       <div className="relative h-48 w-full overflow-hidden bg-black">
         <img
           src={imageUrl}
@@ -54,7 +58,7 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
         </div>
       </div>
 
-      {/* Card Content & Checkmark Features (`IMG_7582.jpeg` match!) */}
+      {/* 2. Card Content & Checkmark Features (`IMG_7582.jpeg` match!) */}
       <div className="p-6 space-y-6 flex-1 flex flex-col justify-between bg-[#16131F]">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
@@ -79,7 +83,7 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
           </span>
         </div>
 
-        {/* Checkmarks (`IMG_7582.jpeg` checkmarks match!) */}
+        {/* Checkmark Features List (`IMG_7582.jpeg` checkmarks match!) */}
         <div className="space-y-3 pt-2 font-sans text-xs text-gray-200">
           {featList.map((feat, idx) => (
             <div key={idx} className="flex items-center gap-3">
@@ -91,20 +95,18 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
           ))}
         </div>
 
-        {/* Upgraded Dedicated CTA Navigation Button */}
+        {/* 3. Dedicated Page Navigation CTA Button (`No in-page modal! Strictly returns to dedicated page!`) */}
         <div className="pt-4">
           <a
             href={`/dashboard/investments/checkout?planId=${planId}`}
             className="block w-full"
           >
-            <Button
+            <button
               type="button"
-              variant={buttonColor === 'red' ? 'tesla-red' : 'electric'}
-              size="lg"
-              className="w-full py-4 text-xs font-extrabold tracking-[0.2em] uppercase shadow-red-glow group-hover:scale-[1.02]"
+              className="w-full rounded-2xl bg-[#EF4444] py-4 text-xs font-extrabold uppercase tracking-wider text-white transition hover:bg-[#DC2626] shadow-red-glow active:scale-[0.98]"
             >
               Invest Now →
-            </Button>
+            </button>
           </a>
         </div>
       </div>

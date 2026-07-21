@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Button } from '../atoms/Button';
 
 export interface IVehicleSlide {
   id: string;
@@ -54,9 +53,11 @@ export const HeroSwiper: React.FC<{ slides?: IVehicleSlide[] }> = ({ slides }) =
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
+  // Touch swipe state
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
+  // Auto-play interval (every 6 seconds unless touched/hovered)
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
@@ -87,8 +88,13 @@ export const HeroSwiper: React.FC<{ slides?: IVehicleSlide[] }> = ({ slides }) =
     if (touchStartX.current === null || touchEndX.current === null) return;
     const diff = touchStartX.current - touchEndX.current;
     if (Math.abs(diff) > 45) {
-      if (diff > 0) handleNext();
-      else handlePrev();
+      if (diff > 0) {
+        // Swiped left -> next slide
+        handleNext();
+      } else {
+        // Swiped right -> prev slide
+        handlePrev();
+      }
     }
     touchStartX.current = null;
     touchEndX.current = null;
@@ -106,6 +112,7 @@ export const HeroSwiper: React.FC<{ slides?: IVehicleSlide[] }> = ({ slides }) =
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Background Image with Smooth Crossfade */}
       <div className="absolute inset-0 z-0">
         {activeSlides.map((slide, idx) => (
           <div
@@ -125,9 +132,10 @@ export const HeroSwiper: React.FC<{ slides?: IVehicleSlide[] }> = ({ slides }) =
         ))}
       </div>
 
+      {/* Slide Title & Subtitle (`IMG_7587 / 7588` match) */}
       <div className="relative z-20 space-y-2 px-4 transition-all duration-300 transform">
         {currentSlide.category && (
-          <h2 className="text-sm sm:text-lg font-bold tracking-[0.25em] text-gray-300 uppercase font-mono animate-fade-in">
+          <h2 className="text-sm sm:text-lg font-bold tracking-widest text-gray-300 uppercase font-mono animate-fade-in">
             {currentSlide.category}
           </h2>
         )}
@@ -139,36 +147,38 @@ export const HeroSwiper: React.FC<{ slides?: IVehicleSlide[] }> = ({ slides }) =
         </p>
       </div>
 
+      {/* Navigation Arrows (‹ ›) for Desktop */}
       <button
         onClick={handlePrev}
         aria-label="Previous Vehicle Slide"
-        className="hidden sm:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white shadow-xl backdrop-blur-md hover:bg-black hover:scale-110 transition"
+        className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-30 h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white shadow-xl backdrop-blur-md hover:bg-black hover:scale-110 transition"
       >
         ‹
       </button>
       <button
         onClick={handleNext}
         aria-label="Next Vehicle Slide"
-        className="hidden sm:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white shadow-xl backdrop-blur-md hover:bg-black hover:scale-110 transition"
+        className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-30 h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white shadow-xl backdrop-blur-md hover:bg-black hover:scale-110 transition"
       >
         ›
       </button>
 
-      {/* Upgraded Sleek Tesla Rectangular Buttons + Pagination Dots (`IMG_7587 / 7588` exact layout match!) */}
-      <div className="relative z-20 space-y-6 px-6 max-w-xl mx-auto w-full font-sans">
+      {/* Action Buttons + Pagination Dots (`IMG_7588` Dots Match) */}
+      <div className="relative z-20 space-y-6 px-6 max-w-lg mx-auto w-full font-sans">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
           <a href={currentSlide.orderUrl} className="w-full sm:flex-1">
-            <Button variant="tesla-red" size="lg" className="w-full py-4 text-xs sm:text-sm shadow-red-glow">
-              Order Now &rarr;
-            </Button>
+            <button className="w-full rounded-xl bg-[#EF4444] py-4 text-sm font-extrabold uppercase tracking-wider text-white shadow-red-glow transition hover:bg-[#DC2626] active:scale-[0.98]">
+              Order Now
+            </button>
           </a>
           <a href={currentSlide.learnUrl} className="w-full sm:flex-1">
-            <Button variant="glass-white" size="lg" className="w-full py-4 text-xs sm:text-sm shadow-xl">
+            <button className="w-full rounded-xl bg-white py-4 text-sm font-extrabold uppercase tracking-wider text-black shadow-md transition hover:bg-gray-200 active:scale-[0.98]">
               Learn More
-            </Button>
+            </button>
           </a>
         </div>
 
+        {/* 4 Clean Pagination Dots (`• • • •` exact IMG_7588 bottom match!) */}
         <div className="flex items-center justify-center gap-3 pt-2">
           {activeSlides.map((_, idx) => (
             <button

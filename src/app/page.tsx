@@ -2,7 +2,6 @@ import React from 'react';
 import { APP_CONFIG } from '@/config/app.config';
 import { INVESTMENT_PLANS_CONFIG } from '@/config/plans.config';
 import { HeroSwiper } from '@/components/organisms/HeroSwiper';
-import { Button } from '@/components/atoms/Button';
 
 export default function LandingPage() {
   return (
@@ -26,15 +25,17 @@ export default function LandingPage() {
         </nav>
 
         <div className="flex items-center gap-4 font-sans">
-          <a href="/dashboard">
-            <Button variant="glass-white" size="sm" className="shadow-sm">
-              Track Order
-            </Button>
+          <a
+            href="/dashboard"
+            className="rounded-full bg-white px-5 py-2 text-xs font-bold text-black transition hover:bg-gray-200 shadow-sm"
+          >
+            Track Order
           </a>
-          <a href="/login">
-            <Button variant="tesla-red" size="sm" className="shadow-red-glow">
-              Login
-            </Button>
+          <a
+            href="/login"
+            className="rounded-full bg-[#EF4444] px-6 py-2 text-xs font-extrabold text-white transition hover:bg-[#DC2626] shadow-red-glow"
+          >
+            Login
           </a>
         </div>
       </header>
@@ -113,9 +114,9 @@ export default function LandingPage() {
                   {/* Red `[ Get Started ]` Button (`IMG_7582` match with blue changed to RED!) */}
                   <div className="pt-4">
                     <a href={`/register?planId=${plan.planId}`} className="block w-full">
-                      <Button variant="tesla-red" size="lg" className="w-full py-4 text-xs tracking-[0.2em] shadow-red-glow group-hover:scale-[1.02]">
-                        Get Started →
-                      </Button>
+                      <button className="w-full rounded-2xl bg-[#EF4444] py-4 text-xs font-extrabold uppercase tracking-wider text-white transition hover:bg-[#DC2626] shadow-red-glow group-hover:scale-[1.02]">
+                        Get Started
+                      </button>
                     </a>
                   </div>
                 </div>
@@ -128,16 +129,16 @@ export default function LandingPage() {
       {/* 4. Current Offers & Inventory Section (`IMG_7589.png` match) */}
       <section className="mx-auto max-w-7xl px-6 py-20 font-sans space-y-12">
         <div className="rounded-3xl border border-[#1E2433] bg-[#111520] p-8 sm:p-12 shadow-tesla flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="space-y-4 max-w-xl">
+          <div className="space-y-3 max-w-xl">
             <h2 className="text-3xl font-extrabold text-white sm:text-4xl">Current Offers</h2>
             <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
               Explore limited-time offers on Tesla vehicles and structured high-yield allocations.
             </p>
             <div className="pt-2">
               <a href="/register?offer=limited">
-                <Button variant="glass-white" size="lg" className="shadow-lg">
+                <button className="rounded-xl bg-white px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-black hover:bg-gray-200 transition shadow-sm">
                   Learn More
-                </Button>
+                </button>
               </a>
             </div>
           </div>
@@ -147,21 +148,21 @@ export default function LandingPage() {
         </div>
 
         <div className="rounded-3xl border border-[#1E2433] bg-[#111520] p-8 sm:p-12 shadow-tesla flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="space-y-4 max-w-xl">
+          <div className="space-y-3 max-w-xl">
             <h2 className="text-3xl font-extrabold text-white sm:text-4xl">Inventory</h2>
             <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
               Find nearby vehicles available for immediate delivery and instant portfolio settlement.
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
               <a href="/register?inventory=new">
-                <Button variant="glass-white" size="lg" className="shadow-lg">
+                <button className="rounded-xl bg-white px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-black hover:bg-gray-200 transition shadow-sm">
                   New
-                </Button>
+                </button>
               </a>
               <a href="/register?inventory=preowned">
-                <Button variant="secondary" size="lg" className="shadow-sm border-white/20">
+                <button className="rounded-xl border border-[#2C354C] bg-[#181D2D] px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-white hover:border-white transition shadow-sm">
                   Pre-Owned
-                </Button>
+                </button>
               </a>
             </div>
           </div>
@@ -191,10 +192,10 @@ export default function LandingPage() {
           💬
         </a>
         <a href="/register?schedule=testdrive" className="flex-1">
-          <Button variant="glass-white" size="lg" className="w-full py-4 text-sm shadow-2xl backdrop-blur-xl flex items-center justify-center gap-2">
+          <button className="w-full rounded-2xl border border-white/20 bg-[#111520]/95 backdrop-blur-xl py-4 text-sm font-extrabold text-white shadow-2xl hover:bg-[#1C2234] transition flex items-center justify-center gap-2">
             <span>🚗</span>
             <span>Schedule a Drive Today</span>
-          </Button>
+          </button>
         </a>
       </div>
 
