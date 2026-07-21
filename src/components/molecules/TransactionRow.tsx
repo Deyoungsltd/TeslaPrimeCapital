@@ -22,23 +22,23 @@ export const TransactionRow: React.FC<ITransactionRowProps> = ({
   const isCredit = ['DEPOSIT', 'YIELD_PAYOUT', 'COMMISSION'].includes(type.toUpperCase());
 
   return (
-    <tr className="border-b border-[#1f1f2e] transition-colors duration-150 hover:bg-[#181824]/60">
-      <td className="whitespace-nowrap px-4 py-4 text-xs font-mono font-bold text-gray-300">
+    <tr className="border-b border-gray-800/80 transition-colors hover:bg-gray-800/30">
+      <td className="whitespace-nowrap px-4 py-4 text-xs font-mono font-medium text-gray-300">
         {transactionId}
       </td>
-      <td className="whitespace-nowrap px-4 py-4 text-xs font-extrabold uppercase tracking-wider text-white">
+      <td className="whitespace-nowrap px-4 py-4 text-xs font-bold uppercase tracking-wider text-gray-200">
         <span className={isCredit ? 'text-emerald-400 mr-1.5 font-extrabold' : 'text-rose-400 mr-1.5 font-extrabold'}>
           {isCredit ? '+' : '-'}
         </span>
         {type.replace(/_/g, ' ')}
       </td>
-      <td className="whitespace-nowrap px-4 py-4 text-right font-mono text-sm font-bold">
-        <CurrencyDisplay amount={amount} currency={currency} className={isCredit ? 'text-emerald-400 font-extrabold' : 'text-white font-extrabold'} />
+      <td className="whitespace-nowrap px-4 py-4 text-right font-mono text-sm">
+        <CurrencyDisplay amount={amount} currency={currency} className={isCredit ? 'text-emerald-400' : 'text-gray-100'} />
       </td>
       <td className="whitespace-nowrap px-4 py-4 text-center">
         <Badge status={status} />
       </td>
-      <td className="whitespace-nowrap px-4 py-4 text-right text-xs text-gray-400 font-mono">
+      <td className="whitespace-nowrap px-4 py-4 text-right text-xs text-gray-400">
         {new Date(createdAt).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}
       </td>
     </tr>
