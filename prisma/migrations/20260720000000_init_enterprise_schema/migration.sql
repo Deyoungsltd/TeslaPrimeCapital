@@ -129,9 +129,6 @@ CREATE TABLE "plans" (
     "compoundingAllowed" BOOLEAN NOT NULL DEFAULT false,
     "requiresKycTier" "KycTier" NOT NULL DEFAULT 'TIER_0',
     "isActive" BOOLEAN NOT NULL DEFAULT true,
-    "imageUrl" TEXT,
-    "profitText" VARCHAR(50),
-    "features" JSONB,
     "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMPTZ NOT NULL,
 

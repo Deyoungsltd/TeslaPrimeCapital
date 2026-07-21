@@ -32,7 +32,6 @@ export default function AdminPortalLayout({ children }: { children: React.ReactN
   const adminTabs = [
     { label: 'Executive Overview', href: '/admin', roles: ['SUPER_ADMIN', 'COMPLIANCE_OFFICER', 'FINANCE_MANAGER'] },
     { label: 'User & Role Governance', href: '/admin/users', roles: ['SUPER_ADMIN'] },
-    { label: 'Plan & Car Picture Manager (`IMG_7582 Match`)', href: '/admin/investments', roles: ['SUPER_ADMIN', 'FINANCE_MANAGER'] },
     { label: 'Treasury Withdrawal Queue (`100% Admin`)', href: '/admin/withdrawals', roles: ['SUPER_ADMIN', 'FINANCE_MANAGER'] },
     { label: 'KYC Document Review Desk (`300s URLs`)', href: '/admin/kyc', roles: ['SUPER_ADMIN', 'COMPLIANCE_OFFICER'] },
     { label: 'Immutable Audit Ledger (`AuditLogs`)', href: '/admin/audit-logs', roles: ['SUPER_ADMIN', 'COMPLIANCE_OFFICER', 'FINANCE_MANAGER'] },
@@ -42,37 +41,39 @@ export default function AdminPortalLayout({ children }: { children: React.ReactN
 
   return (
     <QueryProvider>
-      <div className="flex min-h-screen flex-col bg-[#080A0F] text-gray-100 font-sans">
+      <div className="flex min-h-screen flex-col bg-brand-dark text-gray-100">
         <Navbar />
         
-        <div className="border-b border-[#1E2433] bg-[#111520]/90 px-4 py-4 sm:px-6 md:px-8 backdrop-blur-md">
+        {/* Executive Header Banner */}
+        <div className="border-b border-gray-800 bg-brand-card/90 px-4 py-4 sm:px-6 md:px-8">
           <div className="mx-auto max-w-7xl flex flex-col justify-between gap-4 md:flex-row md:items-center">
-            <div className="flex items-center gap-3 font-mono">
-              <span className="rounded-md bg-brand-blue/20 p-2 text-brand-blue border border-brand-blue/50 font-mono font-bold text-xs uppercase tracking-widest">
+            <div className="flex items-center gap-3">
+              <span className="rounded bg-brand-blue/20 p-2 text-brand-blue border border-brand-blue/50 font-mono font-bold text-xs uppercase tracking-widest">
                 Executive Governance Portal
               </span>
-              <span className="text-sm font-bold text-white uppercase tracking-wider font-sans">
-                Role: <span className="text-[#EF4444] font-extrabold">{user?.role || 'SUPER_ADMIN'}</span>
+              <span className="text-sm font-bold text-white uppercase tracking-wider">
+                Role: <span className="text-brand-gold">{user?.role || 'SUPER_ADMIN'}</span>
               </span>
             </div>
             <div className="flex gap-2 text-xs">
-              <a href="/dashboard" className="rounded-lg border border-[#2C354C] bg-[#181D2D] px-4 py-2 font-bold text-gray-300 hover:bg-white hover:text-black transition shadow-sm">
-                &larr; Switch to Investor Terminal (`/dashboard`)
+              <a href="/dashboard" className="rounded border border-gray-700 bg-gray-900 px-3 py-1.5 font-bold text-gray-300 hover:bg-gray-800 transition">
+                &larr; Switch to Retail Terminal (`/dashboard`)
               </a>
             </div>
           </div>
 
-          <div className="mx-auto max-w-7xl mt-4 flex flex-wrap gap-2 pt-3 border-t border-[#1E2433]">
+          {/* Admin Sub-Navigation Tabs */}
+          <div className="mx-auto max-w-7xl mt-4 flex flex-wrap gap-2 pt-2 border-t border-gray-800">
             {filteredTabs.map((tab) => {
               const isActive = pathname === tab.href;
               return (
                 <a
                   key={tab.href}
                   href={tab.href}
-                  className={`rounded-lg px-3.5 py-2 text-xs font-bold uppercase tracking-wider transition duration-150 ${
+                  className={`rounded-md px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider transition ${
                     isActive
-                      ? 'bg-[#EF4444] text-white shadow-red-glow font-extrabold border border-red-400/40'
-                      : 'bg-[#181D2D] text-gray-300 hover:bg-[#22293E] hover:text-white border border-[#2C354C]'
+                      ? 'bg-brand-gold text-black shadow-md'
+                      : 'bg-gray-900 text-gray-400 hover:bg-gray-800 hover:text-white border border-gray-800'
                   }`}
                 >
                   {tab.label}

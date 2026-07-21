@@ -12,8 +12,6 @@ export async function GET(req: NextRequest, { params }: { params: { route: strin
       return await adminController.getOverview(req);
     case 'users':
       return await adminController.getUsers(req);
-    case 'plans':
-      return await adminController.getPlans(req);
     case 'withdrawals/queue':
       return await adminController.getWithdrawalsQueue(req);
     case 'audit-logs':
@@ -28,10 +26,6 @@ export async function POST(req: NextRequest, { params }: { params: { route: stri
   switch (route) {
     case 'users/update':
       return await adminController.updateUser(req);
-    case 'plans/upsert':
-      return await adminController.upsertPlan(req);
-    case 'plans/upload-image':
-      return await adminController.uploadPlanImage(req);
     case 'withdrawals/action':
       return await adminController.executeWithdrawalAction(req);
     default:

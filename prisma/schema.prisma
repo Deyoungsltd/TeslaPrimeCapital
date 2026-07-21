@@ -248,9 +248,6 @@ model Plan {
   compoundingAllowed   Boolean            @default(false)
   requiresKycTier      KycTier            @default(TIER_0)
   isActive             Boolean            @default(true)
-  imageUrl             String?            @db.Text // Car picture banner URL or Cloudinary path (`IMG_7582.jpeg` match)
-  profitText           String?            @db.VarChar(50) // e.g. "40% Profit", "$1,000 minimum"
-  features             Json?              // Array e.g. ["Portfolio Access", "Investment Dashboard", "Email Support"]
   activeInvestments    ActiveInvestment[]
   createdAt            DateTime           @default(now()) @db.Timestamptz()
   updatedAt            DateTime           @updatedAt @db.Timestamptz()

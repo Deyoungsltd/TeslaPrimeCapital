@@ -1,7 +1,7 @@
 /**
  * TeslaPrimeCapital — Database Seeder (`prisma/seed.ts`)
  * Self-contained seeder designed to run cleanly across Windows, Linux, ESM, and CJS.
- * Populates initial investment plans with car pictures (`imageUrl`) and checkmark features (`IMG_7582.jpeg` match).
+ * Populates initial investment plans, default super-admin, and initial system state.
  */
 
 import { PrismaClient } from '@prisma/client';
@@ -11,74 +11,50 @@ const prisma = new PrismaClient();
 
 const INVESTMENT_PLANS_CONFIG = [
   {
-    planId: 'plan-bronze',
-    name: 'Bronze (BASE)',
-    description: 'Perfect for getting started with Tesla investment. Featured vehicle: Model 3.',
-    minDepositUsd: '1000.00000000',
-    maxDepositUsd: '8000.00000000',
-    termDays: 24,
-    dailyRateNumeric: '0.01666667',
-    annualPercentageRate: '608.33%',
+    planId: 'plan-starter-fixed',
+    name: 'Starter Fixed Yield',
+    description: 'Accessible 30-day structured allocation designed for onboarding retail investors. No KYC required up to $1,000.',
+    minDepositUsd: '100.00000000',
+    maxDepositUsd: '4999.00000000',
+    termDays: 30,
+    dailyRateNumeric: '0.00250000', // 0.25% daily -> 7.5% per 30-day term
+    annualPercentageRate: '91.25%',
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: false,
-    requiresKycTier: 'TIER_0',
-    imageUrl: '/branding/car-bronze.jpg',
-    profitText: '40% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', 'Email Support', 'Daily Accrual Tracking']
+    requiresKycTier: 'TIER_0'
   },
   {
-    planId: 'plan-silver',
-    name: 'Silver',
-    description: 'Enhanced returns for serious investors. Featured vehicle: Model Y / Cybertruck.',
+    planId: 'plan-prime-growth',
+    name: 'Prime Dynamic Growth',
+    description: 'High-performance 90-day algorithmic capital allocation with optional rollover maturity rules.',
     minDepositUsd: '5000.00000000',
-    maxDepositUsd: '14999.00000000',
-    termDays: 3,
-    dailyRateNumeric: '0.21666667',
-    annualPercentageRate: '7908.33%',
-    payoutPolicy: 'LUMP_SUM_MATURITY',
-    compoundingAllowed: false,
-    requiresKycTier: 'TIER_1',
-    imageUrl: '/branding/car-silver.jpg',
-    profitText: '65% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', 'Email Support', 'Priority Liquidity Release']
-  },
-  {
-    planId: 'plan-gold',
-    name: 'Gold',
-    description: 'Premium investment with exclusive benefits. Featured vehicle: Model S Plaid.',
-    minDepositUsd: '10000.00000000',
-    maxDepositUsd: '50000.00000000',
-    termDays: 7,
-    dailyRateNumeric: '0.11428571',
-    annualPercentageRate: '4171.43%',
+    maxDepositUsd: '49999.00000000',
+    termDays: 90,
+    dailyRateNumeric: '0.00400000', // 0.40% daily -> 36% per 90-day term
+    annualPercentageRate: '146.00%',
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: true,
-    requiresKycTier: 'TIER_1',
-    imageUrl: '/branding/car-gold.jpg',
-    profitText: '80% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', 'Email Support', 'Dedicated Account Manager']
+    requiresKycTier: 'TIER_1'
   },
   {
-    planId: 'plan-diamond',
-    name: 'Diamond (Platinum)',
-    description: 'Elite flagship capital management pool. Featured vehicle: Cybertruck / Roadster.',
+    planId: 'plan-institutional-apex',
+    name: 'Institutional Apex Strategy',
+    description: 'Bespoke high-liquidity capital management pool for institutional syndicates and high-net-worth clients.',
     minDepositUsd: '50000.00000000',
     maxDepositUsd: '1000000.00000000',
-    termDays: 14,
-    dailyRateNumeric: '0.07071429',
-    annualPercentageRate: '2581.07%',
+    termDays: 180,
+    dailyRateNumeric: '0.00550000', // 0.55% daily -> 99% per 180-day term
+    annualPercentageRate: '200.75%',
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: true,
-    requiresKycTier: 'TIER_2',
-    imageUrl: '/branding/car-diamond.jpg',
-    profitText: '99% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', '24/7 VIP Phone Support', 'Instant Multi-Sig Release']
+    requiresKycTier: 'TIER_2'
   }
 ] as const;
 
 async function main() {
   console.log('Seeding TeslaPrimeCapital enterprise database state...');
 
+  // 1. Seed Investment Plans
   for (const plan of INVESTMENT_PLANS_CONFIG) {
     await prisma.plan.upsert({
       where: { planId: plan.planId },
@@ -94,9 +70,6 @@ async function main() {
         compoundingAllowed: plan.compoundingAllowed,
         requiresKycTier: plan.requiresKycTier as any,
         isActive: true,
-        imageUrl: plan.imageUrl,
-        profitText: plan.profitText,
-        features: plan.features as any,
       },
       create: {
         planId: plan.planId,
@@ -111,14 +84,12 @@ async function main() {
         compoundingAllowed: plan.compoundingAllowed,
         requiresKycTier: plan.requiresKycTier as any,
         isActive: true,
-        imageUrl: plan.imageUrl,
-        profitText: plan.profitText,
-        features: plan.features as any,
       },
     });
-    console.log(`Upserted Plan with Car Picture: ${plan.name} (${plan.planId})`);
+    console.log(`Upserted Plan: ${plan.name} (${plan.planId})`);
   }
 
+  // 2. Seed Default Super-Admin User
   const adminEmail = 'superadmin@teslaprimecapital.com';
   const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
 

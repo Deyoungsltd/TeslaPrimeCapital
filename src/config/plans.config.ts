@@ -1,7 +1,6 @@
 /**
  * TeslaPrimeCapital — Structured Investment Plan Baseline Configuration
  * Enforces approved Phase 1 decisions: Lump Sum at Plan Maturity & Tier 0 Starter ($1k limit without KYC).
- * Includes car pictures (`imageUrl`) and checkmark features (`IMG_7582.jpeg` match).
  */
 
 export interface IPlanConfiguration {
@@ -11,79 +10,51 @@ export interface IPlanConfiguration {
   minDepositUsd: string;
   maxDepositUsd: string;
   termDays: number;
-  dailyRateNumeric: string;
-  annualPercentageRate: string;
+  dailyRateNumeric: string; // e.g. '0.00350000' for 0.35% daily
+  annualPercentageRate: string; // e.g. '127.75%'
   payoutPolicy: 'LUMP_SUM_MATURITY';
   compoundingAllowed: boolean;
   requiresKycTier: 'TIER_0' | 'TIER_1' | 'TIER_2';
-  imageUrl?: string;
-  profitText?: string;
-  features?: string[];
 }
 
 export const INVESTMENT_PLANS_CONFIG: readonly IPlanConfiguration[] = [
   {
-    planId: 'plan-bronze',
-    name: 'Bronze (BASE)',
-    description: 'Perfect for getting started with Tesla investment. Featured vehicle: Model 3.',
-    minDepositUsd: '1000.00000000',
-    maxDepositUsd: '8000.00000000',
-    termDays: 24,
-    dailyRateNumeric: '0.01666667', // 40% over 24 days
-    annualPercentageRate: '608.33%',
+    planId: 'plan-starter-fixed',
+    name: 'Starter Fixed Yield',
+    description: 'Accessible 30-day structured allocation designed for onboarding retail investors. No KYC required up to $1,000.',
+    minDepositUsd: '100.00000000',
+    maxDepositUsd: '4999.00000000',
+    termDays: 30,
+    dailyRateNumeric: '0.00250000', // 0.25% daily -> 7.5% per 30-day term
+    annualPercentageRate: '91.25%',
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: false,
-    requiresKycTier: 'TIER_0',
-    imageUrl: '/branding/car-bronze.jpg',
-    profitText: '40% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', 'Email Support', 'Daily Accrual Tracking']
+    requiresKycTier: 'TIER_0'
   },
   {
-    planId: 'plan-silver',
-    name: 'Silver',
-    description: 'Enhanced returns for serious investors. Featured vehicle: Model Y / Cybertruck.',
+    planId: 'plan-prime-growth',
+    name: 'Prime Dynamic Growth',
+    description: 'High-performance 90-day algorithmic capital allocation with optional rollover maturity rules.',
     minDepositUsd: '5000.00000000',
-    maxDepositUsd: '14999.00000000',
-    termDays: 3,
-    dailyRateNumeric: '0.21666667', // 65% over 3 days
-    annualPercentageRate: '7908.33%',
-    payoutPolicy: 'LUMP_SUM_MATURITY',
-    compoundingAllowed: false,
-    requiresKycTier: 'TIER_1',
-    imageUrl: '/branding/car-silver.jpg',
-    profitText: '65% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', 'Email Support', 'Priority Liquidity Release']
-  },
-  {
-    planId: 'plan-gold',
-    name: 'Gold',
-    description: 'Premium investment with exclusive benefits. Featured vehicle: Model S Plaid.',
-    minDepositUsd: '10000.00000000',
-    maxDepositUsd: '50000.00000000',
-    termDays: 7,
-    dailyRateNumeric: '0.11428571', // 80% over 7 days
-    annualPercentageRate: '4171.43%',
+    maxDepositUsd: '49999.00000000',
+    termDays: 90,
+    dailyRateNumeric: '0.00400000', // 0.40% daily -> 36% per 90-day term
+    annualPercentageRate: '146.00%',
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: true,
-    requiresKycTier: 'TIER_1',
-    imageUrl: '/branding/car-gold.jpg',
-    profitText: '80% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', 'Email Support', 'Dedicated Account Manager']
+    requiresKycTier: 'TIER_1'
   },
   {
-    planId: 'plan-diamond',
-    name: 'Diamond (Platinum)',
-    description: 'Elite flagship capital management pool. Featured vehicle: Cybertruck / Roadster.',
+    planId: 'plan-institutional-apex',
+    name: 'Institutional Apex Strategy',
+    description: 'Bespoke high-liquidity capital management pool for institutional syndicates and high-net-worth clients.',
     minDepositUsd: '50000.00000000',
     maxDepositUsd: '1000000.00000000',
-    termDays: 14,
-    dailyRateNumeric: '0.07071429', // 99% over 14 days
-    annualPercentageRate: '2581.07%',
+    termDays: 180,
+    dailyRateNumeric: '0.00550000', // 0.55% daily -> 99% per 180-day term
+    annualPercentageRate: '200.75%',
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: true,
-    requiresKycTier: 'TIER_2',
-    imageUrl: '/branding/car-diamond.jpg',
-    profitText: '99% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', '24/7 VIP Phone Support', 'Instant Multi-Sig Release']
+    requiresKycTier: 'TIER_2'
   }
 ] as const;
