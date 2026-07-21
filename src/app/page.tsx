@@ -4,170 +4,136 @@ import { INVESTMENT_PLANS_CONFIG } from '@/config/plans.config';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white">
-      {/* Exact Header (`IMG_7550` match) */}
+    <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white pb-24">
+      
+      {/* 1. Exact Top Navbar (`IMG_7582.jpeg` Top Match) */}
       <header className="sticky top-0 z-50 flex h-20 w-full items-center justify-between border-b border-[#1E2433] bg-[#080A0F]/95 px-6 sm:px-12 backdrop-blur-md">
         <a href="/" className="flex items-center gap-3">
-          <span className="text-xl font-extrabold tracking-[0.35em] text-white uppercase font-sans">
+          <span className="text-2xl font-extrabold tracking-[0.35em] text-white uppercase font-sans">
             T E S L A
-          </span>
-          <span className="rounded border border-[#252D3F] bg-[#111520] px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-gray-300">
-            Equity Pro
           </span>
         </a>
 
-        <nav className="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-gray-300 font-mono">
-          <a href="#portfolios" className="hover:text-white transition">Investment Plans (`IMG_7582 Match`)</a>
-          <a href="#ledgers" className="hover:text-white transition">Double-Entry Ledgers</a>
-          <a href="#governance" className="hover:text-white transition">Compliance Gate</a>
+        <nav className="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-gray-300 font-sans">
+          <a href="/" className="hover:text-white transition">Home</a>
+          <a href="#portfolios" className="hover:text-white transition">About</a>
+          <a href="#portfolios" className="hover:text-white transition">Our Solutions ▾</a>
+          <a href="#portfolios" className="hover:text-white transition">FAQ</a>
+          <a href="#portfolios" className="hover:text-white transition">Contact</a>
+          <a href="/dashboard" className="hover:text-white transition">Tracking</a>
         </nav>
 
         <div className="flex items-center gap-4 font-sans">
           <a
-            href="/login"
-            className="rounded-lg border border-[#2C354C] bg-[#111520] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-gray-200 transition hover:border-white hover:text-white shadow-sm"
+            href="/dashboard"
+            className="rounded-full bg-white px-5 py-2 text-xs font-bold text-black transition hover:bg-gray-200 shadow-sm"
           >
-            Sign In
+            Track Order
           </a>
           <a
-            href="/register"
-            className="rounded-lg bg-[#EF4444] px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider text-white transition hover:bg-[#DC2626] shadow-red-glow"
+            href="/login"
+            className="rounded-full bg-[#EF4444] px-6 py-2 text-xs font-extrabold text-white transition hover:bg-[#DC2626] shadow-red-glow"
           >
-            Open Account
+            Login
           </a>
         </div>
       </header>
 
-      {/* Hero Showcase Section */}
-      <main className="flex flex-col items-center justify-center px-6 pt-24 pb-20 text-center sm:pt-32 sm:pb-28">
-        <div className="max-w-4xl space-y-6">
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-red-500/40 bg-red-950/40 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-red-400 font-mono shadow-sm">
-            <span>Algorithmic Compounding &bull; Exact NUMERIC(20,8) Ledgers</span>
-          </div>
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-7xl md:text-8xl leading-none font-sans">
-            TESLA EQUITY PRO.
+      {/* 2. Hero Section: Model 3 Showcase (`IMG_7587.png` exact match with RED button instead of blue!) */}
+      <section className="relative h-[82vh] w-full overflow-hidden bg-black flex flex-col justify-between pt-16 pb-12 text-center border-b border-[#1E2433]">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/branding/hero-bg.jpg"
+            alt="Model 3 Showcase"
+            className="h-full w-full object-cover object-center opacity-85"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-black/30 to-black/60" />
+        </div>
+
+        <div className="relative z-10 space-y-3 px-4">
+          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl font-sans">
+            Model 3
           </h1>
-          <p className="mx-auto max-w-2xl text-base font-normal text-gray-300 sm:text-lg leading-relaxed font-sans">
-            {APP_CONFIG.tagline}. Engineered for absolute transparency, instantaneous multi-currency settlement (`USD`, `EUR`, `BTC`, `ETH`), and verified double-entry compounding.
+          <p className="text-base sm:text-lg font-medium text-gray-200 underline underline-offset-8 decoration-white/60 font-sans">
+            0.99% APR Available
           </p>
-
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6 pt-4 font-sans">
-            <a
-              href="/register"
-              className="w-full sm:w-auto rounded-lg bg-[#EF4444] px-9 py-4 text-sm font-extrabold uppercase tracking-wider text-white shadow-red-glow transition hover:bg-[#DC2626]"
-            >
-              Get Started &rarr;
-            </a>
-            <a
-              href="/dashboard"
-              className="w-full sm:w-auto rounded-lg border border-[#2C354C] bg-[#111520] px-9 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:border-white hover:bg-[#181D2D]"
-            >
-              Enter Live Terminal
-            </a>
-          </div>
         </div>
 
-        {/* Feature Highlights Bar */}
-        <div id="ledgers" className="mt-28 grid grid-cols-1 gap-6 sm:grid-cols-3 max-w-6xl w-full text-left font-mono">
-          <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla transition hover:border-gray-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-blue font-sans">Double-Entry Accounting</span>
-            <h3 className="mt-2 text-lg font-extrabold text-white tracking-tight font-sans">Exact NUMERIC(20,8) Precision</h3>
-            <p className="mt-2 text-xs text-gray-300 leading-relaxed font-sans">Zero floating-point rounding drift. Every deposit, yield accrual, and conversion is bound by exact fixed-point mathematics (`DecimalUtil`).</p>
-          </div>
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4 px-6 max-w-lg mx-auto w-full font-sans">
+          <a href="/register" className="w-full sm:flex-1">
+            <button className="w-full rounded-xl bg-[#EF4444] py-4 text-sm font-extrabold uppercase tracking-wider text-white shadow-red-glow transition hover:bg-[#DC2626] active:scale-[0.98]">
+              Order Now
+            </button>
+          </a>
+          <a href="#portfolios" className="w-full sm:flex-1">
+            <button className="w-full rounded-xl bg-white py-4 text-sm font-extrabold uppercase tracking-wider text-black shadow-md transition hover:bg-gray-200 active:scale-[0.98]">
+              Learn More
+            </button>
+          </a>
+        </div>
+      </section>
 
-          <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla transition hover:border-gray-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 font-sans">Concurrency Defense</span>
-            <h3 className="mt-2 text-lg font-extrabold text-white tracking-tight font-sans">Redis Redlock Mutex Engine</h3>
-            <p className="mt-2 text-xs text-gray-300 leading-relaxed font-sans">Strict distributed locking (`lock:wallet:usr_{'{ID}'}`) eliminates race conditions and double-spend attempts across simultaneous requests.</p>
-          </div>
-
-          <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla transition hover:border-gray-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-400 font-sans">Executive Governance</span>
-            <h3 className="mt-2 text-lg font-extrabold text-white tracking-tight font-sans">100% Mandatory Admin Review</h3>
-            <p className="mt-2 text-xs text-gray-300 leading-relaxed font-sans">Every withdrawal enters our `PENDING_REVIEW` queue. Release strictly requires Two-Factor (`TOTP`) confirmation from treasury officers.</p>
-          </div>
+      {/* 3. Investment Plans Grid (`IMG_7582.jpeg` Exact Match with RED buttons instead of blue!) */}
+      <section id="portfolios" className="mx-auto max-w-7xl px-6 py-24 text-left font-sans">
+        <div className="mb-14 text-center max-w-3xl mx-auto space-y-2">
+          <h2 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+            Investment Plans
+          </h2>
+          <p className="text-sm font-normal text-gray-300 sm:text-base">
+            Choose the plan that fits your Investment goals
+          </p>
         </div>
 
-        {/* Investment Plans Showcase Section (`IMG_7582.jpeg` exact match!) */}
-        <section id="portfolios" className="mt-32 w-full max-w-6xl text-left">
-          <div className="mb-12 border-b border-[#1E2433] pb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-brand-blue font-mono">Portfolio Catalog</span>
-              <h2 className="mt-1 text-3xl font-extrabold tracking-tight text-white sm:text-4xl font-sans">
-                Investment Plans (`IMG_7582 Match`)
-              </h2>
-              <p className="text-xs text-gray-400 font-sans mt-1">
-                Choose the plan that fits your investment goals. Featured vehicles: Model 3, Model Y, Model S Plaid, Cybertruck.
-              </p>
-            </div>
-            <div className="text-right font-sans">
-              <a href="/register">
-                <button className="rounded-lg bg-brand-blue px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blueHover transition shadow-md">
-                  Explore Live Terminal &rarr;
-                </button>
-              </a>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+          {INVESTMENT_PLANS_CONFIG.map((plan) => {
+            const minStr = parseFloat(plan.minDepositUsd).toLocaleString();
+            const profitLabel = plan.profitText || `${plan.termDays} Days Term`;
+            const featList = plan.features && plan.features.length > 0 ? plan.features : ['Portfolio Access', 'Investment Dashboard', 'Email Support'];
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {INVESTMENT_PLANS_CONFIG.map((plan) => (
+            return (
               <div
                 key={plan.planId}
-                className="flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] shadow-tesla transition-all duration-300 hover:border-brand-blue/60 group overflow-hidden"
+                className="flex flex-col justify-between rounded-3xl border border-[#1E2433] bg-[#111520] shadow-tesla transition-all duration-300 hover:border-red-500/60 group overflow-hidden"
               >
-                {/* 1. Horizontal Car Image Header (`IMG_7582.jpeg` match!) */}
+                {/* Car Banner Header (`IMG_7582.jpeg` car header match!) */}
                 <div className="relative h-48 w-full overflow-hidden bg-black">
                   <img
                     src={plan.imageUrl || '/branding/car-bronze.jpg'}
                     alt={plan.name}
-                    className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110 opacity-95 group-hover:opacity-100"
+                    className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110 opacity-95"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#111520] via-[#111520]/20 to-transparent" />
                   
-                  {/* Top Pills */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between font-mono text-xs">
-                    <span className="rounded-md border border-white/20 bg-black/80 px-2.5 py-1 font-extrabold text-white backdrop-blur-md shadow">
-                      {plan.profitText || '40% Profit'}
-                    </span>
-                    <span className="rounded-md bg-brand-blue px-2.5 py-1 font-bold text-white backdrop-blur-md shadow-blue-glow">
-                      {plan.termDays} Days Term
-                    </span>
-                  </div>
+                  <span className="absolute top-3 right-3 rounded-lg border border-white/20 bg-black/80 px-3 py-1 font-mono text-xs font-bold text-red-400 backdrop-blur-md shadow">
+                    {profitLabel}
+                  </span>
                 </div>
 
-                {/* 2. Card Content & Checkmark Features (`IMG_7582.jpeg` match!) */}
-                <div className="p-6 space-y-4 flex-1 flex flex-col justify-between bg-[#111520]">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-2xl font-extrabold tracking-tight text-white font-sans group-hover:text-brand-blue transition-colors">
-                        {plan.name}
-                      </h3>
-                      <span className="text-xs font-mono font-bold text-gray-400">
-                        {plan.annualPercentageRate} APR
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-300 leading-relaxed font-sans min-h-[36px]">
+                {/* Card Body (`Bronze / Silver / Gold / Diamond` match) */}
+                <div className="p-6 space-y-6 flex-1 flex flex-col justify-between bg-[#111520]">
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-extrabold tracking-tight text-white font-sans group-hover:text-[#EF4444] transition-colors">
+                      {plan.name}
+                    </h3>
+                    <p className="text-xs text-gray-300 leading-relaxed min-h-[36px]">
                       {plan.description}
                     </p>
                   </div>
 
-                  {/* Min / Max Range */}
-                  <div className="rounded-xl bg-[#080A0F] p-3.5 border border-[#1E2433] space-y-1.5 font-mono text-xs">
-                    <div className="flex justify-between font-bold">
-                      <span className="text-gray-400">Min Capital:</span>
-                      <span className="text-emerald-400 font-extrabold">${parseFloat(plan.minDepositUsd).toLocaleString()} USD</span>
+                  <div className="pt-3 border-t border-[#1E2433]/80">
+                    <div className="text-2xl font-extrabold text-white tracking-tight font-sans">
+                      ${minStr}
                     </div>
-                    <div className="flex justify-between font-bold">
-                      <span className="text-gray-400">Max Capital:</span>
-                      <span className="text-white font-extrabold">${parseFloat(plan.maxDepositUsd).toLocaleString()} USD</span>
-                    </div>
+                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mt-0.5">
+                      minimum investment
+                    </span>
                   </div>
 
-                  {/* Checkmark Features List (`IMG_7582.jpeg` checkmarks match!) */}
-                  <div className="space-y-2.5 pt-2 font-sans text-xs text-gray-200">
-                    {(plan.features && plan.features.length > 0 ? plan.features : ['Portfolio Access', 'Investment Dashboard', 'Email Support']).map((feat, idx) => (
+                  {/* Checkmarks (`IMG_7582.jpeg` match!) */}
+                  <div className="space-y-3 pt-2 font-sans text-xs text-gray-200">
+                    {featList.map((feat, idx) => (
                       <div key={idx} className="flex items-center gap-3">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-blue/20 text-brand-blue font-extrabold text-[11px] border border-brand-blue/40">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold text-[11px] border border-emerald-500/40">
                           ✔
                         </span>
                         <span className="font-semibold">{feat}</span>
@@ -175,36 +141,165 @@ export default function LandingPage() {
                     ))}
                   </div>
 
-                  {/* Action CTA Button (`No modal! Strictly navigates to dedicated checkout or register page!`) */}
-                  <div className="pt-4 font-sans">
-                    <a href={`/dashboard/investments/checkout?planId=${plan.planId}`} className="block w-full">
-                      <button className="w-full rounded-xl bg-brand-blue py-4 text-xs font-extrabold uppercase tracking-wider text-white transition hover:bg-brand-blueHover shadow-blue-glow group-hover:scale-[1.02]">
-                        Get Started &rarr;
+                  {/* Red `[ Get Started ]` Button (`IMG_7582` match with blue changed to RED!) */}
+                  <div className="pt-4">
+                    <a href={`/register?planId=${plan.planId}`} className="block w-full">
+                      <button className="w-full rounded-2xl bg-[#EF4444] py-4 text-xs font-extrabold uppercase tracking-wider text-white transition hover:bg-[#DC2626] shadow-red-glow group-hover:scale-[1.02]">
+                        Get Started
                       </button>
                     </a>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
+            );
+          })}
+        </div>
+      </section>
 
-        {/* Footer */}
-        <footer id="architecture" className="mt-32 border-t border-[#1E2433] pt-10 text-center text-xs text-gray-500 w-full max-w-5xl font-mono leading-relaxed space-y-4">
-          <div className="flex flex-wrap items-center justify-center gap-6 uppercase tracking-wider text-gray-400 font-sans font-semibold">
-            <a href="/login">Terminal Access</a>
-            <span>&bull;</span>
-            <a href="/register">Institutional Registration</a>
-            <span>&bull;</span>
-            <a href="/dashboard/investments">Compounding Simulator</a>
-            <span>&bull;</span>
-            <a href="/dashboard/kyc">AML Verification Gate</a>
-          </div>
-          <p>
-            &copy; {new Date().getFullYear()} {APP_CONFIG.platformName}. All rights reserved. Self-hosted on Coolify / Docker. Exact double-entry accounting (`NUMERIC(20,8)`) and hybrid rotating session security (`15m JWT + 7d Redis Cookie`).
+      {/* 4. Cybertruck / Utility Truck Section (`IMG_7588.png` match with RED button instead of blue!) */}
+      <section className="relative h-[82vh] w-full overflow-hidden bg-black flex flex-col justify-between pt-16 pb-12 text-center border-t border-b border-[#1E2433]">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/branding/car-diamond.jpg"
+            alt="Cybertruck Utility Truck"
+            className="h-full w-full object-cover object-center opacity-85"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-black/30 to-black/60" />
+        </div>
+
+        <div className="relative z-10 space-y-3 px-4">
+          <h2 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl font-sans">
+            Utility Truck
+          </h2>
+          <p className="text-2xl sm:text-4xl font-extrabold text-white tracking-widest uppercase font-mono">
+            CYBERTRUCK
           </p>
-        </footer>
-      </main>
+          <p className="text-sm sm:text-base font-medium text-gray-200 underline underline-offset-8 decoration-white/60 font-sans">
+            Lease From $949/mo
+          </p>
+        </div>
+
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4 px-6 max-w-lg mx-auto w-full font-sans">
+          <a href="/register?vehicle=cybertruck" className="w-full sm:flex-1">
+            <button className="w-full rounded-xl bg-[#EF4444] py-4 text-sm font-extrabold uppercase tracking-wider text-white shadow-red-glow transition hover:bg-[#DC2626] active:scale-[0.98]">
+              Order Now
+            </button>
+          </a>
+          <a href="#portfolios" className="w-full sm:flex-1">
+            <button className="w-full rounded-xl bg-white py-4 text-sm font-extrabold uppercase tracking-wider text-black shadow-md transition hover:bg-gray-200 active:scale-[0.98]">
+              Learn More
+            </button>
+          </a>
+        </div>
+      </section>
+
+      {/* 5. Current Offers & Inventory Section (`IMG_7589.png` match) */}
+      <section className="mx-auto max-w-7xl px-6 py-20 font-sans space-y-12">
+        <div className="rounded-3xl border border-[#1E2433] bg-[#111520] p-8 sm:p-12 shadow-tesla flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="space-y-3 max-w-xl">
+            <h2 className="text-3xl font-extrabold text-white sm:text-4xl">Current Offers</h2>
+            <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+              Explore limited-time offers on Tesla vehicles and structured high-yield allocations.
+            </p>
+            <div className="pt-2">
+              <a href="/register?offer=limited">
+                <button className="rounded-xl bg-white px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-black hover:bg-gray-200 transition shadow-sm">
+                  Learn More
+                </button>
+              </a>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2 h-56 rounded-2xl overflow-hidden border border-[#1E2433] bg-black">
+            <img src="/branding/car-silver.jpg" alt="Current Offers" className="h-full w-full object-cover" />
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-[#1E2433] bg-[#111520] p-8 sm:p-12 shadow-tesla flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="space-y-3 max-w-xl">
+            <h2 className="text-3xl font-extrabold text-white sm:text-4xl">Inventory</h2>
+            <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+              Find nearby vehicles available for immediate delivery and instant portfolio settlement.
+            </p>
+            <div className="flex flex-wrap gap-4 pt-2">
+              <a href="/register?inventory=new">
+                <button className="rounded-xl bg-white px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-black hover:bg-gray-200 transition shadow-sm">
+                  New
+                </button>
+              </a>
+              <a href="/register?inventory=preowned">
+                <button className="rounded-xl border border-[#2C354C] bg-[#181D2D] px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-white hover:border-white transition shadow-sm">
+                  Pre-Owned
+                </button>
+              </a>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2 h-56 rounded-2xl overflow-hidden border border-[#1E2433] bg-black">
+            <img src="/branding/car-gold.jpg" alt="Inventory" className="h-full w-full object-cover" />
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Solar Panels Section (`IMG_7590.png` match with RED button instead of blue!) */}
+      <section className="relative h-[75vh] w-full overflow-hidden bg-black flex flex-col justify-between pt-16 pb-12 text-center border-t border-b border-[#1E2433]">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/branding/energy-wealth.jpg"
+            alt="Solar Panels & Energy Grid"
+            className="h-full w-full object-cover object-center opacity-85"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-black/30 to-black/60" />
+        </div>
+
+        <div className="relative z-10 space-y-3 px-4">
+          <h2 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl font-sans">
+            Solar Panels
+          </h2>
+          <p className="text-base sm:text-lg font-medium text-gray-200 max-w-xl mx-auto leading-relaxed font-sans">
+            Power Your Home and Reduce Your Electricity Bill with Sustainable Clean Energy
+          </p>
+        </div>
+
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4 px-6 max-w-lg mx-auto w-full font-sans">
+          <a href="/register?product=solar" className="w-full sm:flex-1">
+            <button className="w-full rounded-xl bg-[#EF4444] py-4 text-sm font-extrabold uppercase tracking-wider text-white shadow-red-glow transition hover:bg-[#DC2626] active:scale-[0.98]">
+              Order Now
+            </button>
+          </a>
+          <a href="#portfolios" className="w-full sm:flex-1">
+            <button className="w-full rounded-xl bg-white py-4 text-sm font-extrabold uppercase tracking-wider text-black shadow-md transition hover:bg-gray-200 active:scale-[0.98]">
+              Learn More
+            </button>
+          </a>
+        </div>
+      </section>
+
+      {/* 7. Exact Footer (`IMG_7590.png` match) */}
+      <footer className="mx-auto max-w-5xl px-6 pt-16 text-center text-xs font-semibold text-gray-400 font-sans space-y-6">
+        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+          <span>Tesla &copy; 2026</span>
+          <a href="/login" className="hover:text-white transition">Privacy &amp; Legal</a>
+          <a href="/login" className="hover:text-white transition">Vehicle Recalls</a>
+          <a href="/login" className="hover:text-white transition">News</a>
+          <a href="/dashboard/investments" className="hover:text-white transition">Learn</a>
+        </div>
+        <p className="text-[11px] text-gray-500 font-normal leading-relaxed">
+          Price reflects monthly subscription and capital allocation terms. All double-entry accounting ledgers maintain exact fixed-point `NUMERIC(20,8)` database accuracy.
+        </p>
+      </footer>
+
+      {/* 8. Fixed Schedule a Drive Bar (`IMG_7587 / 7590` Bottom Bar Match) */}
+      <div className="fixed bottom-4 left-4 right-4 z-50 flex items-center justify-center max-w-md mx-auto gap-3">
+        <a href="/dashboard/support" className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-[#111520] text-white shadow-2xl hover:bg-[#1C2234] transition">
+          💬
+        </a>
+        <a href="/register?schedule=testdrive" className="flex-1">
+          <button className="w-full rounded-2xl border border-white/20 bg-[#111520]/95 backdrop-blur-xl py-4 text-sm font-extrabold text-white shadow-2xl hover:bg-[#1C2234] transition flex items-center justify-center gap-2">
+            <span>🚗</span>
+            <span>Schedule a Drive Today</span>
+          </button>
+        </a>
+      </div>
+
     </div>
   );
 }
