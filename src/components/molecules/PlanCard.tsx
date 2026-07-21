@@ -58,13 +58,13 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
   };
 
   return (
-    <div className="relative overflow-hidden flex flex-col justify-between rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla transition-all duration-200 hover:border-gray-600 group">
+    <div className="relative overflow-hidden flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla transition-all duration-200 hover:border-gray-600 group">
       <div className="space-y-4 z-10">
         <div className="flex items-center justify-between font-mono">
-          <span className="rounded-md border border-[#2F374F] bg-[#2A2338] px-3 py-1 text-xs font-bold text-gray-200">
+          <span className="rounded-md border border-[#2F374F] bg-[#1E2433] px-3 py-1 text-xs font-bold text-gray-200">
             {annualPercentageRate} Target
           </span>
-          <span className="rounded-md bg-[#201A2C] border border-[#2C354C] px-2.5 py-1 text-xs font-bold text-gray-300">
+          <span className="rounded-md bg-[#181D2D] border border-[#2C354C] px-2.5 py-1 text-xs font-bold text-gray-300">
             {termDays} Days Duration
           </span>
         </div>
@@ -75,7 +75,7 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
         </div>
       </div>
 
-      <div className="mt-6 border-t border-[#2A2338] pt-6 space-y-4 z-10 font-mono">
+      <div className="mt-6 border-t border-[#1E2433] pt-6 space-y-4 z-10 font-mono">
         <div className="space-y-1.5 text-xs text-gray-300">
           <div className="flex justify-between">
             <span>Min Capital:</span>
@@ -85,7 +85,7 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
             <span>Max Capital:</span>
             <CurrencyDisplay amount={maxDepositUsd} currency="USD" className="text-white font-bold" />
           </div>
-          <div className="flex justify-between text-gray-400 pt-1.5 border-t border-[#2A2338]">
+          <div className="flex justify-between text-gray-400 pt-1.5 border-t border-[#1E2433]">
             <span>Maturity Payout:</span>
             <span className="text-white font-bold">Lump Sum at Term End</span>
           </div>
@@ -111,7 +111,7 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
             />
           </div>
 
-          <div className="flex justify-between items-center text-xs bg-black/80 p-3 rounded-lg border border-[#2A2338] font-mono">
+          <div className="flex justify-between items-center text-xs bg-black/80 p-3 rounded-lg border border-[#1E2433] font-mono">
             <span className="text-gray-400 font-sans font-medium text-[11px]">Est. Maturity Return:</span>
             <CurrencyDisplay amount={projectedReturn()} currency="USD" className="text-emerald-400 font-extrabold text-sm" />
           </div>

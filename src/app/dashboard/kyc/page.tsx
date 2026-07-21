@@ -38,7 +38,7 @@ export default function ComplianceVerificationPage() {
       {msg && <div className="rounded-xl border border-emerald-500/50 bg-emerald-950/40 p-4 text-xs font-bold text-emerald-400 font-mono">{msg}</div>}
 
       {/* Exact Complete Your KYC Form (`IMG_7572`, `IMG_7573` match) */}
-      <div className="rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla space-y-6">
+      <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla space-y-6">
         <h1 className="text-2xl font-extrabold text-white font-sans tracking-tight">Complete Your KYC</h1>
 
         <div className="space-y-5">
@@ -91,9 +91,9 @@ export default function ComplianceVerificationPage() {
         </div>
 
         {/* Exact Ledger Table (`S/N | Type | Transfer to | Amount | Date` match) */}
-        <div className="pt-6 border-t border-[#2A2338]">
+        <div className="pt-6 border-t border-[#1E2433]">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-[#2A2338] text-left font-mono">
+            <table className="min-w-full divide-y divide-[#1E2433] text-left font-mono">
               <thead>
                 <tr>
                   <th className="py-3 pr-4 text-xs font-bold uppercase text-gray-400 font-sans">S/N</th>
@@ -103,9 +103,9 @@ export default function ComplianceVerificationPage() {
                   <th className="py-3 pl-4 text-xs font-bold uppercase text-gray-400 font-sans">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#2A2338]/60 text-xs">
+              <tbody className="divide-y divide-[#1E2433]/60 text-xs">
                 {records.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-[#201A2C]/60 transition">
+                  <tr key={idx} className="hover:bg-[#181D2D]/60 transition">
                     <td className="py-4 pr-4 font-bold text-gray-300">{row.sn}</td>
                     <td className="py-4 px-4 text-white font-medium">{row.type}</td>
                     <td className="py-4 px-4 font-mono text-gray-300">{row.transferTo}</td>

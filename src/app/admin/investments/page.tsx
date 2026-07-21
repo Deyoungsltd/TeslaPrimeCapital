@@ -160,7 +160,7 @@ export default function AdminPlansAndCarPicturesPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col justify-between gap-4 border-b border-[#2A2338] pb-6 sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-4 border-b border-[#1E2433] pb-6 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-2xl font-extrabold text-white sm:text-3xl font-sans tracking-tight">
             Plan &amp; Car Picture Governance (`Admin`)
@@ -181,8 +181,8 @@ export default function AdminPlansAndCarPicturesPage() {
       {/* Editor Modal Popup */}
       {selectedPlan && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-          <form onSubmit={handleSavePlan} className="w-full max-w-3xl rounded-2xl border border-[#2C354C] bg-[#16131F] p-6 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto font-sans">
-            <div className="flex items-center justify-between border-b border-[#2A2338] pb-4">
+          <form onSubmit={handleSavePlan} className="w-full max-w-3xl rounded-2xl border border-[#2C354C] bg-[#111520] p-6 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto font-sans">
+            <div className="flex items-center justify-between border-b border-[#1E2433] pb-4">
               <h3 className="text-lg font-extrabold text-white">
                 {isNew ? 'Create New Investment Plan' : `Edit Plan & Car Picture: ${name}`}
               </h3>
@@ -191,7 +191,7 @@ export default function AdminPlansAndCarPicturesPage() {
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 items-start">
               {/* Left Column: Car Picture Upload & Preview (`IMG_7582.jpeg` match!) */}
-              <div className="space-y-4 rounded-xl border border-[#2A2338] bg-black/60 p-4">
+              <div className="space-y-4 rounded-xl border border-[#1E2433] bg-black/60 p-4">
                 <span className="text-xs font-bold text-brand-blue uppercase tracking-wider block font-mono">
                   Featured Car Image Banner (`IMG_7582.jpeg` Match)
                 </span>
@@ -207,7 +207,7 @@ export default function AdminPlansAndCarPicturesPage() {
                     accept="image/*"
                     onChange={handleCarImageUpload}
                     disabled={uploadingImage}
-                    className="block w-full text-xs text-gray-400 file:mr-3 file:rounded-lg file:border-0 file:bg-[#EF4444] file:px-3 file:py-2 file:text-xs file:font-bold file:text-white hover:file:bg-[#DC2626] cursor-pointer bg-[#201A2C] rounded-lg border border-[#2C354C] transition"
+                    className="block w-full text-xs text-gray-400 file:mr-3 file:rounded-lg file:border-0 file:bg-[#EF4444] file:px-3 file:py-2 file:text-xs file:font-bold file:text-white hover:file:bg-[#DC2626] cursor-pointer bg-[#181D2D] rounded-lg border border-[#2C354C] transition"
                   />
                   {uploadingImage && <span className="text-[10px] font-mono text-emerald-400 block mt-1 animate-pulse">Encoding car image from device...</span>}
                 </div>
@@ -270,7 +270,7 @@ export default function AdminPlansAndCarPicturesPage() {
               </div>
             </div>
 
-            <div className="flex gap-4 pt-4 border-t border-[#2A2338]">
+            <div className="flex gap-4 pt-4 border-t border-[#1E2433]">
               <Button type="submit" variant="electric" size="md" className="flex-1" isLoading={saving}>
                 Commit &amp; Save Plan Specifications &rarr;
               </Button>
@@ -283,9 +283,9 @@ export default function AdminPlansAndCarPicturesPage() {
       )}
 
       {/* Table of Active Plans (`Admin Governance`) */}
-      <div className="overflow-x-auto rounded-2xl border border-[#2A2338] bg-[#16131F] shadow-tesla font-sans">
-        <table className="min-w-full divide-y divide-[#2A2338]">
-          <thead className="bg-[#201A2C]">
+      <div className="overflow-x-auto rounded-2xl border border-[#1E2433] bg-[#111520] shadow-tesla font-sans">
+        <table className="min-w-full divide-y divide-[#1E2433]">
+          <thead className="bg-[#181D2D]">
             <tr>
               <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider text-gray-400">Featured Car</th>
               <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider text-gray-400">Package Name</th>
@@ -296,9 +296,9 @@ export default function AdminPlansAndCarPicturesPage() {
               <th className="px-5 py-3.5 text-right text-xs font-bold uppercase tracking-wider text-gray-400">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#2A2338]/60">
+          <tbody className="divide-y divide-[#1E2433]/60">
             {plans.map((p) => (
-              <tr key={p.id} className="hover:bg-[#201A2C]/60 transition">
+              <tr key={p.id} className="hover:bg-[#181D2D]/60 transition">
                 <td className="px-5 py-4">
                   <div className="h-14 w-24 rounded-lg overflow-hidden border border-[#2C354C] bg-black">
                     <img src={p.imageUrl || '/branding/car-bronze.jpg'} alt={p.name} className="h-full w-full object-cover" />
@@ -309,7 +309,7 @@ export default function AdminPlansAndCarPicturesPage() {
                   <div className="text-xs text-gray-400 font-mono truncate max-w-[180px]">{p.description}</div>
                 </td>
                 <td className="px-5 py-4 text-center">
-                  <span className="rounded-md border border-[#2F374F] bg-[#2A2338] px-2.5 py-1 font-mono text-xs font-bold text-gray-200">
+                  <span className="rounded-md border border-[#2F374F] bg-[#1E2433] px-2.5 py-1 font-mono text-xs font-bold text-gray-200">
                     {p.profitText || '40% Profit'}
                   </span>
                 </td>

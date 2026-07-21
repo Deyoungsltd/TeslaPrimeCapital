@@ -85,7 +85,7 @@ export default function DashboardOverviewPage() {
       {/* Exact 4 Stat Cards Grid (`IMG_7552` match) */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {/* Card 1: Account Balance */}
-        <div className="flex flex-col justify-between rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla">
+        <div className="flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla">
           <div className="flex items-center justify-between text-gray-400">
             <span className="text-xs font-bold uppercase tracking-wider text-gray-300">Account Balance</span>
             <span className="text-gray-400 font-mono text-base">↗</span>
@@ -96,7 +96,7 @@ export default function DashboardOverviewPage() {
         </div>
 
         {/* Card 2: Active Investments */}
-        <div className="flex flex-col justify-between rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla">
+        <div className="flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla">
           <div className="flex items-center justify-between text-gray-400">
             <span className="text-xs font-bold uppercase tracking-wider text-gray-300">Active Investments</span>
             <span className="text-gray-400 font-mono text-base">↗</span>
@@ -110,7 +110,7 @@ export default function DashboardOverviewPage() {
         </div>
 
         {/* Card 3: Withdrawals */}
-        <div className="flex flex-col justify-between rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla">
+        <div className="flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla">
           <div className="flex items-center justify-between text-gray-400">
             <span className="text-xs font-bold uppercase tracking-wider text-gray-300">Withdrawals</span>
             <span className="text-gray-400 font-mono text-base">🛡</span>
@@ -124,7 +124,7 @@ export default function DashboardOverviewPage() {
         </div>
 
         {/* Card 4: Referrals */}
-        <div className="flex flex-col justify-between rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla">
+        <div className="flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla">
           <div className="flex items-center justify-between text-gray-400">
             <span className="text-xs font-bold uppercase tracking-wider text-gray-300">Referrals</span>
             <span className="text-gray-400 font-mono text-base">🛡</span>
@@ -139,7 +139,7 @@ export default function DashboardOverviewPage() {
       </div>
 
       {/* Referral Link Box (`IMG_7556` exact match) */}
-      <div className="rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla max-w-2xl">
+      <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla max-w-2xl">
         <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2 font-sans">
           Referral Link
         </label>
@@ -160,8 +160,8 @@ export default function DashboardOverviewPage() {
       </div>
 
       {/* Embedded TradingView Stock Chart (`T NASDAQ:TSLA` IMG_7556 / IMG_7557 match) */}
-      <div className="rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla space-y-4">
-        <div className="flex items-center justify-between border-b border-[#2A2338] pb-4">
+      <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla space-y-4">
+        <div className="flex items-center justify-between border-b border-[#1E2433] pb-4">
           <div className="flex items-center gap-3">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EF4444] text-white font-extrabold font-mono text-base">
               T
@@ -175,7 +175,7 @@ export default function DashboardOverviewPage() {
         </div>
 
         {/* Live TradingView Widget Embed */}
-        <div className="h-[450px] w-full rounded-xl overflow-hidden border border-[#2A2338] bg-black">
+        <div className="h-[450px] w-full rounded-xl overflow-hidden border border-[#1E2433] bg-black">
           <iframe
             src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_tsla&symbol=NASDAQ%3ATSLA&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_source=teslaequitypro.com&utm_medium=widget&utm_campaign=chart&utm_term=NASDAQ%3ATSLA"
             style={{ width: '100%', height: '100%', border: '0' }}

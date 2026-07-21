@@ -26,8 +26,8 @@ export const WalletSummary: React.FC<{ balances: IWalletBalance[] }> = ({ balanc
   };
 
   return (
-    <div className="rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla">
-      <div className="flex flex-wrap items-center justify-between gap-5 border-b border-[#2A2338] pb-5 z-10 relative">
+    <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla">
+      <div className="flex flex-wrap items-center justify-between gap-5 border-b border-[#1E2433] pb-5 z-10 relative">
         <div className="flex flex-wrap gap-2.5 font-mono">
           {balances.map((w) => (
             <button
@@ -36,7 +36,7 @@ export const WalletSummary: React.FC<{ balances: IWalletBalance[] }> = ({ balanc
               className={`rounded-lg px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all duration-150 ${
                 selectedCurrency === w.currency
                   ? 'bg-[#EF4444] text-white shadow-red-glow font-extrabold'
-                  : 'bg-[#0D0A12] border border-[#2A2338] text-gray-400 hover:bg-[#201A2C] hover:text-white'
+                  : 'bg-[#080A0F] border border-[#1E2433] text-gray-400 hover:bg-[#181D2D] hover:text-white'
               }`}
             >
               {w.currency}
@@ -58,7 +58,7 @@ export const WalletSummary: React.FC<{ balances: IWalletBalance[] }> = ({ balanc
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3 font-mono">
-        <div className="rounded-xl bg-[#0D0A12] p-5 border border-[#2A2338] shadow-md">
+        <div className="rounded-xl bg-[#080A0F] p-5 border border-[#1E2433] shadow-md">
           <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 font-sans">Available Liquid Balance</span>
           <div className="mt-2 text-2xl font-extrabold tracking-tight text-white">
             <CurrencyDisplay amount={currentWallet.availableBalance} currency={currentWallet.currency} />
@@ -66,7 +66,7 @@ export const WalletSummary: React.FC<{ balances: IWalletBalance[] }> = ({ balanc
           <span className="mt-1 block text-[11px] text-gray-400 font-sans">Ready for instant allocation / withdrawal</span>
         </div>
 
-        <div className="rounded-xl bg-[#0D0A12] p-5 border border-[#2A2338] shadow-md">
+        <div className="rounded-xl bg-[#080A0F] p-5 border border-[#1E2433] shadow-md">
           <span className="text-xs font-bold uppercase tracking-wider text-amber-400 font-sans">Encumbered / Locked Balance</span>
           <div className="mt-2 text-2xl font-extrabold tracking-tight text-amber-400">
             <CurrencyDisplay amount={currentWallet.lockedBalance} currency={currentWallet.currency} />
@@ -74,7 +74,7 @@ export const WalletSummary: React.FC<{ balances: IWalletBalance[] }> = ({ balanc
           <span className="mt-1 block text-[11px] text-gray-400 font-sans">Locked in active contracts / review</span>
         </div>
 
-        <div className="rounded-xl bg-[#0D0A12] p-5 border border-[#2A2338] shadow-md">
+        <div className="rounded-xl bg-[#080A0F] p-5 border border-[#1E2433] shadow-md">
           <span className="text-xs font-bold uppercase tracking-wider text-gray-300 font-sans">Total Lifetime Deposited</span>
           <div className="mt-2 text-2xl font-extrabold tracking-tight text-white">
             <CurrencyDisplay amount={currentWallet.totalDeposited} currency={currentWallet.currency} />

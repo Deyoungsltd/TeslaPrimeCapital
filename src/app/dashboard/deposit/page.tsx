@@ -65,7 +65,7 @@ export default function DepositPortalPage() {
       {msg && <div className="rounded-xl border border-emerald-500/50 bg-emerald-950/40 p-4 text-xs font-bold text-emerald-400 font-mono">{msg}</div>}
 
       {/* Exact Deposit Form Card (`IMG_7569`, `IMG_7570`, `IMG_7571` match) */}
-      <form onSubmit={handleDepositSubmit} className="rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla space-y-5">
+      <form onSubmit={handleDepositSubmit} className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla space-y-5">
         <h1 className="text-2xl font-extrabold text-white font-sans tracking-tight">Deposit</h1>
 
         <div>
@@ -73,7 +73,7 @@ export default function DepositPortalPage() {
           <select
             value={walletType}
             onChange={(e) => setWalletType(e.target.value)}
-            className="w-full rounded-lg border border-[#2C354C] bg-[#0D0A12] px-4 py-3 text-sm font-sans text-gray-200 focus:border-red-500 focus:outline-none mb-2.5"
+            className="w-full rounded-lg border border-[#2C354C] bg-[#080A0F] px-4 py-3 text-sm font-sans text-gray-200 focus:border-red-500 focus:outline-none mb-2.5"
           >
             <option value="BTC">Select a wallet address — Bitcoin (BTC)</option>
             <option value="ETH">Select a wallet address — Ethereum (ETH)</option>
@@ -91,7 +91,7 @@ export default function DepositPortalPage() {
             <button
               type="button"
               onClick={handleCopy}
-              className="flex-shrink-0 rounded-lg border border-[#2C354C] bg-[#201A2C] px-3.5 py-3 text-gray-300 hover:border-white hover:text-white transition shadow-sm"
+              className="flex-shrink-0 rounded-lg border border-[#2C354C] bg-[#181D2D] px-3.5 py-3 text-gray-300 hover:border-white hover:text-white transition shadow-sm"
               title="Copy Address"
             >
               📋
@@ -135,9 +135,9 @@ export default function DepositPortalPage() {
         </div>
 
         {/* Exact Ledger Table (`S/N | Wallet | Amount | Transac` match) */}
-        <div className="pt-6 border-t border-[#2A2338]">
+        <div className="pt-6 border-t border-[#1E2433]">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-[#2A2338] text-left font-mono">
+            <table className="min-w-full divide-y divide-[#1E2433] text-left font-mono">
               <thead>
                 <tr>
                   <th className="py-3 pr-4 text-xs font-bold uppercase text-gray-400 font-sans">S/N</th>
@@ -146,9 +146,9 @@ export default function DepositPortalPage() {
                   <th className="py-3 pl-4 text-xs font-bold uppercase text-gray-400 font-sans">Transac</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#2A2338]/60 text-xs">
+              <tbody className="divide-y divide-[#1E2433]/60 text-xs">
                 {depositsList.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-[#201A2C]/60 transition">
+                  <tr key={idx} className="hover:bg-[#181D2D]/60 transition">
                     <td className="py-4 pr-4 font-bold text-gray-300">{row.sn}</td>
                     <td className="py-4 px-4 text-white font-medium">{row.wallet}</td>
                     <td className="py-4 px-4 font-bold text-white">{row.amount}</td>

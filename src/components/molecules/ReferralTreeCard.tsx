@@ -28,8 +28,8 @@ export const ReferralTreeCard: React.FC<{ referralCode: string; referralLink: st
   };
 
   return (
-    <div className="rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla space-y-6">
-      <div className="flex flex-col justify-between gap-4 border-b border-[#2A2338] pb-6 md:flex-row md:items-center">
+    <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla space-y-6">
+      <div className="flex flex-col justify-between gap-4 border-b border-[#1E2433] pb-6 md:flex-row md:items-center">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-gray-300 font-sans">Referral Link</span>
           <div className="mt-2 flex items-center gap-2">
@@ -41,7 +41,7 @@ export const ReferralTreeCard: React.FC<{ referralCode: string; referralLink: st
             />
             <button
               onClick={handleCopy}
-              className="flex-shrink-0 rounded-lg border border-[#2C354C] bg-[#201A2C] p-3 text-gray-300 hover:border-white hover:text-white transition shadow-sm"
+              className="flex-shrink-0 rounded-lg border border-[#2C354C] bg-[#181D2D] p-3 text-gray-300 hover:border-white hover:text-white transition shadow-sm"
               title="Copy Link"
             >
               {copied ? '✓' : '📋'}
@@ -54,15 +54,15 @@ export const ReferralTreeCard: React.FC<{ referralCode: string; referralLink: st
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-5 text-center font-mono">
-        <div className="rounded-xl bg-[#0D0A12] p-4 border border-[#2A2338]">
+        <div className="rounded-xl bg-[#080A0F] p-4 border border-[#1E2433]">
           <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">Direct (Tier 1 - 5%)</span>
           <span className="mt-1 block text-2xl font-extrabold text-white">{summary.tier1Count}</span>
         </div>
-        <div className="rounded-xl bg-[#0D0A12] p-4 border border-[#2A2338]">
+        <div className="rounded-xl bg-[#080A0F] p-4 border border-[#1E2433]">
           <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">Sub (Tier 2 - 2%)</span>
           <span className="mt-1 block text-2xl font-extrabold text-gray-300">{summary.tier2Count}</span>
         </div>
-        <div className="rounded-xl bg-[#0D0A12] p-4 border border-[#2A2338]">
+        <div className="rounded-xl bg-[#080A0F] p-4 border border-[#1E2433]">
           <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">Extended (Tier 3 - 1%)</span>
           <span className="mt-1 block text-2xl font-extrabold text-gray-400">{summary.tier3Count}</span>
         </div>

@@ -50,7 +50,7 @@ export default function WithdrawalPortalPage() {
       {msg && <div className="rounded-xl border border-amber-500/50 bg-amber-950/40 p-4 text-xs font-bold text-amber-400 font-mono">{msg}</div>}
 
       {/* Exact Withdrawal Form Card (`IMG_7575`, `IMG_7576` match) */}
-      <form onSubmit={handleWithdrawSubmit} className="rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla space-y-5">
+      <form onSubmit={handleWithdrawSubmit} className="rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla space-y-5">
         <h1 className="text-2xl font-extrabold text-white font-sans tracking-tight">Withdraw</h1>
 
         <div>
@@ -58,7 +58,7 @@ export default function WithdrawalPortalPage() {
           <select
             value={walletType}
             onChange={(e) => setWalletType(e.target.value)}
-            className="w-full rounded-lg border border-[#2C354C] bg-[#0D0A12] px-4 py-3 text-sm font-sans text-gray-200 focus:border-red-500 focus:outline-none mb-2.5"
+            className="w-full rounded-lg border border-[#2C354C] bg-[#080A0F] px-4 py-3 text-sm font-sans text-gray-200 focus:border-red-500 focus:outline-none mb-2.5"
           >
             <option value="Crypto">Select a wallet address — Crypto (BTC / ETH / USDT)</option>
             <option value="PayPal">Select a wallet address — PayPal Account</option>
@@ -99,9 +99,9 @@ export default function WithdrawalPortalPage() {
         </div>
 
         {/* Exact Ledger Table (`S/N | Type | Transfer to | Amount` match) */}
-        <div className="pt-6 border-t border-[#2A2338]">
+        <div className="pt-6 border-t border-[#1E2433]">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-[#2A2338] text-left font-mono">
+            <table className="min-w-full divide-y divide-[#1E2433] text-left font-mono">
               <thead>
                 <tr>
                   <th className="py-3 pr-4 text-xs font-bold uppercase text-gray-400 font-sans">S/N</th>
@@ -110,9 +110,9 @@ export default function WithdrawalPortalPage() {
                   <th className="py-3 pl-4 text-xs font-bold uppercase text-gray-400 font-sans">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#2A2338]/60 text-xs">
+              <tbody className="divide-y divide-[#1E2433]/60 text-xs">
                 {withdrawalsList.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-[#201A2C]/60 transition">
+                  <tr key={idx} className="hover:bg-[#181D2D]/60 transition">
                     <td className="py-4 pr-4 font-bold text-gray-300">{row.sn}</td>
                     <td className="py-4 px-4 text-white font-medium">{row.type}</td>
                     <td className="py-4 px-4 font-mono text-gray-300 truncate max-w-[140px]">{row.transferTo}</td>

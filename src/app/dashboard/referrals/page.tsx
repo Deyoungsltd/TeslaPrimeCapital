@@ -44,7 +44,7 @@ export default function MultiTierReferralsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="border-b border-[#2A2338] pb-6">
+      <div className="border-b border-[#1E2433] pb-6">
         <h1 className="text-2xl font-extrabold text-white sm:text-3xl font-sans tracking-tight">
           Referrals
         </h1>
@@ -66,13 +66,13 @@ export default function MultiTierReferralsPage() {
           Commission Vesting History (`CommissionLog`)
         </h2>
         {profile?.commissions?.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[#2A2338] p-12 text-center text-xs text-gray-400">
+          <div className="rounded-2xl border border-dashed border-[#1E2433] p-12 text-center text-xs text-gray-400">
             No commission logs generated yet. Share your partner URL to onboard investors.
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-[#2A2338] bg-[#16131F] shadow-tesla">
-            <table className="min-w-full divide-y divide-[#2A2338] font-mono text-left">
-              <thead className="bg-[#201A2C]">
+          <div className="overflow-x-auto rounded-2xl border border-[#1E2433] bg-[#111520] shadow-tesla">
+            <table className="min-w-full divide-y divide-[#1E2433] font-mono text-left">
+              <thead className="bg-[#181D2D]">
                 <tr>
                   <th className="px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-gray-400 font-sans">Referred Partner</th>
                   <th className="px-5 py-3.5 text-center text-xs font-bold uppercase tracking-wider text-gray-400 font-sans">Tier Level</th>
@@ -83,12 +83,12 @@ export default function MultiTierReferralsPage() {
                   <th className="px-5 py-3.5 text-right text-xs font-bold uppercase tracking-wider text-gray-400 font-sans">Timestamp</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#2A2338]/60">
+              <tbody className="divide-y divide-[#1E2433]/60">
                 {profile?.commissions?.map((c: any) => (
-                  <tr key={c.id} className="hover:bg-[#201A2C]/60 transition">
+                  <tr key={c.id} className="hover:bg-[#181D2D]/60 transition">
                     <td className="whitespace-nowrap px-5 py-4 text-xs font-medium text-white font-sans">{c.referredUser}</td>
                     <td className="whitespace-nowrap px-5 py-4 text-center">
-                      <span className="rounded bg-[#201A2C] px-2 py-1 font-mono text-[10px] text-gray-300 border border-[#2C354C] font-bold">
+                      <span className="rounded bg-[#181D2D] px-2 py-1 font-mono text-[10px] text-gray-300 border border-[#2C354C] font-bold">
                         Tier {c.tierLevel}
                       </span>
                     </td>

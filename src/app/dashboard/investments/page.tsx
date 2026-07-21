@@ -81,7 +81,7 @@ export default function StructuredInvestmentsPage() {
   return (
     <div className="space-y-8">
       {/* Exact Heading (`IMG_7555` match) */}
-      <div className="border-b border-[#2A2338] pb-6">
+      <div className="border-b border-[#1E2433] pb-6">
         <h1 className="text-2xl font-extrabold text-white sm:text-3xl font-sans tracking-tight">
           Investment Packages
         </h1>
@@ -100,12 +100,12 @@ export default function StructuredInvestmentsPage() {
       {/* Investment Modal Popup */}
       {selectedPlanForModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <form onSubmit={handleConfirmInvestment} className="w-full max-w-md rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between border-b border-[#2A2338] pb-3">
+          <form onSubmit={handleConfirmInvestment} className="w-full max-w-md rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-[#1E2433] pb-3">
               <h3 className="text-lg font-extrabold text-white">Confirm Investment: {selectedPlanForModal.name}</h3>
               <button type="button" onClick={() => setSelectedPlanForModal(null)} className="text-gray-400 hover:text-white font-bold">✕</button>
             </div>
-            <div className="space-y-3 bg-[#0D0A12] p-4 rounded-xl border border-[#2A2338] font-mono text-xs text-gray-300">
+            <div className="space-y-3 bg-[#080A0F] p-4 rounded-xl border border-[#1E2433] font-mono text-xs text-gray-300">
               <div className="flex justify-between"><span>Target Return:</span> <span className="font-bold text-emerald-400">{selectedPlanForModal.profitPct}</span></div>
               <div className="flex justify-between"><span>Duration:</span> <span className="font-bold text-white">{selectedPlanForModal.duration}</span></div>
               <div className="flex justify-between"><span>Allowed Range:</span> <span className="font-bold text-gray-200">{selectedPlanForModal.rangeText}</span></div>
@@ -117,7 +117,7 @@ export default function StructuredInvestmentsPage() {
                 required
                 value={customAmount}
                 onChange={(e) => setCustomAmount(e.target.value)}
-                className="mt-1.5 w-full rounded-lg border border-[#2A2338] bg-black px-4 py-3 text-sm font-mono text-white focus:border-red-500 focus:outline-none"
+                className="mt-1.5 w-full rounded-lg border border-[#1E2433] bg-black px-4 py-3 text-sm font-mono text-white focus:border-red-500 focus:outline-none"
               />
             </div>
             <div className="flex gap-3 pt-2">
@@ -133,11 +133,11 @@ export default function StructuredInvestmentsPage() {
         {plansCatalog.map((plan) => (
           <div
             key={plan.id}
-            className="flex flex-col justify-between rounded-2xl border border-[#2A2338] bg-[#16131F] p-6 shadow-tesla transition-all duration-200 hover:border-gray-600"
+            className="flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla transition-all duration-200 hover:border-gray-600"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="rounded-md border border-[#2F374F] bg-[#2A2338] px-3 py-1 text-xs font-bold text-gray-200 font-mono">
+                <span className="rounded-md border border-[#2F374F] bg-[#1E2433] px-3 py-1 text-xs font-bold text-gray-200 font-mono">
                   {plan.profitPct}
                 </span>
                 <span className="text-gray-400 font-mono text-base font-bold">↗</span>
@@ -145,7 +145,7 @@ export default function StructuredInvestmentsPage() {
               <h3 className="text-2xl font-extrabold text-white tracking-tight font-sans">{plan.name}</h3>
             </div>
 
-            <div className="mt-8 space-y-3 pt-4 border-t border-[#2A2338]/60 font-mono text-xs text-gray-300">
+            <div className="mt-8 space-y-3 pt-4 border-t border-[#1E2433]/60 font-mono text-xs text-gray-300">
               <div className="flex items-center gap-2">
                 <span className="text-gray-500">🕒</span>
                 <span>Duration: <strong className="text-white font-bold">{plan.duration}</strong></span>
@@ -169,13 +169,13 @@ export default function StructuredInvestmentsPage() {
       </div>
 
       {/* Your Active Capital Allocations Table */}
-      <section className="space-y-4 pt-6 border-t border-[#2A2338]">
+      <section className="space-y-4 pt-6 border-t border-[#1E2433]">
         <h2 className="text-base font-extrabold uppercase tracking-wider text-white font-sans">
           Your Active Capital Ledgers (`ActiveInvestments`)
         </h2>
-        <div className="overflow-x-auto rounded-2xl border border-[#2A2338] bg-[#16131F] shadow-tesla">
-          <table className="min-w-full divide-y divide-[#2A2338]">
-            <thead className="bg-[#201A2C]">
+        <div className="overflow-x-auto rounded-2xl border border-[#1E2433] bg-[#111520] shadow-tesla">
+          <table className="min-w-full divide-y divide-[#1E2433]">
+            <thead className="bg-[#181D2D]">
               <tr>
                 <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider text-gray-400 font-sans">Package</th>
                 <th className="px-5 py-3.5 text-right text-xs font-bold uppercase tracking-wider text-gray-400 font-mono">Principal Locked</th>
@@ -184,9 +184,9 @@ export default function StructuredInvestmentsPage() {
                 <th className="px-5 py-3.5 text-right text-xs font-bold uppercase tracking-wider text-gray-400 font-mono">Maturity Date</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2A2338]/60">
+            <tbody className="divide-y divide-[#1E2433]/60">
               {activeAllocations.map((inv) => (
-                <tr key={inv.id} className="hover:bg-[#201A2C]/60 transition">
+                <tr key={inv.id} className="hover:bg-[#181D2D]/60 transition">
                   <td className="whitespace-nowrap px-5 py-4 text-xs font-bold text-white font-sans">{inv.planName}</td>
                   <td className="whitespace-nowrap px-5 py-4 text-right font-mono text-sm font-extrabold text-white">
                     <CurrencyDisplay amount={inv.principalAmount} currency="USD" />

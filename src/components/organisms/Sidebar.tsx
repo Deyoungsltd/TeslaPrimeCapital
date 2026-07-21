@@ -33,7 +33,7 @@ export const Sidebar: React.FC = () => {
   if (!isSidebarOpen) return null;
 
   return (
-    <aside aria-label="Main Terminal Navigation" className="w-64 flex-shrink-0 border-r border-[#2A2338] bg-[#0D0A12] p-5 flex flex-col justify-between transition-all duration-200">
+    <aside aria-label="Main Terminal Navigation" className="w-64 flex-shrink-0 border-r border-[#1E2433] bg-[#080A0F] p-5 flex flex-col justify-between transition-all duration-200">
       <nav className="space-y-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
@@ -43,8 +43,8 @@ export const Sidebar: React.FC = () => {
               href={item.href}
               className={`flex items-center gap-3.5 rounded-lg px-4 py-3 text-sm font-semibold tracking-wide transition-all duration-150 ${
                 isActive
-                  ? 'bg-[#16131F] text-white border-l-4 border-[#EF4444] font-bold shadow-sm'
-                  : 'text-gray-400 hover:bg-[#16131F]/60 hover:text-white border-l-4 border-transparent'
+                  ? 'bg-[#111520] text-white border-l-4 border-[#EF4444] font-bold shadow-sm'
+                  : 'text-gray-400 hover:bg-[#111520]/60 hover:text-white border-l-4 border-transparent'
               }`}
             >
               <svg className="h-5 w-5 flex-shrink-0 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@ export const Sidebar: React.FC = () => {
         })}
 
         {isAdmin && (
-          <div className="pt-6 mt-6 border-t border-[#2A2338] space-y-1.5">
+          <div className="pt-6 mt-6 border-t border-[#1E2433] space-y-1.5">
             <span className="px-4 text-[10px] font-extrabold uppercase tracking-widest text-brand-blue font-mono block">
               Executive Governance
             </span>
@@ -65,7 +65,7 @@ export const Sidebar: React.FC = () => {
               className={`flex items-center gap-3 rounded-lg px-4 py-3 text-xs font-bold uppercase tracking-wider transition-all duration-150 ${
                 pathname?.startsWith('/admin')
                   ? 'bg-gradient-to-r from-[#EF4444]/20 to-black text-white border-l-4 border-[#EF4444]'
-                  : 'text-gray-300 hover:bg-[#16131F] hover:text-white border-l-4 border-transparent'
+                  : 'text-gray-300 hover:bg-[#111520] hover:text-white border-l-4 border-transparent'
               }`}
             >
               <svg className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,7 +78,7 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Red [ -> Log Out ] Button at bottom of drawer (`IMG_7550` match) */}
-      <div className="pt-6 border-t border-[#2A2338]">
+      <div className="pt-6 border-t border-[#1E2433]">
         <button
           onClick={handleLogout}
           className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#EF4444] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#DC2626] shadow-red-glow"
