@@ -1,8 +1,7 @@
-'use client';
-
 import React from 'react';
 import { APP_CONFIG } from '@/config/app.config';
 import { INVESTMENT_PLANS_CONFIG } from '@/config/plans.config';
+import { HeroSwiper } from '@/components/organisms/HeroSwiper';
 
 export default function LandingPage() {
   return (
@@ -41,40 +40,8 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* 2. Hero Section: Model 3 Showcase (`IMG_7587.png` exact match with RED button instead of blue!) */}
-      <section className="relative h-[82vh] w-full overflow-hidden bg-black flex flex-col justify-between pt-16 pb-12 text-center border-b border-[#1E2433]">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/branding/hero-bg.jpg"
-            alt="Model 3 Showcase"
-            onError={(e) => { e.currentTarget.src = '/branding/car-bronze.jpg'; }}
-            className="h-full w-full object-cover object-center opacity-85"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-black/30 to-black/60" />
-        </div>
-
-        <div className="relative z-10 space-y-3 px-4">
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl font-sans">
-            Model 3
-          </h1>
-          <p className="text-base sm:text-lg font-medium text-gray-200 underline underline-offset-8 decoration-white/60 font-sans">
-            0.99% APR Available
-          </p>
-        </div>
-
-        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4 px-6 max-w-lg mx-auto w-full font-sans">
-          <a href="/register" className="w-full sm:flex-1">
-            <button className="w-full rounded-xl bg-[#EF4444] py-4 text-sm font-extrabold uppercase tracking-wider text-white shadow-red-glow transition hover:bg-[#DC2626] active:scale-[0.98]">
-              Order Now
-            </button>
-          </a>
-          <a href="#portfolios" className="w-full sm:flex-1">
-            <button className="w-full rounded-xl bg-white py-4 text-sm font-extrabold uppercase tracking-wider text-black shadow-md transition hover:bg-gray-200 active:scale-[0.98]">
-              Learn More
-            </button>
-          </a>
-        </div>
-      </section>
+      {/* 2. Interactive Touch-Swipeable Vehicle Carousel (`IMG_7587 Model 3 & IMG_7588 Cybertruck Swiper Match!`) */}
+      <HeroSwiper />
 
       {/* 3. Investment Plans Grid (`IMG_7582.jpeg` Exact Match with RED buttons instead of blue!) */}
       <section id="portfolios" className="mx-auto max-w-7xl px-6 py-24 text-left font-sans">
@@ -98,12 +65,11 @@ export default function LandingPage() {
                 key={plan.planId}
                 className="flex flex-col justify-between rounded-3xl border border-[#1E2433] bg-[#111520] shadow-tesla transition-all duration-300 hover:border-red-500/60 group overflow-hidden"
               >
-                {/* Car Banner Header (`IMG_7582.jpeg` car header match!) */}
+                {/* Car Banner Header (`IMG_7582.jpeg` car header match with bulletproof fallback!) */}
                 <div className="relative h-48 w-full overflow-hidden bg-black">
                   <img
                     src={plan.imageUrl || '/branding/car-bronze.jpg'}
                     alt={plan.name}
-                    onError={(e) => { e.currentTarget.src = '/branding/car-bronze.jpg'; }}
                     className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110 opacity-95"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#111520] via-[#111520]/20 to-transparent" />
@@ -160,45 +126,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. Cybertruck / Utility Truck Section (`IMG_7588.png` match with RED button instead of blue!) */}
-      <section className="relative h-[82vh] w-full overflow-hidden bg-black flex flex-col justify-between pt-16 pb-12 text-center border-t border-b border-[#1E2433]">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/branding/car-diamond.jpg"
-            alt="Cybertruck Utility Truck"
-            onError={(e) => { e.currentTarget.src = '/branding/car-silver.jpg'; }}
-            className="h-full w-full object-cover object-center opacity-85"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-black/30 to-black/60" />
-        </div>
-
-        <div className="relative z-10 space-y-3 px-4">
-          <h2 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl font-sans">
-            Utility Truck
-          </h2>
-          <p className="text-2xl sm:text-4xl font-extrabold text-white tracking-widest uppercase font-mono">
-            CYBERTRUCK
-          </p>
-          <p className="text-sm sm:text-base font-medium text-gray-200 underline underline-offset-8 decoration-white/60 font-sans">
-            Lease From $949/mo
-          </p>
-        </div>
-
-        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4 px-6 max-w-lg mx-auto w-full font-sans">
-          <a href="/register?vehicle=cybertruck" className="w-full sm:flex-1">
-            <button className="w-full rounded-xl bg-[#EF4444] py-4 text-sm font-extrabold uppercase tracking-wider text-white shadow-red-glow transition hover:bg-[#DC2626] active:scale-[0.98]">
-              Order Now
-            </button>
-          </a>
-          <a href="#portfolios" className="w-full sm:flex-1">
-            <button className="w-full rounded-xl bg-white py-4 text-sm font-extrabold uppercase tracking-wider text-black shadow-md transition hover:bg-gray-200 active:scale-[0.98]">
-              Learn More
-            </button>
-          </a>
-        </div>
-      </section>
-
-      {/* 5. Current Offers & Inventory Section (`IMG_7589.png` match) */}
+      {/* 4. Current Offers & Inventory Section (`IMG_7589.png` match) */}
       <section className="mx-auto max-w-7xl px-6 py-20 font-sans space-y-12">
         <div className="rounded-3xl border border-[#1E2433] bg-[#111520] p-8 sm:p-12 shadow-tesla flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="space-y-3 max-w-xl">
@@ -215,7 +143,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="w-full md:w-1/2 h-56 rounded-2xl overflow-hidden border border-[#1E2433] bg-black">
-            <img src="/branding/car-silver.jpg" alt="Current Offers" onError={(e) => { e.currentTarget.src = '/branding/car-bronze.jpg'; }} className="h-full w-full object-cover" />
+            <img src="/branding/car-silver.jpg" alt="Current Offers" className="h-full w-full object-cover" />
           </div>
         </div>
 
@@ -239,12 +167,12 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="w-full md:w-1/2 h-56 rounded-2xl overflow-hidden border border-[#1E2433] bg-black">
-            <img src="/branding/car-gold.jpg" alt="Inventory" onError={(e) => { e.currentTarget.src = '/branding/car-diamond.jpg'; }} className="h-full w-full object-cover" />
+            <img src="/branding/car-gold.jpg" alt="Inventory" className="h-full w-full object-cover" />
           </div>
         </div>
       </section>
 
-      {/* 6. Exact Footer (`IMG_7590.png` match) */}
+      {/* 5. Exact Footer (`IMG_7590.png` match) */}
       <footer className="mx-auto max-w-5xl px-6 pt-16 text-center text-xs font-semibold text-gray-400 font-sans space-y-6">
         <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
           <span>Tesla &copy; 2026</span>
@@ -258,7 +186,7 @@ export default function LandingPage() {
         </p>
       </footer>
 
-      {/* 7. Fixed Schedule a Drive Bar (`IMG_7587 / 7590` Bottom Bar Match) */}
+      {/* 6. Fixed Schedule a Drive Bar (`IMG_7587 / 7590` Bottom Bar Match) */}
       <div className="fixed bottom-4 left-4 right-4 z-50 flex items-center justify-center max-w-md mx-auto gap-3">
         <a href="/dashboard/support" className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-[#111520] text-white shadow-2xl hover:bg-[#1C2234] transition">
           💬
