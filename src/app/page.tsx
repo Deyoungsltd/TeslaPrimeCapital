@@ -480,7 +480,7 @@ export default function LandingPage() {
                   Start Earning
                 </button>
               </a>
-              <a href="/dashboard/referrals" className="w-full sm:w-auto">
+              <a href="/faq" className="w-full sm:w-auto">
                 <button
                   type="button"
                   className="w-full sm:w-[220px] h-12 rounded-lg border border-white/15 bg-white/5 font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:-translate-y-0.5 active:translate-y-0"

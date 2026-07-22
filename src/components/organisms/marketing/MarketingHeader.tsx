@@ -35,14 +35,6 @@ export const MarketingHeader: React.FC<{ activePath?: string }> = ({ activePath 
       </nav>
 
       <div className="flex items-center gap-3">
-        <a href="/dashboard" className="hidden sm:block">
-          <button
-            type="button"
-            className="h-10 px-5 rounded-lg border border-white/15 bg-white/5 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-gray-200 transition hover:bg-white/10 hover:border-white/40"
-          >
-            Terminal
-          </button>
-        </a>
         <a href="/login">
           <button
             type="button"
