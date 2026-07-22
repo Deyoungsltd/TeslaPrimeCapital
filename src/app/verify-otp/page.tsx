@@ -42,23 +42,12 @@ function VerifyOtpContent() {
           window.location.href = '/dashboard';
         }
         return;
-      } else {
-        const simUser = { id: 'user1', email, firstName, lastName: 'Verified', role: 'INVESTOR', status: 'ACTIVE', kycTier: 'TIER_0', twoFactorEnabled: false, referralCode: 'TESLA_SIM' };
-        setUserAndToken(simUser as any, 'simulated_jwt_token_verified');
-        if (planIdParam) {
-          window.location.href = `/dashboard/investments/checkout?planId=${planIdParam}`;
-        } else {
-          window.location.href = '/dashboard';
-        }
       }
+      // Backend rejected the code or a server fault occurred — surface it truthfully
+      setError(body?.error?.message || 'Verification failed. Check the code and try again.');
     } catch {
-      const simUser = { id: 'user1', email, firstName, lastName: 'Verified', role: 'INVESTOR', status: 'ACTIVE', kycTier: 'TIER_0', twoFactorEnabled: false, referralCode: 'TESLA_SIM' };
-      setUserAndToken(simUser as any, 'simulated_jwt_token_verified');
-      if (planIdParam) {
-        window.location.href = `/dashboard/investments/checkout?planId=${planIdParam}`;
-      } else {
-        window.location.href = '/dashboard';
-      }
+      // Network failure — never forge a verified session; report honestly
+      setError('Unable to reach the verification service. Check your connection and try again.');
     } finally {
       setLoading(false);
     }

@@ -20,17 +20,10 @@ export default function MultiTierReferralsPage() {
         if (res.ok) {
           const body = await res.json();
           if (body.success && body.data) setProfile(body.data);
-        } else {
-          setProfile({
-            referralCode: 'TESLA_PRIME_PARTNER_9988',
-            referralLink: 'teslaequitypro.com?ref=TESLA_PRIME_9988',
-            summary: { tier1Count: 14, tier2Count: 38, tier3Count: 65, totalEarnedUsd: '1450.00000000', pendingVestingUsd: '320.00000000' },
-            commissions: [
-              { id: 'com1', tierLevel: 1, commissionPercentage: '5%', qualifyingAmount: '10000.00000000', commissionEarned: '500.00000000', status: 'CREDITED', referredUser: 'Jonathan D. (jo***@example.com)', createdAt: new Date().toISOString() },
-              { id: 'com2', tierLevel: 2, commissionPercentage: '2%', qualifyingAmount: '5000.00000000', commissionEarned: '100.00000000', status: 'CREDITED', referredUser: 'Sarah K. (sa***@example.com)', createdAt: new Date(Date.now() - 86400000).toISOString() },
-            ],
-          });
         }
+      } catch {
+        // Affiliate profile unreachable — render unavailable state, never fabricated tiers
+        setProfile(null);
       } finally {
         setLoading(false);
       }
@@ -57,12 +50,20 @@ export default function MultiTierReferralsPage() {
         </p>
       </div>
 
-      {profile && (
+      {profile ? (
         <ReferralTreeCard
           referralCode={profile.referralCode}
           referralLink={profile.referralLink}
           summary={profile.summary}
         />
+      ) : (
+        <div className="rounded-2xl border border-dashed border-[#1E2433] bg-[#111520]/50 p-10 text-center">
+          <p className="text-xs font-mono text-gray-400 uppercase tracking-wider leading-relaxed">
+            Affiliate profile temporarily unavailable.
+            <br />
+            <span className="text-gray-500">Your commission data will load automatically once the service reconnects.</span>
+          </p>
+        </div>
       )}
 
       {/* Live Advanced Candlestick Chart (`Tesla, Inc.` workstation match) */}

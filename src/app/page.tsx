@@ -2,7 +2,8 @@ import React from 'react';
 import { APP_CONFIG } from '@/config/app.config';
 import { INVESTMENT_PLANS_CONFIG } from '@/config/plans.config';
 import { HeroSwiper } from '@/components/organisms/HeroSwiper';
-import { TeslaLogo } from '@/components/atoms/TeslaLogo';
+import { MarketingHeader } from '@/components/organisms/marketing/MarketingHeader';
+import { MarketingFooter } from '@/components/organisms/marketing/MarketingFooter';
 import { TradingViewTickerTape } from '@/components/organisms/tradingview/TradingViewTickerTape';
 import { TradingViewSymbolOverview } from '@/components/organisms/tradingview/TradingViewSymbolOverview';
 import { TradingViewMarketOverview } from '@/components/organisms/tradingview/TradingViewMarketOverview';
@@ -18,38 +19,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white">
 
       {/* ================= 1. Institutional Header ================= */}
-      <header className="sticky top-0 z-50 flex h-[72px] w-full items-center justify-between border-b border-[#1E2433] bg-[#080A0F]/90 px-6 sm:px-12 backdrop-blur-xl">
-        <a href="/" className="flex items-center">
-          <TeslaLogo size="sm" />
-        </a>
-
-        <nav className="hidden lg:flex items-center gap-9 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-          <a href="/" className="hover:text-white transition">Home</a>
-          <a href="#portfolios" className="hover:text-white transition">Plans</a>
-          <a href="#markets" className="hover:text-white transition">Markets</a>
-          <a href="#process" className="hover:text-white transition">Process</a>
-          <a href="#faq" className="hover:text-white transition">FAQ</a>
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <a href="/dashboard" className="hidden sm:block">
-            <button
-              type="button"
-              className="h-10 px-5 rounded-lg border border-white/15 bg-white/5 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-gray-200 transition hover:bg-white/10 hover:border-white/40"
-            >
-              Terminal
-            </button>
-          </a>
-          <a href="/login">
-            <button
-              type="button"
-              className="h-10 px-6 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-white shadow-[0_4px_25px_rgba(239,68,68,0.35)] transition-all duration-300 hover:shadow-[0_8px_35px_rgba(239,68,68,0.6)] hover:-translate-y-0.5"
-            >
-              Sign In
-            </button>
-          </a>
-        </div>
-      </header>
+      <MarketingHeader activePath="/" />
 
       {/* ================= 2. Allocation Showcase Carousel ================= */}
       <HeroSwiper />
@@ -275,7 +245,7 @@ export default function LandingPage() {
               ))}
             </div>
             <div className="pt-4">
-              <a href="#portfolios" className="inline-block">
+              <a href="/plans" className="inline-block">
                 <button
                   type="button"
                   className="h-11 px-8 rounded-lg border border-white/15 bg-white/5 font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:-translate-y-0.5"
@@ -420,7 +390,7 @@ export default function LandingPage() {
                 Open an Account
               </button>
             </a>
-            <a href="#portfolios" className="w-full sm:w-auto">
+            <a href="/plans" className="w-full sm:w-auto">
               <button
                 type="button"
                 className="w-full sm:w-[200px] h-12 rounded-lg border border-white/15 bg-white/5 font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:-translate-y-0.5 active:translate-y-0"
@@ -607,70 +577,7 @@ export default function LandingPage() {
       </section>
 
       {/* ================= 12. Institutional Footer ================= */}
-      <footer className="border-t border-[#1E2433] bg-[#080A0F]">
-        <div className="mx-auto max-w-7xl px-6 sm:px-12 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12">
-          <div className="space-y-4">
-            <TeslaLogo size="sm" />
-            <p className="text-xs text-gray-500 leading-relaxed">
-              Enterprise digital wealth management. Structured high-yield allocations on double-entry rails with fixed-point ledger precision.
-            </p>
-            <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600">
-              {APP_CONFIG.supportEmail}
-            </span>
-          </div>
-
-          <div>
-            <h4 className="font-mono text-[10px] font-extrabold uppercase tracking-[0.25em] text-gray-500 mb-5">Platform</h4>
-            <ul className="space-y-3 text-xs font-semibold text-gray-400">
-              <li><a href="#portfolios" className="hover:text-white transition">Investment Plans</a></li>
-              <li><a href="#markets" className="hover:text-white transition">Live Markets</a></li>
-              <li><a href="/dashboard/referrals" className="hover:text-white transition">Referral Program</a></li>
-              <li><a href="/login" className="hover:text-white transition">Sign In</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-mono text-[10px] font-extrabold uppercase tracking-[0.25em] text-gray-500 mb-5">Account</h4>
-            <ul className="space-y-3 text-xs font-semibold text-gray-400">
-              <li><a href="/register" className="hover:text-white transition">Create Account</a></li>
-              <li><a href="/forgot-password" className="hover:text-white transition">Recover Access</a></li>
-              <li><a href="/dashboard/kyc" className="hover:text-white transition">Verification</a></li>
-              <li><a href="/dashboard/wallet" className="hover:text-white transition">Wallets</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-mono text-[10px] font-extrabold uppercase tracking-[0.25em] text-gray-500 mb-5">Terminal</h4>
-            <ul className="space-y-3 text-xs font-semibold text-gray-400">
-              <li><a href="/dashboard" className="hover:text-white transition">Dashboard</a></li>
-              <li><a href="/dashboard/investments" className="hover:text-white transition">Investments</a></li>
-              <li><a href="/dashboard/analytics" className="hover:text-white transition">Analytics</a></li>
-              <li><a href="/dashboard/notifications" className="hover:text-white transition">Notifications</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-mono text-[10px] font-extrabold uppercase tracking-[0.25em] text-gray-500 mb-5">Legal</h4>
-            <ul className="space-y-3 text-xs font-semibold text-gray-400">
-              <li><a href="/terms" className="hover:text-white transition">Terms of Service</a></li>
-              <li><a href="/privacy" className="hover:text-white transition">Privacy Policy</a></li>
-              <li><a href="/risk" className="hover:text-white transition">Risk Disclosure</a></li>
-              <li><a href={`mailto:${APP_CONFIG.supportEmail}`} className="hover:text-white transition">Contact Compliance</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="border-t border-[#1E2433]">
-          <div className="mx-auto max-w-7xl px-6 sm:px-12 py-8 flex flex-col lg:flex-row items-center justify-between gap-6">
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-              TeslaPrimeCapital &copy; 2026 — All Rights Reserved
-            </span>
-            <p className="max-w-2xl text-center lg:text-right font-mono text-[9px] leading-relaxed text-gray-600">
-              Structured allocations are subject to term and market risk. Compounded yield is calculated daily and settled only at plan maturity under the Lump-Sum Payout Policy. Figures presented in plan materials are targets, not guarantees of future performance.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
 
     </div>
   );

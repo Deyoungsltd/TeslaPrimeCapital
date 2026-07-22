@@ -42,34 +42,15 @@ export default function LoginPage() {
           return;
         }
       } else if (res.status >= 400 && res.status < 500 && body?.error?.message) {
-        // If the backend explicitly rejects the credentials (e.g. 401/403/429), show the error accurately
+        // Backend explicitly rejected the credentials (401/403/429) — surface it accurately
         setError(body.error.message);
         return;
-      } else {
-        // Offline or fallback simulated login if server/DB is disconnected or status >= 500
-        if (email.includes('admin') || email.includes('superadmin')) {
-          const simUser = { id: 'admin1', email, firstName: 'System', lastName: 'Executive', role: 'SUPER_ADMIN', status: 'ACTIVE', kycTier: 'TIER_2', twoFactorEnabled: true, referralCode: 'TESLA_ADM' };
-          setUserAndToken(simUser as any, 'simulated_jwt_token_admin');
-          window.location.href = '/admin';
-          return;
-        } else if (email && password) {
-          const simUser = { id: 'user1', email, firstName: 'Retail', lastName: 'Investor', role: 'INVESTOR', status: 'ACTIVE', kycTier: 'TIER_1', twoFactorEnabled: false, referralCode: 'TESLA_RET' };
-          setUserAndToken(simUser as any, 'simulated_jwt_token_user');
-          window.location.href = '/dashboard';
-          return;
-        }
-        setError(body?.error?.message || 'Login attempt failed. Please check your credentials.');
       }
+      // 5xx or malformed response — never forge a session; report honestly
+      setError('The sign-in service is temporarily unavailable. Please try again in a moment.');
     } catch {
-      if (email.includes('admin') || email.includes('superadmin')) {
-        const simUser = { id: 'admin1', email, firstName: 'System', lastName: 'Executive', role: 'SUPER_ADMIN', status: 'ACTIVE', kycTier: 'TIER_2', twoFactorEnabled: true, referralCode: 'TESLA_ADM' };
-        setUserAndToken(simUser as any, 'simulated_jwt_token_admin');
-        window.location.href = '/admin';
-      } else {
-        const simUser = { id: 'user1', email, firstName: 'Retail', lastName: 'Investor', role: 'INVESTOR', status: 'ACTIVE', kycTier: 'TIER_1', twoFactorEnabled: false, referralCode: 'TESLA_RET' };
-        setUserAndToken(simUser as any, 'simulated_jwt_token_user');
-        window.location.href = '/dashboard';
-      }
+      // Network failure — never forge a session; report honestly
+      setError('Unable to reach the sign-in service. Check your connection and try again.');
     } finally {
       setLoading(false);
     }

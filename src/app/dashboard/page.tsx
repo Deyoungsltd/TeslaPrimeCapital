@@ -9,7 +9,6 @@ export default function DashboardOverviewPage() {
   const [balances, setBalances] = useState<any[]>([]);
   const [activeCount, setActiveCount] = useState(1);
   const [copied, setCopied] = useState(false);
-  const [showNotificationToast, setShowNotificationToast] = useState(true);
 
   useEffect(() => {
     const fetchTerminalData = async () => {
@@ -18,70 +17,38 @@ export default function DashboardOverviewPage() {
         if (balRes.ok) {
           const balData = await balRes.json();
           if (balData.success && balData.data) setBalances(balData.data);
-        } else {
-          setBalances([
-            { id: '1', currency: 'USD', availableBalance: '150000.00000000', lockedBalance: '100000.00000000', totalDeposited: '280000.00000000', totalWithdrawn: '415000.00000000' },
-          ]);
         }
       } catch {
-        // Fallback for clean offline simulation
-        setBalances([
-          { id: '1', currency: 'USD', availableBalance: '150000.00000000', lockedBalance: '100000.00000000', totalDeposited: '280000.00000000', totalWithdrawn: '415000.00000000' },
-        ]);
+        // Wallets endpoint unreachable — show zero balances, never fabricated funds
+        setBalances([]);
       }
     };
     fetchTerminalData();
   }, []);
 
   const usdWallet = balances.find((b) => b.currency === 'USD') || balances[0] || {
-    availableBalance: '150000.00000000',
-    lockedBalance: '100000.00000000',
-    totalDeposited: '280000.00000000',
-    totalWithdrawn: '415000.00000000',
+    availableBalance: '0.00000000',
+    lockedBalance: '0.00000000',
+    totalDeposited: '0.00000000',
+    totalWithdrawn: '0.00000000',
   };
+
+  const referralUrl = `${
+    typeof window !== 'undefined' ? window.location.origin : 'https://teslaprimecapital.com'
+  }/register?ref=${user?.referralCode ?? ''}`;
 
   const handleCopyLink = () => {
     try {
-      navigator.clipboard.writeText('https://teslaequitypro.com');
+      navigator.clipboard.writeText(referralUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 3000);
     } catch {
-      // Fallback
+      // Clipboard unavailable
     }
   };
 
   return (
     <div className="space-y-8 relative">
-      {/* Live Notification Popup/Card (`Chen Singapore Just received $55,000!` IMG_7553 match) */}
-      {showNotificationToast && (
-        <div className="mx-auto max-w-sm rounded-2xl bg-[#10B981] p-4 text-white shadow-emerald-glow relative animate-pulse-slow">
-          <button
-            onClick={() => setShowNotificationToast(false)}
-            className="absolute top-3 right-3 text-black/60 hover:text-black font-extrabold text-sm"
-          >
-            ✕
-          </button>
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/20 text-yellow-300 font-bold text-lg">
-              🏆
-            </div>
-            <div>
-              <div className="flex items-center gap-2 text-sm font-extrabold text-black">
-                <span>Chen 🇸🇬</span>
-                <span className="text-[11px] font-medium text-black/80 font-mono">📍 Singapore</span>
-              </div>
-              <div className="text-base font-extrabold text-white tracking-tight font-mono">
-                Just received $55,000!
-              </div>
-              <div className="text-[10px] font-mono text-black/70">🕒 12 minutes ago</div>
-            </div>
-          </div>
-          <div className="mt-3 border-t border-black/15 pt-2 text-center text-xs font-bold text-black tracking-wide font-mono">
-            $ You could be next!
-          </div>
-        </div>
-      )}
-
       {/* Exact 4 Stat Cards Grid (`IMG_7552` match) */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {/* Card 1: Account Balance */}
@@ -147,14 +114,24 @@ export default function DashboardOverviewPage() {
           <input
             type="text"
             readOnly
-            value="https://teslaequitypro.com"
+            value={referralUrl}
             className="w-full rounded-lg border border-[#2C354C] bg-black px-4 py-3 text-sm font-mono text-white select-all focus:outline-none"
           />
           <button
             onClick={handleCopyLink}
+            aria-label="Copy referral link"
             className="flex-shrink-0 rounded-lg border border-[#2C354C] bg-[#161B29] p-3 text-gray-300 hover:border-white hover:text-white transition shadow-sm"
           >
-            {copied ? '✓' : '📋'}
+            {copied ? (
+              <svg className="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : (
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="9" y="9" width="11" height="11" rx="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M5 15V6a2 2 0 012-2h9" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
           </button>
         </div>
       </div>
@@ -177,7 +154,7 @@ export default function DashboardOverviewPage() {
         {/* Live TradingView Widget Embed */}
         <div className="h-[450px] w-full rounded-xl overflow-hidden border border-[#1E2433] bg-black">
           <iframe
-            src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_tsla&symbol=NASDAQ%3ATSLA&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_source=teslaequitypro.com&utm_medium=widget&utm_campaign=chart&utm_term=NASDAQ%3ATSLA"
+            src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_tsla&symbol=NASDAQ%3ATSLA&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_source=teslaprimecapital.com&utm_medium=widget&utm_campaign=chart&utm_term=NASDAQ%3ATSLA"
             style={{ width: '100%', height: '100%', border: '0' }}
             allowFullScreen
             title="TradingView NASDAQ:TSLA Real-Time Stock Chart"

@@ -8,6 +8,7 @@ import { validateInput } from '../middlewares/validate.middleware';
 import { extractAuthenticatedUser } from '../middlewares/authenticate.middleware';
 import { NotificationQuerySchema, NotificationMarkReadSchema } from '../validators/notification.validator';
 import { logger } from '@/utils/logger.util';
+import { prisma } from '@/lib/prisma';
 import { IApiResponse } from '@/contracts/api.envelope';
 
 export class NotificationController {
@@ -18,6 +19,37 @@ export class NotificationController {
       ...(error !== undefined && { error }),
       meta: { timestamp: new Date().toISOString(), requestId: `req_${Math.random().toString(36).substring(2, 11)}` },
     }, { status });
+  }
+
+  /**
+   * Public settlement feed: returns the most recent COMPLETED yield payouts
+   * and withdrawals with privacy-masked beneficiary names (`First L.`).
+   * Only genuinely settled transactions are returned — never fabricated.
+   */
+  public async getRecentPayouts(_req: NextRequest): Promise<NextResponse> {
+    try {
+      const settledTransactions = await prisma.transaction.findMany({
+        where: {
+          status: 'COMPLETED',
+          type: { in: ['YIELD_PAYOUT', 'WITHDRAWAL'] },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 12,
+        include: { user: { select: { firstName: true, lastName: true } } },
+      });
+
+      const payouts = settledTransactions.map((txn) => ({
+        name: `${txn.user.firstName.trim()} ${(txn.user.lastName.trim().charAt(0) || '').toUpperCase()}.`,
+        amount: txn.amount.toString(),
+        currency: txn.currency,
+        occurredAt: txn.createdAt.toISOString(),
+      }));
+
+      return NotificationController.makeEnvelope(true, { payouts }, undefined, 200);
+    } catch (err: any) {
+      logger.error(`Recent payouts feed retrieval failure: ${err.message}`);
+      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_RECENT_PAYOUTS_FAILED', message: err.message }, 500);
+    }
   }
 
   public async getUnreadCount(req: NextRequest): Promise<NextResponse> {

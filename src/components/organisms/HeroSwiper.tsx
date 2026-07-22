@@ -21,7 +21,7 @@ export const HeroSwiper: React.FC<{ slides?: IVehicleSlide[] }> = ({ slides }) =
       subtitle: 'Entry capital structuring · From $1,000 · 24-day maturity term',
       imageUrl: '/branding/hero-bg.jpg',
       orderUrl: '/register?planId=plan-bronze',
-      learnUrl: '#portfolios',
+      learnUrl: '/plans',
     },
     {
       id: 'silver',
@@ -30,7 +30,7 @@ export const HeroSwiper: React.FC<{ slides?: IVehicleSlide[] }> = ({ slides }) =
       subtitle: 'Enhanced momentum allocation · From $5,000 · 3-day maturity term',
       imageUrl: '/branding/car-silver.jpg',
       orderUrl: '/register?planId=plan-silver',
-      learnUrl: '#portfolios',
+      learnUrl: '/plans',
     },
     {
       id: 'gold',
@@ -39,7 +39,7 @@ export const HeroSwiper: React.FC<{ slides?: IVehicleSlide[] }> = ({ slides }) =
       subtitle: 'Premium compounding pool · From $10,000 · 7-day maturity term',
       imageUrl: '/branding/car-gold.jpg',
       orderUrl: '/register?planId=plan-gold',
-      learnUrl: '#portfolios',
+      learnUrl: '/plans',
     },
     {
       id: 'diamond',
@@ -48,7 +48,7 @@ export const HeroSwiper: React.FC<{ slides?: IVehicleSlide[] }> = ({ slides }) =
       subtitle: 'Elite executive capital pool · From $50,000 · 14-day maturity term',
       imageUrl: '/branding/car-diamond.jpg',
       orderUrl: '/register?planId=plan-diamond',
-      learnUrl: '#portfolios',
+      learnUrl: '/plans',
     },
   ];
 

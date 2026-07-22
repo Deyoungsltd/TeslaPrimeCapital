@@ -8,6 +8,8 @@ import { notificationController } from '@/server/controllers/notification.contro
 export async function GET(req: NextRequest, { params }: { params: { route: string[] } }): Promise<Response> {
   const route = params.route.join('/');
   switch (route) {
+    case 'recent-payouts':
+      return await notificationController.getRecentPayouts(req);
     case 'unread-count':
       return await notificationController.getUnreadCount(req);
     case 'list':

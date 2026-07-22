@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { Navbar } from '@/components/organisms/Navbar';
 import { Sidebar } from '@/components/organisms/Sidebar';
 import { QueryProvider } from '@/components/providers/QueryProvider';
+import { PayoutTickerToast } from '@/components/organisms/PayoutTickerToast';
 import { useSessionStore } from '@/lib/store/session.store';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -48,6 +49,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </main>
         </div>
+        <PayoutTickerToast />
       </div>
     </QueryProvider>
   );

@@ -12,11 +12,26 @@ import { WelcomeOtpEmail } from './templates/WelcomeOtpEmail';
 import { TwoFactorLoginEmail } from './templates/TwoFactorLoginEmail';
 import { SecurityAlertEmail } from './templates/SecurityAlertEmail';
 
-const resendApiKey = process.env.RESEND_API_KEY || 're_test_dummy_key';
-const resend = new Resend(resendApiKey);
+const resendApiKey = process.env.RESEND_API_KEY || '';
+const resend = new Resend(resendApiKey || 're_unconfigured_placeholder');
+
+/**
+ * Delivery gate: simulated logging is permitted ONLY outside production and
+ * ONLY when no real Resend key is configured. In production a missing key
+ * must surface as a failed delivery, never as a silently logged email.
+ */
+const RESEND_CONFIGURED = Boolean(resendApiKey) && !resendApiKey.startsWith('re_test');
 
 export class EmailService {
-  private static readonly FROM_ADDRESS = `${APP_CONFIG.platformName} <notifications@teslaprimecapital.com>`;
+  private static readonly FROM_ADDRESS = process.env.EMAIL_FROM || `${APP_CONFIG.platformName} <notifications@teslaprimecapital.com>`;
+
+  private static shouldSimulateDelivery(): boolean {
+    return process.env.NODE_ENV !== 'production' && !RESEND_CONFIGURED;
+  }
+
+  private static unconfiguredInProduction(): boolean {
+    return process.env.NODE_ENV === 'production' && !RESEND_CONFIGURED;
+  }
 
   /**
    * Sends a registration verification OTP email.
@@ -26,9 +41,13 @@ export class EmailService {
       logger.info(`Rendering WelcomeOtpEmail for ${recipient}`);
       const html = render(React.createElement(WelcomeOtpEmail, { firstName, otpCode, ipAddress }) as React.ReactElement);
 
-      if (process.env.NODE_ENV === 'test' || resendApiKey.startsWith('re_test')) {
-        logger.info(`[SIMULATED EMAIL DISPATCH] To: ${recipient} | Subject: Account Verification Code | OTP: ${otpCode}`);
+      if (EmailService.shouldSimulateDelivery()) {
+        logger.info(`[DEV-ONLY EMAIL LOG] To: ${recipient} | Subject: Account Verification Code | OTP: ${otpCode}`);
         return true;
+      }
+      if (EmailService.unconfiguredInProduction()) {
+        logger.error(`PRODUCTION EMAIL FAILURE: RESEND_API_KEY is not configured. Verification email to ${recipient} was NOT sent.`);
+        return false;
       }
 
       const { error } = await resend.emails.send({
@@ -58,9 +77,13 @@ export class EmailService {
     try {
       const html = render(React.createElement(TwoFactorLoginEmail, { firstName, otpCode, ipAddress, device }) as React.ReactElement);
 
-      if (process.env.NODE_ENV === 'test' || resendApiKey.startsWith('re_test')) {
-        logger.info(`[SIMULATED EMAIL DISPATCH] To: ${recipient} | Subject: Two-Factor Login Code | OTP: ${otpCode}`);
+      if (EmailService.shouldSimulateDelivery()) {
+        logger.info(`[DEV-ONLY EMAIL LOG] To: ${recipient} | Subject: Two-Factor Login Code | OTP: ${otpCode}`);
         return true;
+      }
+      if (EmailService.unconfiguredInProduction()) {
+        logger.error(`PRODUCTION EMAIL FAILURE: RESEND_API_KEY is not configured. Two-factor email to ${recipient} was NOT sent.`);
+        return false;
       }
 
       const { error } = await resend.emails.send({
@@ -88,9 +111,13 @@ export class EmailService {
     try {
       const html = render(React.createElement(SecurityAlertEmail, { firstName, alertTitle, alertDescription, ipAddress, device }) as React.ReactElement);
 
-      if (process.env.NODE_ENV === 'test' || resendApiKey.startsWith('re_test')) {
-        logger.info(`[SIMULATED EMAIL DISPATCH] To: ${recipient} | Alert: ${alertTitle}`);
+      if (EmailService.shouldSimulateDelivery()) {
+        logger.info(`[DEV-ONLY EMAIL LOG] To: ${recipient} | Alert: ${alertTitle}`);
         return true;
+      }
+      if (EmailService.unconfiguredInProduction()) {
+        logger.error(`PRODUCTION EMAIL FAILURE: RESEND_API_KEY is not configured. Security alert to ${recipient} was NOT sent.`);
+        return false;
       }
 
       const { error } = await resend.emails.send({
