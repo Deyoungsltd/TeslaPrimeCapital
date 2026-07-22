@@ -2,7 +2,7 @@
   "name": "teslaprimecapital-enterprise",
   "version": "0.3.0-alpha",
   "private": true,
-  "description": "TeslaPrimeCapital — Enterprise Digital Wealth Management & Investment Platform",
+  "description": "TeslaPrimeCapital \u2014 Enterprise Digital Wealth Management & Investment Platform",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,7 +14,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
-    "seed": "ts-node -O \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" prisma/seed.ts"
+    "seed": "ts-node -O \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" prisma/seed.ts",
+    "verify:env": "node scripts/verify-env.mjs"
   },
   "prisma": {
     "seed": "ts-node -O \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" prisma/seed.ts"
