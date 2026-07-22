@@ -1,4 +1,5 @@
 'use client';
+import { SafeImage } from '@/components/atoms/SafeImage';
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
@@ -140,12 +141,12 @@ export default function AdminEditPlanPage() {
           <span className="text-xs font-bold text-brand-blue uppercase tracking-wider block font-mono">
             Featured Car Image Banner (`IMG_7582 Match`)
           </span>
-          <div className="h-56 w-full rounded-xl overflow-hidden border border-[#20283E] bg-black shadow-inner">
-            <img src={imageUrl} alt="Car Preview" className="h-full w-full object-cover" />
+          <div className="relative h-56 w-full rounded-xl overflow-hidden border border-[#20283E] bg-black shadow-inner">
+            <SafeImage src={imageUrl} alt="Vehicle preview" fill sizes="(max-width: 768px) 100vw, 480px" className="object-cover" />
           </div>
           <div>
             <label className="block text-xs font-bold text-gray-300 mb-2 font-sans">
-              Upload New Car Picture from Device 📂
+              Upload Vehicle Photograph
             </label>
             <input
               type="file"

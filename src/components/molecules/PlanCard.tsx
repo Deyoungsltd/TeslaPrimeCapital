@@ -1,4 +1,5 @@
 'use client';
+import { SafeImage } from '@/components/atoms/SafeImage';
 
 import React from 'react';
 import { CurrencyDisplay } from '../atoms/CurrencyDisplay';
@@ -43,11 +44,12 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
     <div className="flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] shadow-tesla transition-all duration-300 hover:border-red-500/50 hover:shadow-[0_10px_40px_rgba(0,0,0,0.5)] group overflow-hidden">
       {/* Horizontal Vehicle Banner */}
       <div className="relative h-44 w-full overflow-hidden bg-black">
-        <img
+        <SafeImage
           src={imageUrl}
           alt={name}
-          onError={(e) => { e.currentTarget.src = '/branding/car-bronze.jpg'; }}
-          className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105 opacity-95"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 320px"
+          className="object-cover object-center transition-transform duration-700 group-hover:scale-105 opacity-95"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#111520] via-[#111520]/30 to-transparent" />
 

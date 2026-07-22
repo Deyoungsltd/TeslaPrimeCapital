@@ -1,4 +1,5 @@
 'use client';
+import { SafeImage } from '@/components/atoms/SafeImage';
 
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -122,11 +123,13 @@ export const HeroSwiper: React.FC<{ slides?: IVehicleSlide[] }> = ({ slides }) =
               idx === currentIndex ? 'opacity-90 z-10' : 'opacity-0 z-0 pointer-events-none'
             }`}
           >
-            <img
+            <SafeImage
               src={slide.imageUrl}
               alt={slide.title}
-              onError={(e) => { e.currentTarget.src = '/branding/car-bronze.jpg'; }}
-              className="h-full w-full object-cover object-center"
+              fill
+              priority={idx === 0}
+              sizes="100vw"
+              className="object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-black/30 to-black/60" />
           </div>

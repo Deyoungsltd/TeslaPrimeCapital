@@ -1,56 +1,25 @@
-'use client';
+import React from 'react';
+import type { Metadata } from 'next';
+import DashboardShell from './DashboardShell';
 
-import React, { useEffect } from 'react';
-import { Navbar } from '@/components/organisms/Navbar';
-import { Sidebar } from '@/components/organisms/Sidebar';
-import { QueryProvider } from '@/components/providers/QueryProvider';
-import { PayoutTickerToast } from '@/components/organisms/PayoutTickerToast';
-import { useSessionStore } from '@/lib/store/session.store';
+/**
+ * Client Terminal segment layout (server component).
+ *
+ * The entire /dashboard/* tree is an authenticated application surface: it
+ * must never appear in search indexes (its pages are personalized shells and
+ * indexing them would leak route structure for zero organic value). The
+ * metadata contract lives here; interactive chrome lives in DashboardShell.
+ */
+export const metadata: Metadata = {
+  title: 'Client Terminal',
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: { index: false, follow: false, noimageindex: true },
+  },
+};
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { setUserAndToken } = useSessionStore();
-
-  useEffect(() => {
-    const verifyTerminalSession = async () => {
-      try {
-        const res = await fetch('/api/v1/auth/refresh', { method: 'POST' });
-        if (res.ok) {
-          const body = await res.json();
-          if (body.success && body.data?.user) {
-            setUserAndToken(body.data.user, body.data.accessToken);
-            return;
-          }
-        }
-        // Check if an active session or simulated login is already present in client store/localStorage
-        const state = useSessionStore.getState();
-        if (!state.user || !state.accessToken) {
-          window.location.href = '/login?expired=true';
-        }
-      } catch (err) {
-        // Fallback or offline simulation check
-        const state = useSessionStore.getState();
-        if (!state.user || !state.accessToken) {
-          window.location.href = '/login?expired=true';
-        }
-      }
-    };
-    verifyTerminalSession();
-  }, [setUserAndToken]);
-
-  return (
-    <QueryProvider>
-      <div className="flex min-h-screen flex-col bg-brand-dark text-gray-100">
-        <Navbar />
-        <div className="flex flex-1 overflow-hidden">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
-            <div className="mx-auto max-w-7xl space-y-8">
-              {children}
-            </div>
-          </main>
-        </div>
-        <PayoutTickerToast />
-      </div>
-    </QueryProvider>
-  );
+  return <DashboardShell>{children}</DashboardShell>;
 }

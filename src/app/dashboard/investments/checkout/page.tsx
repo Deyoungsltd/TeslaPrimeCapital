@@ -1,4 +1,5 @@
 'use client';
+import { SafeImage } from '@/components/atoms/SafeImage';
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -149,7 +150,7 @@ function CheckoutContent() {
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-start">
         <div className="rounded-2xl border border-[#20283E] bg-[#131824] overflow-hidden shadow-tesla">
           <div className="relative h-48 w-full bg-black">
-            <img src={plan.imageUrl || '/branding/car-bronze.jpg'} alt={plan.name} className="h-full w-full object-cover" />
+            <SafeImage src={plan.imageUrl || '/branding/car-bronze.jpg'} alt={plan.name} fill sizes="(max-width: 768px) 100vw, 480px" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#131824] via-[#131824]/20 to-transparent" />
             <span className="absolute top-3 left-3 rounded-lg border border-white/20 bg-black/80 px-3 py-1 text-xs font-extrabold text-white font-mono shadow">
               {plan.profitText || '40% Profit'}

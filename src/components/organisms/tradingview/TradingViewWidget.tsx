@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export interface ITradingViewWidgetProps {
   /** Absolute URL of the official TradingView external-embedding script. */
@@ -17,6 +17,13 @@ export interface ITradingViewWidgetProps {
   attributionHref?: string;
   /** Blue anchor text inside the attribution line (e.g. `NASDAQ:TSLA Chart`). */
   attributionText?: string;
+  /**
+   * When true (default), the vendor script is only injected once the widget
+   * scrolls within 600px of the viewport — third-party market payloads never
+   * compete with first paint or interaction readiness. Set false only for
+   * above-the-fold widgets that must stream immediately.
+   */
+  lazy?: boolean;
 }
 
 /**
@@ -38,11 +45,36 @@ export const TradingViewWidget: React.FC<ITradingViewWidgetProps> = ({
   height,
   attributionHref,
   attributionText,
+  lazy = true,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const widgetAreaRef = useRef<HTMLDivElement | null>(null);
+  const [shouldLoad, setShouldLoad] = useState(!lazy);
+
+  // Viewport gate: arm an IntersectionObserver that grants the widget its
+  // payload budget only when the user actually scrolls near it.
+  useEffect(() => {
+    if (!lazy || shouldLoad) return;
+    const container = containerRef.current;
+    if (!container || typeof IntersectionObserver === 'undefined') {
+      setShouldLoad(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '600px 0px' },
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [lazy, shouldLoad]);
 
   useEffect(() => {
+    if (!shouldLoad) return;
     const container = containerRef.current;
     const widgetArea = widgetAreaRef.current;
     if (!container || !widgetArea) return;
@@ -60,7 +92,7 @@ export const TradingViewWidget: React.FC<ITradingViewWidgetProps> = ({
       }
       widgetArea.innerHTML = '';
     };
-  }, [scriptSrc, config]);
+  }, [scriptSrc, config, shouldLoad]);
 
   return (
     <div ref={containerRef} className="tradingview-widget-container w-full">

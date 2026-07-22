@@ -5,6 +5,7 @@ const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Plans', href: '/plans' },
   { label: 'How to Invest', href: '/how-to-invest' },
+  { label: 'Insights', href: '/insights' },
   { label: 'About', href: '/about' },
   { label: 'FAQ', href: '/faq' },
 ];

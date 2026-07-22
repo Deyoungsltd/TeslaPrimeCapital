@@ -1,12 +1,15 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { buildMarketingMetadata } from '@/lib/seo';
 import { MarketingHeader } from '@/components/organisms/marketing/MarketingHeader';
 import { MarketingFooter } from '@/components/organisms/marketing/MarketingFooter';
+import { BreadcrumbJsonLd } from '@/components/atoms/BreadcrumbJsonLd';
 
-export const metadata: Metadata = {
-  title: 'How to Invest — TeslaPrimeCapital',
-  description: 'The complete capital deployment guide: registration, verification tiers, funding rails, allocation, and maturity settlement.',
-};
+export const metadata: Metadata = buildMarketingMetadata(
+  'How to Invest',
+  'The complete capital deployment guide: registration, verification tiers, funding rails, allocation, and maturity settlement.',
+  '/how-to-invest',
+);
 
 const STEPS = [
   {
@@ -46,6 +49,7 @@ export default function HowToInvestPage() {
   return (
     <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white">
       <MarketingHeader activePath="/how-to-invest" />
+      <BreadcrumbJsonLd items={[{ name: 'Home', path: '/' }, { name: 'How to Invest', path: '/how-to-invest' }]} />
 
       <main>
         <section className="mx-auto max-w-7xl px-6 sm:px-12 pt-20 pb-14 space-y-4">

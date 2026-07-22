@@ -1,13 +1,17 @@
+import { SafeImage } from '@/components/atoms/SafeImage';
 import React from 'react';
 import type { Metadata } from 'next';
+import { buildMarketingMetadata } from '@/lib/seo';
 import { APP_CONFIG } from '@/config/app.config';
 import { MarketingHeader } from '@/components/organisms/marketing/MarketingHeader';
 import { MarketingFooter } from '@/components/organisms/marketing/MarketingFooter';
+import { BreadcrumbJsonLd } from '@/components/atoms/BreadcrumbJsonLd';
 
-export const metadata: Metadata = {
-  title: 'About the Firm — TeslaPrimeCapital',
-  description: 'Engineering-first capital management: double-entry ledgers, human custody, deterministic settlement.',
-};
+export const metadata: Metadata = buildMarketingMetadata(
+  'About the Firm',
+  'Engineering-first capital management: double-entry ledgers, human custody, deterministic settlement.',
+  '/about',
+);
 
 const PILLARS = [
   {
@@ -39,6 +43,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white">
       <MarketingHeader activePath="/about" />
+      <BreadcrumbJsonLd items={[{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }]} />
 
       <main>
         {/* Statement band */}
@@ -59,11 +64,13 @@ export default function AboutPage() {
 
         {/* Boardroom image + standards */}
         <section className="mx-auto max-w-7xl px-6 sm:px-12 pb-20">
-          <div className="relative rounded-2xl overflow-hidden border border-[#1E2433] bg-black shadow-tesla">
-            <img
+          <div className="relative h-[320px] sm:h-[440px] rounded-2xl overflow-hidden border border-[#1E2433] bg-black shadow-tesla">
+            <SafeImage
               src="/branding/boardroom.jpg"
               alt="TeslaPrimeCapital operations floor"
-              className="h-[320px] sm:h-[440px] w-full object-cover opacity-95"
+              fill
+              sizes="(max-width: 1280px) 100vw, 1180px"
+              className="object-cover opacity-95"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 rounded-xl border border-[#1E2433] bg-[#0A0D14]/95 px-6 py-5 backdrop-blur-md">

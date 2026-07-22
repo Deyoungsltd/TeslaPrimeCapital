@@ -1,4 +1,5 @@
 'use client';
+import { SafeImage } from '@/components/atoms/SafeImage';
 
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/atoms/Button';
@@ -195,12 +196,12 @@ export default function AdminPlansAndCarPicturesPage() {
                 <span className="text-xs font-bold text-brand-blue uppercase tracking-wider block font-mono">
                   Featured Car Image Banner (`IMG_7582.jpeg` Match)
                 </span>
-                <div className="h-44 w-full rounded-xl overflow-hidden border border-[#2C354C] bg-black">
-                  <img src={imageUrl} alt="Car Preview" className="h-full w-full object-cover" />
+                <div className="relative h-44 w-full rounded-xl overflow-hidden border border-[#2C354C] bg-black">
+                  <SafeImage src={imageUrl} alt="Vehicle preview" fill sizes="(max-width: 768px) 100vw, 480px" className="object-cover" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-300 mb-1 font-sans">
-                    Upload New Car Picture from Device 📂
+                    Upload Vehicle Photograph
                   </label>
                   <input
                     type="file"
@@ -300,8 +301,8 @@ export default function AdminPlansAndCarPicturesPage() {
             {plans.map((p) => (
               <tr key={p.id} className="hover:bg-[#181D2D]/60 transition">
                 <td className="px-5 py-4">
-                  <div className="h-14 w-24 rounded-lg overflow-hidden border border-[#2C354C] bg-black">
-                    <img src={p.imageUrl || '/branding/car-bronze.jpg'} alt={p.name} className="h-full w-full object-cover" />
+                  <div className="relative h-14 w-24 rounded-lg overflow-hidden border border-[#2C354C] bg-black">
+                    <SafeImage src={p.imageUrl || '/branding/car-bronze.jpg'} alt={p.name} fill sizes="96px" className="object-cover" />
                   </div>
                 </td>
                 <td className="px-5 py-4">

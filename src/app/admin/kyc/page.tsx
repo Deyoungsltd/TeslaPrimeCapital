@@ -1,4 +1,5 @@
 'use client';
+import { SafeImage } from '@/components/atoms/SafeImage';
 
 import React, { useEffect, useState } from 'react';
 import { Badge } from '@/components/atoms/Badge';
@@ -106,11 +107,13 @@ export default function AdminKycReviewDeskPage() {
               <span className="text-xs font-bold text-gray-300 uppercase tracking-wider block font-mono">Ephemeral 300s Signed Cloudinary Preview (`Watermarked`)</span>
               <div className="overflow-hidden rounded-2xl border border-[#2A2338] bg-black p-2 text-center shadow-inner relative">
                 <div className="relative h-64 w-full overflow-hidden rounded-xl bg-[#16131F] flex items-center justify-center">
-                  <img
+                  <SafeImage
                     src={previewUrl || '/branding/crypto-vault.jpg'}
                     alt={selectedDoc.documentType}
-                    onError={(e) => { e.currentTarget.src = '/branding/crypto-vault.jpg'; }}
-                    className="h-full w-full object-cover opacity-90"
+                    fallbackSrc="/branding/crypto-vault.jpg"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 640px"
+                    className="object-cover opacity-90"
                   />
                   <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center p-4">
                     <span className="rounded-lg border border-red-500/50 bg-[#7F1D1D]/90 px-4 py-2 font-mono text-xs font-extrabold text-white shadow-red-glow">

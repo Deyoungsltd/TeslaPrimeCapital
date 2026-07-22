@@ -1,3 +1,4 @@
+import { SafeImage } from '@/components/atoms/SafeImage';
 import React from 'react';
 import { APP_CONFIG } from '@/config/app.config';
 import { INVESTMENT_PLANS_CONFIG } from '@/config/plans.config';
@@ -88,10 +89,12 @@ export default function LandingPage() {
               >
                 {/* Vehicle Banner */}
                 <div className="relative h-44 w-full overflow-hidden bg-black">
-                  <img
+                  <SafeImage
                     src={plan.imageUrl || '/branding/car-bronze.jpg'}
                     alt={plan.name}
-                    className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105 opacity-95"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 288px"
+                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105 opacity-95"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#111520] via-[#111520]/30 to-transparent" />
                   <span className="absolute top-3 right-3 rounded-md border border-white/15 bg-black/80 px-3 py-1.5 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-red-400 backdrop-blur-md">
@@ -257,11 +260,13 @@ export default function LandingPage() {
           </div>
 
           <div className="relative">
-            <div className="rounded-2xl border border-[#1E2433] bg-black overflow-hidden shadow-tesla">
-              <img
+            <div className="relative aspect-[3/2] rounded-2xl border border-[#1E2433] bg-black overflow-hidden shadow-tesla">
+              <SafeImage
                 src="/branding/boardroom.jpg"
                 alt="TeslaPrimeCapital operations floor"
-                className="h-full w-full object-cover opacity-95"
+                fill
+                sizes="(max-width: 1024px) 100vw, 640px"
+                className="object-cover opacity-95"
               />
             </div>
             <div className="absolute -bottom-5 -left-5 sm:-left-8 rounded-xl border border-[#1E2433] bg-[#0A0D14] px-6 py-5 shadow-tesla">
@@ -419,8 +424,8 @@ export default function LandingPage() {
               </a>
             </div>
           </div>
-          <div className="w-full md:w-1/2 h-56 rounded-xl overflow-hidden border border-[#1E2433] bg-black">
-            <img src="/branding/car-silver.jpg" alt="Current Offers" className="h-full w-full object-cover" />
+          <div className="relative w-full md:w-1/2 h-56 rounded-xl overflow-hidden border border-[#1E2433] bg-black">
+            <SafeImage src="/branding/car-silver.jpg" alt="Current Offers" fill sizes="(max-width: 768px) 100vw, 560px" className="object-cover" />
           </div>
         </div>
 
@@ -444,8 +449,8 @@ export default function LandingPage() {
               </a>
             </div>
           </div>
-          <div className="w-full md:w-1/2 h-56 rounded-xl overflow-hidden border border-[#1E2433] bg-black">
-            <img src="/branding/car-gold.jpg" alt="Inventory" className="h-full w-full object-cover" />
+          <div className="relative w-full md:w-1/2 h-56 rounded-xl overflow-hidden border border-[#1E2433] bg-black">
+            <SafeImage src="/branding/car-gold.jpg" alt="Inventory" fill sizes="(max-width: 768px) 100vw, 560px" className="object-cover" />
           </div>
         </div>
       </section>

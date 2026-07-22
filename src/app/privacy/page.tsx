@@ -1,12 +1,14 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { buildMarketingMetadata } from '@/lib/seo';
 import { APP_CONFIG } from '@/config/app.config';
 import { TeslaLogo } from '@/components/atoms/TeslaLogo';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy — TeslaPrimeCapital',
-  description: 'How TeslaPrimeCapital collects, encrypts, retains, and protects personal and financial data.',
-};
+export const metadata: Metadata = buildMarketingMetadata(
+  'Privacy Policy',
+  'How TeslaPrimeCapital collects, encrypts, retains, and protects personal and financial data.',
+  '/privacy',
+);
 
 const SECTIONS: Array<{ title: string; body: string }> = [
   {

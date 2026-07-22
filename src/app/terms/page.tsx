@@ -1,12 +1,14 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { buildMarketingMetadata } from '@/lib/seo';
 import { APP_CONFIG } from '@/config/app.config';
 import { TeslaLogo } from '@/components/atoms/TeslaLogo';
 
-export const metadata: Metadata = {
-  title: 'Terms of Service — TeslaPrimeCapital',
-  description: 'The contractual terms governing use of the TeslaPrimeCapital platform, structured allocation plans, wallets, and referral program.',
-};
+export const metadata: Metadata = buildMarketingMetadata(
+  'Terms of Service',
+  'The contractual terms governing use of the TeslaPrimeCapital platform, structured allocation plans, wallets, and referral program.',
+  '/terms',
+);
 
 const SECTIONS: Array<{ title: string; body: string }> = [
   {

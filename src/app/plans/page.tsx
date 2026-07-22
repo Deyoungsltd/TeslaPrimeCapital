@@ -1,13 +1,17 @@
+import { SafeImage } from '@/components/atoms/SafeImage';
 import React from 'react';
 import type { Metadata } from 'next';
+import { buildMarketingMetadata } from '@/lib/seo';
 import { INVESTMENT_PLANS_CONFIG } from '@/config/plans.config';
 import { MarketingHeader } from '@/components/organisms/marketing/MarketingHeader';
 import { MarketingFooter } from '@/components/organisms/marketing/MarketingFooter';
+import { BreadcrumbJsonLd } from '@/components/atoms/BreadcrumbJsonLd';
 
-export const metadata: Metadata = {
-  title: 'Investment Plans — TeslaPrimeCapital',
-  description: 'Four term-defined structured allocation pools with daily compounding and lump-sum maturity settlement.',
-};
+export const metadata: Metadata = buildMarketingMetadata(
+  'Investment Plans',
+  'Four term-defined structured allocation pools with daily compounding and lump-sum maturity settlement.',
+  '/plans',
+);
 
 const MATURITY_STEPS = [
   { phase: 'Day 0', title: 'Capital locks', body: 'Your allocation moves from the available wallet into the plan. From this moment the position is term-locked — no early exit.' },
@@ -19,6 +23,7 @@ export default function InvestmentPlansPage() {
   return (
     <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white">
       <MarketingHeader activePath="/plans" />
+      <BreadcrumbJsonLd items={[{ name: 'Home', path: '/' }, { name: 'Investment Plans', path: '/plans' }]} />
 
       <main>
         {/* Header band */}
@@ -45,10 +50,12 @@ export default function InvestmentPlansPage() {
               className="rounded-2xl border border-[#1E2433] bg-[#111520] shadow-tesla overflow-hidden flex flex-col group"
             >
               <div className="relative h-56 w-full overflow-hidden bg-black">
-                <img
+                <SafeImage
                   src={plan.imageUrl || '/branding/car-bronze.jpg'}
                   alt={plan.name}
-                  className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105 opacity-95"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 620px"
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-105 opacity-95"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#111520] via-transparent to-transparent" />
                 <div className="absolute top-4 left-4 rounded-md border border-white/15 bg-black/80 px-3 py-1.5 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-red-400 backdrop-blur-md">

@@ -1,11 +1,13 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { buildMarketingMetadata } from '@/lib/seo';
 import { TeslaLogo } from '@/components/atoms/TeslaLogo';
 
-export const metadata: Metadata = {
-  title: 'Risk Disclosure — TeslaPrimeCapital',
-  description: 'Material risks of structured capital allocations, digital-asset settlement rails, and term liquidity locks.',
-};
+export const metadata: Metadata = buildMarketingMetadata(
+  'Risk Disclosure',
+  'Material risks of structured capital allocations, digital-asset settlement rails, and term liquidity locks.',
+  '/risk',
+);
 
 const SECTIONS: Array<{ title: string; body: string }> = [
   {
