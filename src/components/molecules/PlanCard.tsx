@@ -40,72 +40,71 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
   const featList = features && features.length > 0 ? features : ['Portfolio Access', 'Investment Dashboard', 'Email Support'];
 
   return (
-    <div className="flex flex-col justify-between rounded-3xl border border-[#2A2338] bg-[#16131F] shadow-tesla transition-all duration-300 hover:border-red-500/60 group overflow-hidden">
-      {/* 1. Horizontal Car Image Banner (`IMG_7582.jpeg` Match with bulletproof fallback!) */}
-      <div className="relative h-48 w-full overflow-hidden bg-black">
+    <div className="flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] shadow-tesla transition-all duration-300 hover:border-red-500/50 hover:shadow-[0_10px_40px_rgba(0,0,0,0.5)] group overflow-hidden">
+      {/* Horizontal Vehicle Banner */}
+      <div className="relative h-44 w-full overflow-hidden bg-black">
         <img
           src={imageUrl}
           alt={name}
           onError={(e) => { e.currentTarget.src = '/branding/car-bronze.jpg'; }}
-          className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110 opacity-95"
+          className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105 opacity-95"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#16131F] via-[#16131F]/30 to-transparent" />
-        
-        <div className="absolute top-3 right-3 flex items-center justify-between font-mono text-xs z-10">
-          <span className="rounded-lg border border-white/20 bg-black/80 px-3 py-1 font-extrabold text-red-400 backdrop-blur-md shadow">
+        <div className="absolute inset-0 bg-gradient-to-t from-[#111520] via-[#111520]/30 to-transparent" />
+
+        <div className="absolute top-3 right-3 z-10">
+          <span className="rounded-md border border-white/15 bg-black/80 px-3 py-1.5 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-red-400 backdrop-blur-md">
             {profitText}
           </span>
         </div>
       </div>
 
-      {/* 2. Card Content & Checkmark Features (`IMG_7582.jpeg` match!) */}
-      <div className="p-6 space-y-6 flex-1 flex flex-col justify-between bg-[#16131F]">
+      {/* Card Content */}
+      <div className="p-6 space-y-6 flex-1 flex flex-col justify-between bg-[#111520]">
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-extrabold tracking-tight text-white font-sans group-hover:text-[#EF4444] transition-colors">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-xl font-extrabold tracking-tight text-white font-sans group-hover:text-[#EF4444] transition-colors">
               {name}
             </h3>
-            <span className="text-xs font-mono font-bold text-gray-400">
-              {termDays} Days Term
+            <span className="flex-shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 pt-1.5">
+              {termDays}D Term
             </span>
           </div>
-          <p className="text-xs text-gray-300 leading-relaxed font-sans min-h-[36px]">
+          <p className="text-xs text-gray-400 leading-relaxed font-sans min-h-[36px]">
             {description}
           </p>
         </div>
 
-        <div className="pt-3 border-t border-[#2A2338]/80">
+        <div className="pt-4 border-t border-[#1E2433]/80">
           <div className="text-2xl font-extrabold text-white tracking-tight font-sans">
             ${parseFloat(minDepositUsd).toLocaleString()}
           </div>
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mt-0.5">
-            minimum investment
+          <span className="font-mono text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] block mt-1">
+            Minimum Allocation
           </span>
         </div>
 
-        {/* Checkmark Features List (`IMG_7582.jpeg` checkmarks match!) */}
-        <div className="space-y-3 pt-2 font-sans text-xs text-gray-200">
+        {/* Precision SVG Checkmarks */}
+        <div className="space-y-3 pt-1 font-sans text-xs text-gray-300">
           {featList.map((feat, idx) => (
             <div key={idx} className="flex items-center gap-3">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold text-[11px] border border-emerald-500/40">
-                ✔
+              <span className="flex h-4.5 w-4.5 flex-shrink-0 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                <svg className="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5">
+                  <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </span>
               <span className="font-semibold">{feat}</span>
             </div>
           ))}
         </div>
 
-        {/* 3. Dedicated Page Navigation CTA Button (`No in-page modal! Strictly returns to dedicated page!`) */}
+        {/* Dedicated Page Navigation CTA */}
         <div className="pt-4">
-          <a
-            href={`/dashboard/investments/checkout?planId=${planId}`}
-            className="block w-full"
-          >
+          <a href={`/dashboard/investments/checkout?planId=${planId}`} className="block w-full">
             <button
               type="button"
-              className="w-full rounded-2xl bg-[#EF4444] py-4 text-xs font-extrabold uppercase tracking-wider text-white transition hover:bg-[#DC2626] shadow-red-glow active:scale-[0.98]"
+              className="w-full h-11 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white shadow-[0_4px_25px_rgba(239,68,68,0.4)] transition-all duration-300 hover:shadow-[0_8px_35px_rgba(239,68,68,0.7)] hover:-translate-y-0.5 active:translate-y-0"
             >
-              Invest Now →
+              Allocate Capital
             </button>
           </a>
         </div>

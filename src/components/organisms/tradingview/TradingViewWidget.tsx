@@ -14,9 +14,9 @@ export interface ITradingViewWidgetProps {
   /** Explicit pixel height of the rendered widget frame. */
   height: number;
   /** Attribution hyperlink target (official TradingView copyright pattern). */
-  attributionHref: string;
+  attributionHref?: string;
   /** Blue anchor text inside the attribution line (e.g. `NASDAQ:TSLA Chart`). */
-  attributionText: string;
+  attributionText?: string;
 }
 
 /**
@@ -69,17 +69,19 @@ export const TradingViewWidget: React.FC<ITradingViewWidgetProps> = ({
         className="tradingview-widget-container__widget w-full"
         style={{ height }}
       />
-      <div className="tradingview-widget-copyright pt-3 text-center text-[11px] font-semibold text-gray-500">
-        <a
-          href={attributionHref}
-          rel="noopener nofollow"
-          target="_blank"
-          className="text-[#3E6AE1] hover:text-white transition"
-        >
-          {attributionText}
-        </a>
-        <span> By TradingView</span>
-      </div>
+      {attributionHref && attributionText && (
+        <div className="tradingview-widget-copyright pt-3 text-center text-[11px] font-semibold text-gray-500">
+          <a
+            href={attributionHref}
+            rel="noopener nofollow"
+            target="_blank"
+            className="text-[#3E6AE1] hover:text-white transition"
+          >
+            {attributionText}
+          </a>
+          <span> By TradingView</span>
+        </div>
+      )}
     </div>
   );
 };

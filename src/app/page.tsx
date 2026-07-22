@@ -2,59 +2,114 @@ import React from 'react';
 import { APP_CONFIG } from '@/config/app.config';
 import { INVESTMENT_PLANS_CONFIG } from '@/config/plans.config';
 import { HeroSwiper } from '@/components/organisms/HeroSwiper';
+import { TradingViewTickerTape } from '@/components/organisms/tradingview/TradingViewTickerTape';
+import { TradingViewSymbolOverview } from '@/components/organisms/tradingview/TradingViewSymbolOverview';
+import { TradingViewMarketOverview } from '@/components/organisms/tradingview/TradingViewMarketOverview';
+
+const SVG_CHECK = (
+  <svg className="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5">
+    <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white pb-10">
-      
-      {/* 1. Exact Top Navbar (`IMG_7582.jpeg` Top Match) */}
-      <header className="sticky top-0 z-50 flex h-20 w-full items-center justify-between border-b border-[#1E2433] bg-[#080A0F]/95 px-6 sm:px-12 backdrop-blur-md">
+    <div className="min-h-screen bg-[#080A0F] text-white font-sans selection:bg-[#EF4444] selection:text-white">
+
+      {/* ================= 1. Institutional Header ================= */}
+      <header className="sticky top-0 z-50 flex h-[72px] w-full items-center justify-between border-b border-[#1E2433] bg-[#080A0F]/90 px-6 sm:px-12 backdrop-blur-xl">
         <a href="/" className="flex items-center gap-3">
-          <span className="text-2xl font-extrabold tracking-[0.35em] text-white uppercase font-sans">
-            T E S L A
+          <span className="text-lg sm:text-xl font-extrabold tracking-[0.4em] text-white uppercase font-sans">
+            Tesla
+          </span>
+          <span className="hidden sm:block border-l border-[#1E2433] pl-3 font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-gray-500">
+            Prime Capital
           </span>
         </a>
 
-        <nav className="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-gray-300 font-sans">
+        <nav className="hidden lg:flex items-center gap-9 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
           <a href="/" className="hover:text-white transition">Home</a>
-          <a href="#portfolios" className="hover:text-white transition">About</a>
-          <a href="#portfolios" className="hover:text-white transition">Our Solutions ▾</a>
-          <a href="#portfolios" className="hover:text-white transition">FAQ</a>
-          <a href="#portfolios" className="hover:text-white transition">Contact</a>
-          <a href="/dashboard" className="hover:text-white transition">Tracking</a>
+          <a href="#portfolios" className="hover:text-white transition">Plans</a>
+          <a href="#markets" className="hover:text-white transition">Markets</a>
+          <a href="#process" className="hover:text-white transition">Process</a>
+          <a href="#faq" className="hover:text-white transition">FAQ</a>
         </nav>
 
-        <div className="flex items-center gap-4 font-sans">
-          <a
-            href="/dashboard"
-            className="rounded-full bg-white px-5 py-2 text-xs font-bold text-black transition hover:bg-gray-200 shadow-sm"
-          >
-            Track Order
+        <div className="flex items-center gap-3">
+          <a href="/dashboard" className="hidden sm:block">
+            <button
+              type="button"
+              className="h-10 px-5 rounded-lg border border-white/15 bg-white/5 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-gray-200 transition hover:bg-white/10 hover:border-white/40"
+            >
+              Terminal
+            </button>
           </a>
-          <a
-            href="/login"
-            className="rounded-full bg-[#EF4444] px-6 py-2 text-xs font-extrabold text-white transition hover:bg-[#DC2626] shadow-red-glow"
-          >
-            Login
+          <a href="/login">
+            <button
+              type="button"
+              className="h-10 px-6 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-white shadow-[0_4px_25px_rgba(239,68,68,0.35)] transition-all duration-300 hover:shadow-[0_8px_35px_rgba(239,68,68,0.6)] hover:-translate-y-0.5"
+            >
+              Sign In
+            </button>
           </a>
         </div>
       </header>
 
-      {/* 2. Interactive Touch-Swipeable Vehicle Carousel (`IMG_7587 Model 3 & IMG_7588 Cybertruck Swiper Match!`) */}
+      {/* ================= 2. Allocation Showcase Carousel ================= */}
       <HeroSwiper />
 
-      {/* 3. Investment Plans Grid (`IMG_7582.jpeg` Exact Match with RED buttons instead of blue!) */}
-      <section id="portfolios" className="mx-auto max-w-7xl px-6 py-24 text-left font-sans">
-        <div className="mb-14 text-center max-w-3xl mx-auto space-y-2">
-          <h2 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-            Investment Plans
-          </h2>
-          <p className="text-sm font-normal text-gray-300 sm:text-base">
-            Choose the plan that fits your Investment goals
-          </p>
+      {/* ================= 3. Live Quote Rail ================= */}
+      <div className="border-b border-[#1E2433] bg-[#0A0D14]">
+        <TradingViewTickerTape />
+      </div>
+
+      {/* ================= 4. Platform Standards Band ================= */}
+      <section className="border-b border-[#1E2433] bg-[#080A0F]">
+        <div className="mx-auto max-w-7xl px-6 sm:px-12 grid grid-cols-2 lg:grid-cols-4">
+          {[
+            { value: '08', label: 'Supported Settlement Currencies' },
+            { value: '5 · 2 · 1%', label: 'Three-Tier Affiliate Commissions' },
+            { value: 'AES-256', label: 'GCM Session & Key Encryption' },
+            { value: '00:00 UTC', label: 'Daily Accrual Engine Execution' },
+          ].map((stat, i) => (
+            <div
+              key={stat.label}
+              className={`py-10 px-2 sm:px-6 text-center ${i !== 0 ? 'border-l border-[#1E2433]' : ''} ${i >= 2 ? 'border-t lg:border-t-0 border-[#1E2433]' : ''}`}
+            >
+              <div className="font-mono text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                {stat.value}
+              </div>
+              <div className="mt-2 font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 leading-relaxed">
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= 5. Structured Allocation Plans ================= */}
+      <section id="portfolios" className="mx-auto max-w-7xl px-6 sm:px-12 py-24">
+        <div className="mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <div className="space-y-4 max-w-2xl">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-10 bg-[#EF4444]" />
+              <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
+                01 — Structured Allocations
+              </span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+              Investment Plans
+            </h2>
+            <p className="text-sm text-gray-400 leading-relaxed max-w-xl">
+              Four term-defined capital pools. Daily compounding accrues off-ledger and settles — principal plus yield — in a single lump sum at maturity.
+            </p>
+          </div>
+          <span className="hidden md:block font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-gray-600">
+            Lump-Sum Maturity Policy
+          </span>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {INVESTMENT_PLANS_CONFIG.map((plan) => {
             const minStr = parseFloat(plan.minDepositUsd).toLocaleString();
             const profitLabel = plan.profitText || `${plan.termDays} Days Term`;
@@ -63,59 +118,61 @@ export default function LandingPage() {
             return (
               <div
                 key={plan.planId}
-                className="flex flex-col justify-between rounded-3xl border border-[#1E2433] bg-[#111520] shadow-tesla transition-all duration-300 hover:border-red-500/60 group overflow-hidden"
+                className="flex flex-col justify-between rounded-2xl border border-[#1E2433] bg-[#111520] shadow-tesla transition-all duration-300 hover:border-red-500/50 hover:shadow-[0_10px_40px_rgba(0,0,0,0.5)] group overflow-hidden"
               >
-                {/* Car Banner Header (`IMG_7582.jpeg` car header match with bulletproof fallback!) */}
-                <div className="relative h-48 w-full overflow-hidden bg-black">
+                {/* Vehicle Banner */}
+                <div className="relative h-44 w-full overflow-hidden bg-black">
                   <img
                     src={plan.imageUrl || '/branding/car-bronze.jpg'}
                     alt={plan.name}
-                    className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110 opacity-95"
+                    className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105 opacity-95"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#111520] via-[#111520]/20 to-transparent" />
-                  
-                  <span className="absolute top-3 right-3 rounded-lg border border-white/20 bg-black/80 px-3 py-1 font-mono text-xs font-bold text-red-400 backdrop-blur-md shadow">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#111520] via-[#111520]/30 to-transparent" />
+                  <span className="absolute top-3 right-3 rounded-md border border-white/15 bg-black/80 px-3 py-1.5 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-red-400 backdrop-blur-md">
                     {profitLabel}
                   </span>
                 </div>
 
-                {/* Card Body (`Bronze / Silver / Gold / Diamond` match) */}
-                <div className="p-6 space-y-6 flex-1 flex flex-col justify-between bg-[#111520]">
+                {/* Card Body */}
+                <div className="p-6 space-y-6 flex-1 flex flex-col justify-between">
                   <div className="space-y-3">
-                    <h3 className="text-2xl font-extrabold tracking-tight text-white font-sans group-hover:text-[#EF4444] transition-colors">
-                      {plan.name}
-                    </h3>
-                    <p className="text-xs text-gray-300 leading-relaxed min-h-[36px]">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="text-xl font-extrabold tracking-tight text-white font-sans group-hover:text-[#EF4444] transition-colors">
+                        {plan.name}
+                      </h3>
+                      <span className="flex-shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 pt-1.5">
+                        {plan.termDays}D Term
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-400 leading-relaxed min-h-[36px]">
                       {plan.description}
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-[#1E2433]/80">
+                  <div className="pt-4 border-t border-[#1E2433]/80">
                     <div className="text-2xl font-extrabold text-white tracking-tight font-sans">
                       ${minStr}
                     </div>
-                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mt-0.5">
-                      minimum investment
+                    <span className="font-mono text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] block mt-1">
+                      Minimum Allocation
                     </span>
                   </div>
 
-                  {/* Checkmarks (`IMG_7582.jpeg` match!) */}
-                  <div className="space-y-3 pt-2 font-sans text-xs text-gray-200">
+                  <div className="space-y-3 pt-1 text-xs text-gray-300">
                     {featList.map((feat, idx) => (
                       <div key={idx} className="flex items-center gap-3">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold text-[11px] border border-emerald-500/40">
-                          ✔
+                        <span className="flex h-4.5 w-4.5 flex-shrink-0 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                          {SVG_CHECK}
                         </span>
                         <span className="font-semibold">{feat}</span>
                       </div>
                     ))}
                   </div>
 
-                  {/* Red `[ Get Started ]` Button (`IMG_7582` match with blue changed to RED!) */}
                   <div className="pt-4">
                     <a href={`/register?planId=${plan.planId}`} className="block w-full">
-                      <button className="w-full rounded-2xl bg-[#EF4444] py-4 text-xs font-extrabold uppercase tracking-wider text-white transition hover:bg-[#DC2626] shadow-red-glow group-hover:scale-[1.02]">
-                        Get Started
+                      <button className="w-full h-11 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white shadow-[0_4px_25px_rgba(239,68,68,0.4)] transition-all duration-300 hover:shadow-[0_8px_35px_rgba(239,68,68,0.7)] hover:-translate-y-0.5 active:translate-y-0">
+                        Allocate Capital
                       </button>
                     </a>
                   </div>
@@ -126,64 +183,361 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. Current Offers & Inventory Section (`IMG_7589.png` match) */}
-      <section className="mx-auto max-w-7xl px-6 py-20 font-sans space-y-12">
-        <div className="rounded-3xl border border-[#1E2433] bg-[#111520] p-8 sm:p-12 shadow-tesla flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="space-y-3 max-w-xl">
-            <h2 className="text-3xl font-extrabold text-white sm:text-4xl">Current Offers</h2>
-            <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-              Explore limited-time offers on Tesla vehicles and structured high-yield allocations.
+      {/* ================= 6. Live Market Context ================= */}
+      <section id="markets" className="border-t border-[#1E2433] bg-[#0A0D14]">
+        <div className="mx-auto max-w-7xl px-6 sm:px-12 py-24">
+          <div className="mb-14 space-y-4 max-w-2xl">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-10 bg-[#EF4444]" />
+              <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
+                02 — Live Market Context
+              </span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+              Execution context, in real time
+            </h2>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Institutional-grade market telemetry streamed directly into the platform. Track the reference asset behind every allocation pool before you commit capital.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-5 sm:p-6 shadow-tesla space-y-4">
+              <div className="flex items-center justify-between border-b border-[#1E2433] pb-4">
+                <h3 className="font-mono text-[11px] font-extrabold uppercase tracking-[0.2em] text-gray-300">Stock — Tesla, Inc.</h3>
+                <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              </div>
+              <TradingViewSymbolOverview height={380} />
+            </div>
+            <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-5 sm:p-6 shadow-tesla space-y-4">
+              <div className="flex items-center justify-between border-b border-[#1E2433] pb-4">
+                <h3 className="font-mono text-[11px] font-extrabold uppercase tracking-[0.2em] text-gray-300">Market Overview — 12M Range</h3>
+                <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              </div>
+              <TradingViewMarketOverview height={380} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= 7. Platform Integrity Pillars ================= */}
+      <section className="mx-auto max-w-7xl px-6 sm:px-12 py-24">
+        <div className="mb-14 space-y-4 max-w-2xl">
+          <div className="flex items-center gap-3">
+            <span className="h-px w-10 bg-[#EF4444]" />
+            <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
+              03 — Platform Integrity
+            </span>
+          </div>
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+            Engineered like a clearing house
+          </h2>
+          <p className="text-sm text-gray-400 leading-relaxed">
+            Every subsystem is built to an audit standard — deterministic ledgers, human custody over releases, and settlement logic that cannot drift.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              title: 'Double-Entry Ledgers',
+              copy: 'Every capital movement posts paired NUMERIC(20,8) entries. Wallet balances reconcile to the eighth decimal — always.',
+              icon: (
+                <path d="M4 5h16M4 5v14h16V5M4 5l4-2m8 2l4 2M9 9h6M9 13h6" strokeLinecap="round" strokeLinejoin="round" />
+              ),
+            },
+            {
+              title: 'Manual Withdrawal Custody',
+              copy: 'Withdrawals lock funds instantly and enter compliance review. Release requires finance-manager approval with TOTP attestation.',
+              icon: (
+                <path d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7l7-4zm-2 9l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
+              ),
+            },
+            {
+              title: 'Lump-Sum Maturity Engine',
+              copy: 'Yield compounds daily off-ledger inside AccrualLog, then settles principal plus yield to your available wallet at term end.',
+              icon: (
+                <path d="M4 19h16M6 16l4-5 3 3 5-7M15 7h3v3" strokeLinecap="round" strokeLinejoin="round" />
+              ),
+            },
+            {
+              title: 'Global Currency Rails',
+              copy: 'Eight fiat and digital currencies operate under one normalized account structure with fixed-point precision.',
+              icon: (
+                <path d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0c2.5-2.2 3.5-5.3 3.5-9S14.5 5.2 12 3m0 18c-2.5-2.2-3.5-5.3-3.5-9S9.5 5.2 12 3M3.5 9h17M3.5 15h17" strokeLinecap="round" strokeLinejoin="round" />
+              ),
+            },
+          ].map((pillar) => (
+            <div
+              key={pillar.title}
+              className="rounded-2xl border border-[#1E2433] bg-[#111520] p-7 transition-all duration-300 hover:border-white/25 hover:bg-[#131826] group"
+            >
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#2C354C] bg-[#0A0D14] text-gray-300 transition-colors group-hover:border-red-500/50 group-hover:text-[#EF4444]">
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  {pillar.icon}
+                </svg>
+              </div>
+              <h3 className="mt-6 text-base font-extrabold tracking-tight text-white">{pillar.title}</h3>
+              <p className="mt-3 text-xs text-gray-400 leading-relaxed">{pillar.copy}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= 8. Deployment Sequence ================= */}
+      <section id="process" className="border-t border-[#1E2433] bg-[#0A0D14]">
+        <div className="mx-auto max-w-7xl px-6 sm:px-12 py-24">
+          <div className="mb-14 space-y-4 max-w-2xl">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-10 bg-[#EF4444]" />
+              <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
+                04 — Deployment Sequence
+              </span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+              Capital in three movements
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {[
+              {
+                step: '01',
+                title: 'Open your account',
+                copy: 'Register in minutes and verify by one-time passcode. Tier-0 clearance permits allocations up to $1,000 before identity review.',
+              },
+              {
+                step: '02',
+                title: 'Allocate to a plan',
+                copy: 'Choose a term pool and fund your wallet in any of eight supported currencies. Capital locks into the accrual engine at allocation.',
+              },
+              {
+                step: '03',
+                title: 'Settle at maturity',
+                copy: 'At 00:00 UTC on maturity day, principal plus compounded yield credits your available wallet in a single lump-sum settlement.',
+              },
+            ].map((item) => (
+              <div key={item.step} className="border-t-2 border-[#1E2433] pt-8 group hover:border-[#EF4444] transition-colors duration-300">
+                <span className="font-mono text-5xl font-extrabold text-[#1E2433] group-hover:text-[#EF4444]/40 transition-colors duration-300">
+                  {item.step}
+                </span>
+                <h3 className="mt-5 text-lg font-extrabold tracking-tight text-white">{item.title}</h3>
+                <p className="mt-3 text-xs text-gray-400 leading-relaxed">{item.copy}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-16 flex flex-col sm:flex-row items-center gap-4">
+            <a href="/register" className="w-full sm:w-auto">
+              <button
+                type="button"
+                className="w-full sm:w-[240px] h-12 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white shadow-[0_4px_25px_rgba(239,68,68,0.4)] transition-all duration-300 hover:shadow-[0_8px_35px_rgba(239,68,68,0.7)] hover:-translate-y-0.5 active:translate-y-0"
+              >
+                Open an Account
+              </button>
+            </a>
+            <a href="#portfolios" className="w-full sm:w-auto">
+              <button
+                type="button"
+                className="w-full sm:w-[200px] h-12 rounded-lg border border-white/15 bg-white/5 font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:-translate-y-0.5 active:translate-y-0"
+              >
+                Review Plans
+              </button>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= 9. Current Offers & Inventory ================= */}
+      <section className="mx-auto max-w-7xl px-6 sm:px-12 py-24 space-y-6">
+        <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-8 sm:p-12 shadow-tesla flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="space-y-4 max-w-xl">
+            <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-gray-500">Limited Windows</span>
+            <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Current Offers</h2>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Explore limited-time offers on Tesla vehicles paired with structured high-yield capital allocations.
             </p>
             <div className="pt-2">
               <a href="/register?offer=limited">
-                <button className="rounded-xl bg-white px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-black hover:bg-gray-200 transition shadow-sm">
+                <button className="h-11 px-8 rounded-lg bg-white font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-black transition hover:bg-gray-200">
                   Learn More
                 </button>
               </a>
             </div>
           </div>
-          <div className="w-full md:w-1/2 h-56 rounded-2xl overflow-hidden border border-[#1E2433] bg-black">
+          <div className="w-full md:w-1/2 h-56 rounded-xl overflow-hidden border border-[#1E2433] bg-black">
             <img src="/branding/car-silver.jpg" alt="Current Offers" className="h-full w-full object-cover" />
           </div>
         </div>
 
-        <div className="rounded-3xl border border-[#1E2433] bg-[#111520] p-8 sm:p-12 shadow-tesla flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="space-y-3 max-w-xl">
-            <h2 className="text-3xl font-extrabold text-white sm:text-4xl">Inventory</h2>
-            <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-              Find nearby vehicles available for immediate delivery and instant portfolio settlement.
+        <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-8 sm:p-12 shadow-tesla flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="space-y-4 max-w-xl">
+            <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-gray-500">Delivery Ready</span>
+            <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Inventory</h2>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Find vehicles available for immediate delivery and instant portfolio settlement.
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
               <a href="/register?inventory=new">
-                <button className="rounded-xl bg-white px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-black hover:bg-gray-200 transition shadow-sm">
+                <button className="h-11 px-8 rounded-lg bg-white font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-black transition hover:bg-gray-200">
                   New
                 </button>
               </a>
               <a href="/register?inventory=preowned">
-                <button className="rounded-xl border border-[#2C354C] bg-[#181D2D] px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-white hover:border-white transition shadow-sm">
+                <button className="h-11 px-8 rounded-lg border border-white/20 bg-white/5 font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white transition hover:bg-white/10 hover:border-white/40">
                   Pre-Owned
                 </button>
               </a>
             </div>
           </div>
-          <div className="w-full md:w-1/2 h-56 rounded-2xl overflow-hidden border border-[#1E2433] bg-black">
+          <div className="w-full md:w-1/2 h-56 rounded-xl overflow-hidden border border-[#1E2433] bg-black">
             <img src="/branding/car-gold.jpg" alt="Inventory" className="h-full w-full object-cover" />
           </div>
         </div>
       </section>
 
-      {/* 5. Exact Footer (`IMG_7590.png` match) */}
-      <footer className="mx-auto max-w-5xl px-6 pt-16 text-center text-xs font-semibold text-gray-400 font-sans space-y-6">
-        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
-          <span>Tesla &copy; 2026</span>
-          <a href="/login" className="hover:text-white transition">Privacy &amp; Legal</a>
-          <a href="/login" className="hover:text-white transition">Vehicle Recalls</a>
-          <a href="/login" className="hover:text-white transition">News</a>
-          <a href="/dashboard/investments" className="hover:text-white transition">Learn</a>
+      {/* ================= 10. Intelligence / FAQ ================= */}
+      <section id="faq" className="border-t border-[#1E2433] bg-[#0A0D14]">
+        <div className="mx-auto max-w-4xl px-6 sm:px-12 py-24">
+          <div className="mb-14 space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-10 bg-[#EF4444]" />
+              <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
+                05 — Intelligence
+              </span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+              Answers, before you ask
+            </h2>
+          </div>
+
+          <div className="divide-y divide-[#1E2433] border-y border-[#1E2433]">
+            {[
+              {
+                q: 'When is my capital settled?',
+                a: 'Under the Lump-Sum Maturity Policy, daily compounding yield accrues off-ledger for the life of the plan. At 00:00 UTC on maturity day, your principal plus the full compounded yield is credited to your available wallet in one settlement.',
+              },
+              {
+                q: 'Can I allocate before completing identity verification?',
+                a: 'Yes. Tier-0 clearance is granted automatically at registration and permits cumulative allocations up to $1,000 USD equivalent. Tier-1 verification — government ID and selfie — is required before any withdrawal and before deposits beyond the ceiling.',
+              },
+              {
+                q: 'How are withdrawals processed?',
+                a: 'Every withdrawal locks your funds instantly and enters a pending-review queue. A finance manager then authorizes release with two-factor TOTP attestation. There is no automated gateway disbursement — custody stays human.',
+              },
+              {
+                q: 'How does the referral program pay?',
+                a: 'Three tiers: 5% on direct partners, 2% on their partners, and 1% on the third level. Commissions vest only when referred capital allocates into a structured plan — never on sign-ups alone.',
+              },
+            ].map((item) => (
+              <details key={item.q} className="group py-6 px-1 cursor-pointer">
+                <summary className="flex items-center justify-between gap-6 list-none">
+                  <span className="text-sm sm:text-base font-bold text-white group-hover:text-[#EF4444] transition-colors">
+                    {item.q}
+                  </span>
+                  <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[#2C354C] text-gray-400 transition-transform duration-300 group-open:rotate-45">
+                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+                    </svg>
+                  </span>
+                </summary>
+                <p className="mt-4 pr-10 text-xs sm:text-sm text-gray-400 leading-relaxed">
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
         </div>
-        <p className="text-[11px] text-gray-500 font-normal leading-relaxed">
-          Price reflects monthly subscription and capital allocation terms. All double-entry accounting ledgers maintain exact fixed-point `NUMERIC(20,8)` database accuracy.
-        </p>
+      </section>
+
+      {/* ================= 11. Conviction CTA Band ================= */}
+      <section className="relative overflow-hidden border-t border-[#1E2433]">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1A0A0C] via-[#080A0F] to-[#080A0F]" />
+        <div className="relative mx-auto max-w-7xl px-6 sm:px-12 py-24 text-center space-y-8">
+          <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.35em] text-[#EF4444]">
+            TeslaPrimeCapital
+          </span>
+          <h2 className="mx-auto max-w-3xl text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.05]">
+            Capital deserves conviction.
+          </h2>
+          <p className="mx-auto max-w-xl text-sm text-gray-400 leading-relaxed">
+            Open your account, fund any of eight currencies, and let the accrual engine do the arithmetic.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <a href="/register" className="w-full sm:w-auto">
+              <button
+                type="button"
+                className="w-full sm:w-[240px] h-12 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white shadow-[0_4px_25px_rgba(239,68,68,0.45)] transition-all duration-300 hover:shadow-[0_8px_40px_rgba(239,68,68,0.75)] hover:-translate-y-0.5 active:translate-y-0"
+              >
+                Create Account
+              </button>
+            </a>
+            <a href="/login" className="w-full sm:w-auto">
+              <button
+                type="button"
+                className="w-full sm:w-[200px] h-12 rounded-lg border border-white/20 bg-white/5 font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:-translate-y-0.5 active:translate-y-0"
+              >
+                Sign In
+              </button>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= 12. Institutional Footer ================= */}
+      <footer className="border-t border-[#1E2433] bg-[#080A0F]">
+        <div className="mx-auto max-w-7xl px-6 sm:px-12 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="space-y-4">
+            <span className="text-lg font-extrabold tracking-[0.4em] text-white uppercase">Tesla</span>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Enterprise digital wealth management. Structured high-yield allocations on double-entry rails with fixed-point ledger precision.
+            </p>
+            <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600">
+              {APP_CONFIG.supportEmail}
+            </span>
+          </div>
+
+          <div>
+            <h4 className="font-mono text-[10px] font-extrabold uppercase tracking-[0.25em] text-gray-500 mb-5">Platform</h4>
+            <ul className="space-y-3 text-xs font-semibold text-gray-400">
+              <li><a href="#portfolios" className="hover:text-white transition">Investment Plans</a></li>
+              <li><a href="#markets" className="hover:text-white transition">Live Markets</a></li>
+              <li><a href="/dashboard/referrals" className="hover:text-white transition">Referral Program</a></li>
+              <li><a href="/login" className="hover:text-white transition">Sign In</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-mono text-[10px] font-extrabold uppercase tracking-[0.25em] text-gray-500 mb-5">Account</h4>
+            <ul className="space-y-3 text-xs font-semibold text-gray-400">
+              <li><a href="/register" className="hover:text-white transition">Create Account</a></li>
+              <li><a href="/forgot-password" className="hover:text-white transition">Recover Access</a></li>
+              <li><a href="/dashboard/kyc" className="hover:text-white transition">Verification</a></li>
+              <li><a href="/dashboard/wallet" className="hover:text-white transition">Wallets</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-mono text-[10px] font-extrabold uppercase tracking-[0.25em] text-gray-500 mb-5">Terminal</h4>
+            <ul className="space-y-3 text-xs font-semibold text-gray-400">
+              <li><a href="/dashboard" className="hover:text-white transition">Dashboard</a></li>
+              <li><a href="/dashboard/investments" className="hover:text-white transition">Investments</a></li>
+              <li><a href="/dashboard/analytics" className="hover:text-white transition">Analytics</a></li>
+              <li><a href="/dashboard/notifications" className="hover:text-white transition">Notifications</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-[#1E2433]">
+          <div className="mx-auto max-w-7xl px-6 sm:px-12 py-8 flex flex-col lg:flex-row items-center justify-between gap-6">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+              TeslaPrimeCapital &copy; 2026 — All Rights Reserved
+            </span>
+            <p className="max-w-2xl text-center lg:text-right font-mono text-[9px] leading-relaxed text-gray-600">
+              Structured allocations are subject to term and market risk. Compounded yield is calculated daily and settled only at plan maturity under the Lump-Sum Payout Policy. Figures presented in plan materials are targets, not guarantees of future performance.
+            </p>
+          </div>
+        </div>
       </footer>
 
     </div>
