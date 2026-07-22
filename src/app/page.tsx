@@ -2,6 +2,7 @@ import React from 'react';
 import { APP_CONFIG } from '@/config/app.config';
 import { INVESTMENT_PLANS_CONFIG } from '@/config/plans.config';
 import { HeroSwiper } from '@/components/organisms/HeroSwiper';
+import { TeslaLogo } from '@/components/atoms/TeslaLogo';
 import { TradingViewTickerTape } from '@/components/organisms/tradingview/TradingViewTickerTape';
 import { TradingViewSymbolOverview } from '@/components/organisms/tradingview/TradingViewSymbolOverview';
 import { TradingViewMarketOverview } from '@/components/organisms/tradingview/TradingViewMarketOverview';
@@ -18,13 +19,8 @@ export default function LandingPage() {
 
       {/* ================= 1. Institutional Header ================= */}
       <header className="sticky top-0 z-50 flex h-[72px] w-full items-center justify-between border-b border-[#1E2433] bg-[#080A0F]/90 px-6 sm:px-12 backdrop-blur-xl">
-        <a href="/" className="flex items-center gap-3">
-          <span className="text-lg sm:text-xl font-extrabold tracking-[0.4em] text-white uppercase font-sans">
-            Tesla
-          </span>
-          <span className="hidden sm:block border-l border-[#1E2433] pl-3 font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-gray-500">
-            Prime Capital
-          </span>
+        <a href="/" className="flex items-center">
+          <TeslaLogo size="sm" />
         </a>
 
         <nav className="hidden lg:flex items-center gap-9 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
@@ -161,7 +157,7 @@ export default function LandingPage() {
                   <div className="space-y-3 pt-1 text-xs text-gray-300">
                     {featList.map((feat, idx) => (
                       <div key={idx} className="flex items-center gap-3">
-                        <span className="flex h-4.5 w-4.5 flex-shrink-0 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                        <span className="flex h-[18px] w-[18px] flex-shrink-0 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
                           {SVG_CHECK}
                         </span>
                         <span className="font-semibold">{feat}</span>
@@ -180,6 +176,29 @@ export default function LandingPage() {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      {/* ================= 5b. Settlement Rails Band ================= */}
+      <section className="border-t border-[#1E2433] bg-[#080A0F]">
+        <div className="mx-auto max-w-7xl px-6 sm:px-12 py-12 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+          <div className="space-y-2 max-w-md">
+            <h3 className="text-lg font-extrabold tracking-tight text-white">Settlement rails</h3>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Fund and settle in any of eight supported currencies — four fiat, four digital — under one normalized fixed-point account structure.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {APP_CONFIG.supportedCurrencies.map((currency) => (
+              <span
+                key={currency.code}
+                className="flex items-center gap-2.5 rounded-lg border border-[#1E2433] bg-[#111520] px-4 py-2.5 font-mono text-[11px] font-extrabold tracking-[0.15em] text-gray-200 transition hover:border-white/30 hover:text-white"
+              >
+                <span className="text-[#EF4444]">{currency.symbol}</span>
+                {currency.code}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -220,13 +239,78 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ================= 6b. The Firm — About ================= */}
+      <section className="mx-auto max-w-7xl px-6 sm:px-12 py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-10 bg-[#EF4444]" />
+              <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
+                03 — The Firm
+              </span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white leading-[1.05]">
+              A capital engine, not a casino
+            </h2>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              TeslaPrimeCapital was built by engineers, not marketers. The platform behaves like a clearing house: every wallet posts double-entry ledgers at eight-decimal precision, every release passes human compliance review, and every plan settles on a fixed maturity date — never a moment early, never a moment late.
+            </p>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              There is no discretionary trading desk gambling with client funds. Yield is computed by a deterministic accrual engine that runs at 00:00 UTC daily, recorded line-by-line in an immutable audit trail you can inspect from your terminal at any time.
+            </p>
+            <div className="space-y-3 pt-2">
+              {[
+                'Double-entry books on every capital movement',
+                'Human approval on every withdrawal release',
+                'Maturity-dated settlement on every structured plan',
+              ].map((fact) => (
+                <div key={fact} className="flex items-center gap-3 text-xs font-semibold text-gray-300">
+                  <span className="flex h-[18px] w-[18px] flex-shrink-0 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                    <svg className="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5">
+                      <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  {fact}
+                </div>
+              ))}
+            </div>
+            <div className="pt-4">
+              <a href="#portfolios" className="inline-block">
+                <button
+                  type="button"
+                  className="h-11 px-8 rounded-lg border border-white/15 bg-white/5 font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:-translate-y-0.5"
+                >
+                  Inspect the Plans
+                </button>
+              </a>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="rounded-2xl border border-[#1E2433] bg-black overflow-hidden shadow-tesla">
+              <img
+                src="/branding/boardroom.jpg"
+                alt="TeslaPrimeCapital operations floor"
+                className="h-full w-full object-cover opacity-95"
+              />
+            </div>
+            <div className="absolute -bottom-5 -left-5 sm:-left-8 rounded-xl border border-[#1E2433] bg-[#0A0D14] px-6 py-5 shadow-tesla">
+              <div className="font-mono text-2xl font-extrabold text-white">20.8</div>
+              <div className="mt-1 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">
+                Decimal Ledger Precision
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ================= 7. Platform Integrity Pillars ================= */}
       <section className="mx-auto max-w-7xl px-6 sm:px-12 py-24">
         <div className="mb-14 space-y-4 max-w-2xl">
           <div className="flex items-center gap-3">
             <span className="h-px w-10 bg-[#EF4444]" />
             <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
-              03 — Platform Integrity
+                04 — Platform Integrity
             </span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
@@ -291,7 +375,7 @@ export default function LandingPage() {
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-[#EF4444]" />
               <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
-                04 — Deployment Sequence
+                05 — Deployment Sequence
               </span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
@@ -396,6 +480,44 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ================= 9b. Affiliate Program Band ================= */}
+      <section className="mx-auto max-w-7xl px-6 sm:px-12 pb-24">
+        <div className="relative overflow-hidden rounded-2xl border border-[#1E2433] bg-[#111520] p-8 sm:p-14 shadow-tesla">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0A0C]/80 via-transparent to-transparent" />
+          <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+            <div className="space-y-4 max-w-2xl">
+              <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
+                Affiliate Program
+              </span>
+              <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                Capital compounds faster with conviction behind it
+              </h3>
+              <p className="text-sm text-gray-400 leading-relaxed">
+                Earn 5% on direct partners, 2% on their network, and 1% on the third tier. Commissions vest the moment referred capital allocates into a structured plan — credited to your wallet automatically.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-4 flex-shrink-0">
+              <a href="/register" className="w-full sm:w-auto">
+                <button
+                  type="button"
+                  className="w-full sm:w-[220px] h-12 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white shadow-[0_4px_25px_rgba(239,68,68,0.4)] transition-all duration-300 hover:shadow-[0_8px_35px_rgba(239,68,68,0.7)] hover:-translate-y-0.5 active:translate-y-0"
+                >
+                  Start Earning
+                </button>
+              </a>
+              <a href="/dashboard/referrals" className="w-full sm:w-auto">
+                <button
+                  type="button"
+                  className="w-full sm:w-[220px] h-12 rounded-lg border border-white/15 bg-white/5 font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:-translate-y-0.5 active:translate-y-0"
+                >
+                  Program Details
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ================= 10. Intelligence / FAQ ================= */}
       <section id="faq" className="border-t border-[#1E2433] bg-[#0A0D14]">
         <div className="mx-auto max-w-4xl px-6 sm:px-12 py-24">
@@ -403,7 +525,7 @@ export default function LandingPage() {
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-[#EF4444]" />
               <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
-                05 — Intelligence
+                06 — Intelligence
               </span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
@@ -486,9 +608,9 @@ export default function LandingPage() {
 
       {/* ================= 12. Institutional Footer ================= */}
       <footer className="border-t border-[#1E2433] bg-[#080A0F]">
-        <div className="mx-auto max-w-7xl px-6 sm:px-12 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="mx-auto max-w-7xl px-6 sm:px-12 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12">
           <div className="space-y-4">
-            <span className="text-lg font-extrabold tracking-[0.4em] text-white uppercase">Tesla</span>
+            <TeslaLogo size="sm" />
             <p className="text-xs text-gray-500 leading-relaxed">
               Enterprise digital wealth management. Structured high-yield allocations on double-entry rails with fixed-point ledger precision.
             </p>
@@ -524,6 +646,16 @@ export default function LandingPage() {
               <li><a href="/dashboard/investments" className="hover:text-white transition">Investments</a></li>
               <li><a href="/dashboard/analytics" className="hover:text-white transition">Analytics</a></li>
               <li><a href="/dashboard/notifications" className="hover:text-white transition">Notifications</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-mono text-[10px] font-extrabold uppercase tracking-[0.25em] text-gray-500 mb-5">Legal</h4>
+            <ul className="space-y-3 text-xs font-semibold text-gray-400">
+              <li><a href="/terms" className="hover:text-white transition">Terms of Service</a></li>
+              <li><a href="/privacy" className="hover:text-white transition">Privacy Policy</a></li>
+              <li><a href="/risk" className="hover:text-white transition">Risk Disclosure</a></li>
+              <li><a href={`mailto:${APP_CONFIG.supportEmail}`} className="hover:text-white transition">Contact Compliance</a></li>
             </ul>
           </div>
         </div>

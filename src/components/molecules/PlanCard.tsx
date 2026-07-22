@@ -87,7 +87,7 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
         <div className="space-y-3 pt-1 font-sans text-xs text-gray-300">
           {featList.map((feat, idx) => (
             <div key={idx} className="flex items-center gap-3">
-              <span className="flex h-4.5 w-4.5 flex-shrink-0 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+              <span className="flex h-[18px] w-[18px] flex-shrink-0 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
                 <svg className="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5">
                   <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

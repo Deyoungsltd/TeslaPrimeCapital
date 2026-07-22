@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useSessionStore } from '@/lib/store/session.store';
 import { APP_CONFIG } from '@/config/app.config';
 import { Badge } from '../atoms/Badge';
+import { TeslaLogo } from '../atoms/TeslaLogo';
 
 export const Navbar: React.FC = () => {
   const { user, toggleSidebar, clearSession } = useSessionStore();
@@ -32,14 +33,9 @@ export const Navbar: React.FC = () => {
           </svg>
         </button>
 
-        {/* T E S L A Letter-Spaced Wordmark Header (`IMG_7550` exact match) */}
-        <a href="/dashboard" className="flex items-center gap-2">
-          <span className="text-lg font-extrabold tracking-[0.35em] text-white uppercase sm:text-xl font-sans">
-            T E S L A
-          </span>
-          <span className="hidden sm:inline-block rounded border border-[#252D3F] bg-[#111520] px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-gray-400">
-            Equity Pro
-          </span>
+        {/* Brand Mark Header */}
+        <a href="/dashboard" className="flex items-center">
+          <TeslaLogo size="sm" />
         </a>
       </div>
 
