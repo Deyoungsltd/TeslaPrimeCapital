@@ -4,6 +4,10 @@ import React, { useEffect, useState } from 'react';
 import { ReferralTreeCard } from '@/components/molecules/ReferralTreeCard';
 import { CurrencyDisplay } from '@/components/atoms/CurrencyDisplay';
 import { Badge } from '@/components/atoms/Badge';
+import { TradingViewAdvancedChart } from '@/components/organisms/tradingview/TradingViewAdvancedChart';
+import { TradingViewTopStories } from '@/components/organisms/tradingview/TradingViewTopStories';
+import { TradingViewSymbolOverview } from '@/components/organisms/tradingview/TradingViewSymbolOverview';
+import { TradingViewMarketOverview } from '@/components/organisms/tradingview/TradingViewMarketOverview';
 
 export default function MultiTierReferralsPage() {
   const [profile, setProfile] = useState<any | null>(null);
@@ -60,6 +64,37 @@ export default function MultiTierReferralsPage() {
           summary={profile.summary}
         />
       )}
+
+      {/* Live Advanced Candlestick Chart (`Tesla, Inc.` workstation match) */}
+      <section className="rounded-2xl border border-[#1E2433] bg-[#111520] p-5 sm:p-6 shadow-tesla">
+        <TradingViewAdvancedChart />
+      </section>
+
+      {/* TSLA Top Stories News Timeline (`Latest headlines` match) */}
+      <section className="space-y-4">
+        <h2 className="text-base font-extrabold text-white font-sans tracking-tight">
+          TSLA <span className="text-gray-400 font-bold">Top Stories</span>
+        </h2>
+        <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-5 sm:p-6 shadow-tesla">
+          <TradingViewTopStories />
+        </div>
+      </section>
+
+      {/* Stock — Live Price & Area Sparkline (`Big-quote panel` match) */}
+      <section className="space-y-4">
+        <h2 className="text-base font-extrabold text-gray-300 font-sans tracking-tight">Stock</h2>
+        <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-5 sm:p-6 shadow-tesla">
+          <TradingViewSymbolOverview />
+        </div>
+      </section>
+
+      {/* Market Overview — 12-Month Range Chart (`Dotted-grid line` match) */}
+      <section className="space-y-4">
+        <h2 className="text-base font-extrabold text-gray-300 font-sans tracking-tight">Market Overview</h2>
+        <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-5 sm:p-6 shadow-tesla">
+          <TradingViewMarketOverview />
+        </div>
+      </section>
 
       <section className="space-y-4">
         <h2 className="text-base font-extrabold uppercase tracking-wider text-white font-sans">
