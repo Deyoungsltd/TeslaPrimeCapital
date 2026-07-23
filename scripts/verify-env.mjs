@@ -77,6 +77,12 @@ async function checkDatabase() {
   const url = env.DATABASE_URL ?? '';
   if (!url) return fail('DATABASE_URL', 'Missing — create a free Neon project and paste the pooled connection string.');
   if (!/^postgres(ql)?:\/\//.test(url)) return fail('DATABASE_URL', 'Must start with postgresql:// — copy the full string from Neon.');
+  // Provider-specific trap: Aiven PostgreSQL terminates non-SSL startup packets
+  // at the pg_hba layer, which Prisma reports as an opaque "Can't reach database
+  // server" (P1001). Fail fast with the exact remediation instead of a 30s timeout.
+  if (url.includes('aivencloud.com') && !/[?&]sslmode=/.test(url)) {
+    return fail('DATABASE_URL', 'Aiven endpoint WITHOUT sslmode — Prisma will die with P1001. Re-copy the FULL "Service URI" (it ends in ?sslmode=require) or append it.');
+  }
   try {
     const bin = path.join(process.cwd(), 'node_modules', '.bin', process.platform === 'win32' ? 'prisma.cmd' : 'prisma');
     execFileSync(bin, ['db', 'execute', '--url', url, '--stdin'], {
@@ -92,6 +98,9 @@ async function checkDatabase() {
 
   const direct = env.DIRECT_URL ?? '';
   if (!direct) return warn('DIRECT_URL', 'Missing — prisma db push/migrate needs the non-pooled (direct) endpoint.');
+  if (direct.includes('aivencloud.com') && !/[?&]sslmode=/.test(direct)) {
+    return fail('DIRECT_URL', 'Aiven endpoint WITHOUT sslmode — npm run db:push will die with P1001. Append ?sslmode=require.');
+  }
   if (direct === url && direct.includes('-pooler')) {
     warn('DIRECT_URL', 'Equals the POOLED url — strip "-pooler" from the host for schema operations.');
   }
