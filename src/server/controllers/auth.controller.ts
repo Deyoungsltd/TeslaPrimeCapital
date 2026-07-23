@@ -18,6 +18,7 @@ import {
 import { AUTH_CONFIG } from '@/config/auth.config';
 import { logger } from '@/utils/logger.util';
 import { IApiResponse } from '@/contracts/api.envelope';
+import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
 
 export class AuthController {
   private static makeEnvelope<T>(success: boolean, data?: T, error?: any, status = 200, headers?: HeadersInit): NextResponse<IApiResponse<T>> {
@@ -61,7 +62,7 @@ export class AuthController {
       const isAccountExists = err.message.includes('ERR_ACCOUNT_EXISTS');
       return AuthController.makeEnvelope(false, undefined, {
         code: isAccountExists ? 'ERR_ACCOUNT_EXISTS' : 'ERR_REGISTRATION_FAILED',
-        message: err.message || 'An error occurred while creating your account.',
+        message: sanitizeErrorMessage(err, 'An error occurred while creating your account.'),
       }, isAccountExists ? 409 : 500);
     }
   }
@@ -126,7 +127,7 @@ export class AuthController {
       const isInvalidCreds = err.message.includes('ERR_INVALID_CREDENTIALS') || err.message.includes('ERR_INVALID_TOTP');
       return AuthController.makeEnvelope(false, undefined, {
         code: isInvalidCreds ? 'ERR_INVALID_CREDENTIALS' : 'ERR_LOGIN_FAILED',
-        message: err.message || 'Authentication failed.',
+        message: sanitizeErrorMessage(err, 'Authentication failed.'),
       }, isInvalidCreds ? 401 : 403);
     }
   }
@@ -179,7 +180,7 @@ export class AuthController {
       logger.error(`Verify OTP controller error: ${err.message}`);
       return AuthController.makeEnvelope(false, undefined, {
         code: 'ERR_OTP_VERIFICATION_FAILED',
-        message: err.message || 'OTP verification failed.',
+        message: sanitizeErrorMessage(err, 'OTP verification failed.'),
       }, 400);
     }
   }
@@ -227,7 +228,7 @@ export class AuthController {
       headers.set('Set-Cookie', `${AUTH_CONFIG.jwt.cookieName}=; Path=/; HttpOnly; Max-Age=0`);
       return AuthController.makeEnvelope(false, undefined, {
         code: 'ERR_SESSION_EXPIRED',
-        message: err.message || 'Session expired. Please log in again.',
+        message: sanitizeErrorMessage(err, 'Session expired. Please log in again.'),
       }, 401, headers);
     }
   }
@@ -279,7 +280,7 @@ export class AuthController {
       return AuthController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
       logger.error(`Generate TOTP error: ${err.message}`);
-      return AuthController.makeEnvelope(false, undefined, { code: 'ERR_TOTP_SETUP_FAILED', message: err.message }, 500);
+      return AuthController.makeEnvelope(false, undefined, { code: 'ERR_TOTP_SETUP_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -303,7 +304,7 @@ export class AuthController {
       return AuthController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
       logger.error(`Enable TOTP error: ${err.message}`);
-      return AuthController.makeEnvelope(false, undefined, { code: 'ERR_TOTP_ENABLE_FAILED', message: err.message }, 400);
+      return AuthController.makeEnvelope(false, undefined, { code: 'ERR_TOTP_ENABLE_FAILED', message: sanitizeErrorMessage(err) }, 400);
     }
   }
 }

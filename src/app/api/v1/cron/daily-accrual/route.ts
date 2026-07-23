@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { investmentService } from '@/server/services/investment.service';
 import { logger } from '@/utils/logger.util';
+import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
 
 /**
  * Scheduled Daily Accrual Endpoint — POST|GET /api/v1/cron/daily-accrual
@@ -62,7 +63,7 @@ async function handleCronInvocation(req: NextRequest): Promise<NextResponse> {
   } catch (err: any) {
     logger.error(`Scheduled daily accrual cycle failed: ${err.message}`, { stack: err.stack });
     return NextResponse.json(
-      { success: false, error: { code: 'ERR_ACCRUAL_CYCLE_FAILED', message: err.message } },
+      { success: false, error: { code: 'ERR_ACCRUAL_CYCLE_FAILED', message: sanitizeErrorMessage(err) } },
       { status: 500 },
     );
   }

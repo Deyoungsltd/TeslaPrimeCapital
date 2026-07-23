@@ -15,6 +15,7 @@ import {
 import { AUTH_CONFIG } from '@/config/auth.config';
 import { logger } from '@/utils/logger.util';
 import { IApiResponse } from '@/contracts/api.envelope';
+import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
 
 export class InvestmentController {
   private static makeEnvelope<T>(success: boolean, data?: T, error?: any, status = 200): NextResponse<IApiResponse<T>> {
@@ -55,7 +56,7 @@ export class InvestmentController {
       return InvestmentController.makeEnvelope(true, formatted, undefined, 200);
     } catch (err: any) {
       logger.error(`Get plans controller error: ${err.message}`);
-      return InvestmentController.makeEnvelope(false, undefined, { code: 'ERR_GET_PLANS_FAILED', message: err.message }, 500);
+      return InvestmentController.makeEnvelope(false, undefined, { code: 'ERR_GET_PLANS_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -107,7 +108,7 @@ export class InvestmentController {
       }, { status: 200 });
     } catch (err: any) {
       logger.error(`Get active investments controller error: ${err.message}`);
-      return InvestmentController.makeEnvelope(false, undefined, { code: 'ERR_GET_ACTIVE_INVESTMENTS_FAILED', message: err.message }, 500);
+      return InvestmentController.makeEnvelope(false, undefined, { code: 'ERR_GET_ACTIVE_INVESTMENTS_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -142,7 +143,7 @@ export class InvestmentController {
 
       return InvestmentController.makeEnvelope(false, undefined, {
         code: isKycErr ? 'ERR_KYC_REQUIRED' : isFundsErr ? 'ERR_INSUFFICIENT_FUNDS' : isBoundsErr ? 'ERR_ALLOCATION_BOUNDS' : 'ERR_ALLOCATION_FAILED',
-        message: err.message || 'Failed to allocate capital into structured plan.',
+        message: sanitizeErrorMessage(err, 'Failed to allocate capital into structured plan.'),
       }, isKycErr ? 403 : isFundsErr || isBoundsErr ? 400 : 500);
     }
   }
@@ -165,7 +166,7 @@ export class InvestmentController {
       }, undefined, 200);
     } catch (err: any) {
       logger.error(`Trigger accrual worker error: ${err.message}`);
-      return InvestmentController.makeEnvelope(false, undefined, { code: 'ERR_ACCRUAL_WORKER_FAILED', message: err.message }, 500);
+      return InvestmentController.makeEnvelope(false, undefined, { code: 'ERR_ACCRUAL_WORKER_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 }

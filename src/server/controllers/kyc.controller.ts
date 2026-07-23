@@ -11,6 +11,7 @@ import { checkPermission } from '../middlewares/authorize.middleware';
 import { UploadSignatureRequestSchema, DocumentRecordRequestSchema, AdminReviewActionSchema } from '../validators/kyc.validator';
 import { logger } from '@/utils/logger.util';
 import { IApiResponse } from '@/contracts/api.envelope';
+import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
 
 export class KYCController {
   private static makeEnvelope<T>(success: boolean, data?: T, error?: any, status = 200): NextResponse<IApiResponse<T>> {
@@ -37,7 +38,7 @@ export class KYCController {
       const result = await kycService.generateUploadSignature(user.id, validation.data);
       return KYCController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
-      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_UPLOAD_SIGNATURE_FAILED', message: err.message }, 500);
+      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_UPLOAD_SIGNATURE_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -53,7 +54,7 @@ export class KYCController {
       const result = await kycService.recordUploadedDocument(user.id, validation.data);
       return KYCController.makeEnvelope(true, result, undefined, 201);
     } catch (err: any) {
-      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_RECORD_DOCUMENT_FAILED', message: err.message }, 500);
+      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_RECORD_DOCUMENT_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -65,7 +66,7 @@ export class KYCController {
       const docs = await kycService.getUserDocuments(user.id);
       return KYCController.makeEnvelope(true, docs, undefined, 200);
     } catch (err: any) {
-      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_GET_DOCUMENTS_FAILED', message: err.message }, 500);
+      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_GET_DOCUMENTS_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -82,7 +83,7 @@ export class KYCController {
       const result = await kycService.getPendingReviewQueue(page, limit);
       return KYCController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
-      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_GET_PENDING_QUEUE_FAILED', message: err.message }, 500);
+      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_GET_PENDING_QUEUE_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -97,7 +98,7 @@ export class KYCController {
       const result = await kycService.getSecureDocumentViewUrl(user.id, documentId, ip);
       return KYCController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
-      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_GET_SECURE_URL_FAILED', message: err.message }, 404);
+      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_GET_SECURE_URL_FAILED', message: sanitizeErrorMessage(err) }, 404);
     }
   }
 
@@ -115,7 +116,7 @@ export class KYCController {
       const result = await kycService.reviewDocument(user.id, validation.data);
       return KYCController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
-      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_REVIEW_ACTION_FAILED', message: err.message }, 500);
+      return KYCController.makeEnvelope(false, undefined, { code: 'ERR_REVIEW_ACTION_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 }

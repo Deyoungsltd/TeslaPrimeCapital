@@ -13,7 +13,6 @@ export async function GET(): Promise<NextResponse> {
   const startTime = Date.now();
   let dbStatus = false;
   let redisStatus = false;
-  let errorMsg = null;
 
   try {
     // 1. Verify PostgreSQL connection (`PgBouncer port 6432`)
@@ -26,7 +25,7 @@ export async function GET(): Promise<NextResponse> {
       redisStatus = true;
     }
   } catch (err: any) {
-    errorMsg = err.message;
+    // Component booleans are the public contract; raw internals stay in logs.
     logger.error(`Production health check failure intercepted: ${err.message}`);
   }
 
@@ -39,7 +38,6 @@ export async function GET(): Promise<NextResponse> {
       db: dbStatus,
       redis: redisStatus,
       durationMs,
-      ...(errorMsg && { error: errorMsg }),
       meta: {
         timestamp: new Date().toISOString(),
         version: '0.3.9-alpha',

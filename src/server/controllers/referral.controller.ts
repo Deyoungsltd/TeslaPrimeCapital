@@ -9,6 +9,7 @@ import { extractAuthenticatedUser } from '../middlewares/authenticate.middleware
 import { ReferralTreeQuerySchema } from '../validators/referral.validator';
 import { logger } from '@/utils/logger.util';
 import { IApiResponse } from '@/contracts/api.envelope';
+import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
 
 export class ReferralController {
   private static makeEnvelope<T>(success: boolean, data?: T, error?: any, status = 200): NextResponse<IApiResponse<T>> {
@@ -43,7 +44,7 @@ export class ReferralController {
       return ReferralController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
       logger.error(`Referral profile controller error: ${err.message}`);
-      return ReferralController.makeEnvelope(false, undefined, { code: 'ERR_GET_REFERRAL_PROFILE_FAILED', message: err.message }, 500);
+      return ReferralController.makeEnvelope(false, undefined, { code: 'ERR_GET_REFERRAL_PROFILE_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 }

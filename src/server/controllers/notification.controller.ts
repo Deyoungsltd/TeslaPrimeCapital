@@ -10,6 +10,7 @@ import { NotificationQuerySchema, NotificationMarkReadSchema } from '../validato
 import { logger } from '@/utils/logger.util';
 import { prisma } from '@/lib/prisma';
 import { IApiResponse } from '@/contracts/api.envelope';
+import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
 
 export class NotificationController {
   private static makeEnvelope<T>(success: boolean, data?: T, error?: any, status = 200): NextResponse<IApiResponse<T>> {
@@ -48,7 +49,7 @@ export class NotificationController {
       return NotificationController.makeEnvelope(true, { payouts }, undefined, 200);
     } catch (err: any) {
       logger.error(`Recent payouts feed retrieval failure: ${err.message}`);
-      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_RECENT_PAYOUTS_FAILED', message: err.message }, 500);
+      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_RECENT_PAYOUTS_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -60,7 +61,7 @@ export class NotificationController {
       const count = await notificationService.getUnreadCount(user.id);
       return NotificationController.makeEnvelope(true, { unreadCount: count }, undefined, 200);
     } catch (err: any) {
-      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_GET_UNREAD_COUNT_FAILED', message: err.message }, 500);
+      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_GET_UNREAD_COUNT_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -93,7 +94,7 @@ export class NotificationController {
         meta: { timestamp: new Date().toISOString(), requestId: 'req_notif', pagination: { page, limit, totalCount: result.totalCount, hasNextPage: page * limit < result.totalCount } },
       }, { status: 200 });
     } catch (err: any) {
-      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_GET_NOTIFICATIONS_FAILED', message: err.message }, 500);
+      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_GET_NOTIFICATIONS_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -109,7 +110,7 @@ export class NotificationController {
       const result = await notificationService.markAsRead(user.id, validation.data);
       return NotificationController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
-      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_MARK_READ_FAILED', message: err.message }, 500);
+      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_MARK_READ_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -121,7 +122,7 @@ export class NotificationController {
       const result = await notificationService.markAllAsRead(user.id);
       return NotificationController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
-      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_MARK_ALL_READ_FAILED', message: err.message }, 500);
+      return NotificationController.makeEnvelope(false, undefined, { code: 'ERR_MARK_ALL_READ_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 

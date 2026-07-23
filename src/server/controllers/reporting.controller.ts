@@ -7,6 +7,7 @@ import { reportingService } from '../services/reporting.service';
 import { extractAuthenticatedUser } from '../middlewares/authenticate.middleware';
 import { logger } from '@/utils/logger.util';
 import { IApiResponse } from '@/contracts/api.envelope';
+import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
 
 export class ReportingController {
   private static makeEnvelope<T>(success: boolean, data?: T, error?: any, status = 200): NextResponse<IApiResponse<T>> {
@@ -26,7 +27,7 @@ export class ReportingController {
       const result = await reportingService.getUserAnalytics(user.id);
       return ReportingController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
-      return ReportingController.makeEnvelope(false, undefined, { code: 'ERR_GET_ANALYTICS_FAILED', message: err.message }, 500);
+      return ReportingController.makeEnvelope(false, undefined, { code: 'ERR_GET_ANALYTICS_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 

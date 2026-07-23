@@ -10,6 +10,7 @@ import { checkPermission } from '../middlewares/authorize.middleware';
 import { UserGovernanceUpdateSchema, WithdrawalApprovalSchema, AdminQuerySchema } from '../validators/admin.validator';
 import { logger } from '@/utils/logger.util';
 import { IApiResponse } from '@/contracts/api.envelope';
+import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
 
 export class AdminController {
   private static makeEnvelope<T>(success: boolean, data?: T, error?: any, status = 200): NextResponse<IApiResponse<T>> {
@@ -29,7 +30,7 @@ export class AdminController {
       const metrics = await adminService.getExecutiveOverview();
       return AdminController.makeEnvelope(true, metrics, undefined, 200);
     } catch (err: any) {
-      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_GET_OVERVIEW_FAILED', message: err.message }, 500);
+      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_GET_OVERVIEW_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -65,7 +66,7 @@ export class AdminController {
         meta: { timestamp: new Date().toISOString(), requestId: 'req_adm', pagination: { page, limit, totalCount: result.totalCount, hasNextPage: page * limit < result.totalCount } },
       }, { status: 200 });
     } catch (err: any) {
-      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_GET_USERS_FAILED', message: err.message }, 500);
+      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_GET_USERS_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -81,7 +82,7 @@ export class AdminController {
       const result = await adminService.updateGovernance(user.id, validation.data);
       return AdminController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
-      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_UPDATE_USER_FAILED', message: err.message }, 500);
+      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_UPDATE_USER_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -96,7 +97,7 @@ export class AdminController {
       const result = await adminService.getPendingWithdrawalsQueue(page, limit);
       return AdminController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
-      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_GET_WITHDRAWALS_QUEUE_FAILED', message: err.message }, 500);
+      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_GET_WITHDRAWALS_QUEUE_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -113,7 +114,7 @@ export class AdminController {
       return AdminController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
       const isMfa = err.message.includes('ERR_ADMIN_MFA') || err.message.includes('ERR_INVALID_TOTP');
-      return AdminController.makeEnvelope(false, undefined, { code: isMfa ? 'ERR_INVALID_TOTP' : 'ERR_WITHDRAWAL_REVIEW_FAILED', message: err.message }, isMfa ? 403 : 500);
+      return AdminController.makeEnvelope(false, undefined, { code: isMfa ? 'ERR_INVALID_TOTP' : 'ERR_WITHDRAWAL_REVIEW_FAILED', message: sanitizeErrorMessage(err) }, isMfa ? 403 : 500);
     }
   }
 
@@ -128,7 +129,7 @@ export class AdminController {
       const result = await adminService.getSystemAuditLogs(page, limit);
       return AdminController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
-      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_GET_AUDIT_LOGS_FAILED', message: err.message }, 500);
+      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_GET_AUDIT_LOGS_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 }

@@ -16,6 +16,7 @@ import {
 import { AUTH_CONFIG } from '@/config/auth.config';
 import { logger } from '@/utils/logger.util';
 import { IApiResponse } from '@/contracts/api.envelope';
+import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
 
 export class WalletController {
   private static makeEnvelope<T>(success: boolean, data?: T, error?: any, status = 200): NextResponse<IApiResponse<T>> {
@@ -55,7 +56,7 @@ export class WalletController {
       return WalletController.makeEnvelope(true, formatted, undefined, 200);
     } catch (err: any) {
       logger.error(`Get balances controller error: ${err.message}`);
-      return WalletController.makeEnvelope(false, undefined, { code: 'ERR_GET_BALANCES_FAILED', message: err.message }, 500);
+      return WalletController.makeEnvelope(false, undefined, { code: 'ERR_GET_BALANCES_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -106,7 +107,7 @@ export class WalletController {
       }, { status: 200 });
     } catch (err: any) {
       logger.error(`Get transactions controller error: ${err.message}`);
-      return WalletController.makeEnvelope(false, undefined, { code: 'ERR_GET_TRANSACTIONS_FAILED', message: err.message }, 500);
+      return WalletController.makeEnvelope(false, undefined, { code: 'ERR_GET_TRANSACTIONS_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 
@@ -138,7 +139,7 @@ export class WalletController {
       const isKycErr = err.message.includes('ERR_KYC_REQUIRED');
       return WalletController.makeEnvelope(false, undefined, {
         code: isKycErr ? 'ERR_KYC_REQUIRED' : 'ERR_DEPOSIT_INITIATION_FAILED',
-        message: err.message || 'Failed to initiate deposit.',
+        message: sanitizeErrorMessage(err, 'Failed to initiate deposit.'),
       }, isKycErr ? 403 : 400);
     }
   }
@@ -174,7 +175,7 @@ export class WalletController {
 
       return WalletController.makeEnvelope(false, undefined, {
         code: isKycErr ? 'ERR_KYC_REQUIRED' : isMfaErr ? 'ERR_MFA_REQUIRED' : isFundsErr ? 'ERR_INSUFFICIENT_FUNDS' : 'ERR_WITHDRAWAL_FAILED',
-        message: err.message || 'Failed to submit withdrawal request.',
+        message: sanitizeErrorMessage(err, 'Failed to submit withdrawal request.'),
       }, isKycErr || isMfaErr ? 403 : isFundsErr ? 400 : 500);
     }
   }
@@ -199,7 +200,7 @@ export class WalletController {
       return WalletController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
       logger.error(`Exchange controller error: ${err.message}`);
-      return WalletController.makeEnvelope(false, undefined, { code: 'ERR_EXCHANGE_FAILED', message: err.message }, 400);
+      return WalletController.makeEnvelope(false, undefined, { code: 'ERR_EXCHANGE_FAILED', message: sanitizeErrorMessage(err) }, 400);
     }
   }
 }
