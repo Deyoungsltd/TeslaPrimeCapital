@@ -11,10 +11,27 @@ const globalForRedis = globalThis as unknown as {
   redlock: Redlock | undefined;
 };
 
+/**
+ * Connection contract — works against ANY Redis-protocol provider:
+ *   - Upstash (TLS via public CA):          rediss:// URL, zero extra config
+ *   - Redis Cloud free plan (no TLS):        redis://default:pass@host:port
+ *   - Providers with a PRIVATE CA (Aiven etc.): rediss:// + REDIS_CA_CERT
+ *     holding the base64-encoded PEM chain from that provider's console —
+ *     the client validates against it instead of failing verification, so
+ *     TLS stays enforced rather than being disabled.
+ */
+const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379/0';
+const providerCaChain = process.env.REDIS_CA_CERT
+  ? Buffer.from(process.env.REDIS_CA_CERT, 'base64').toString('utf8')
+  : undefined;
+const tlsConfig =
+  redisUrl.startsWith('rediss://') && providerCaChain ? { tls: { ca: providerCaChain } } : {};
+
 // Initialize singleton ioredis client
 export const redis =
   globalForRedis.redis ??
-  new Redis(process.env.REDIS_URL || 'redis://localhost:6379/0', {
+  new Redis(redisUrl, {
+    ...tlsConfig,
     maxRetriesPerRequest: 3,
     retryStrategy(times) {
       const delay = Math.min(times * 200, 2000);
