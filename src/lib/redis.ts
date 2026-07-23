@@ -19,13 +19,32 @@ const globalForRedis = globalThis as unknown as {
  *     holding the base64-encoded PEM chain from that provider's console —
  *     the client validates against it instead of failing verification, so
  *     TLS stays enforced rather than being disabled.
+ *
+ * Escape hatch: REDIS_TLS_ALLOW_UNVERIFIED=true relaxes CA verification
+ * (channel stays encrypted, server identity is not verified). Intended ONLY
+ * as a temporary unblock when a provider console will not yield its CA —
+ * every boot logs a loud warning until REDIS_CA_CERT replaces it.
  */
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379/0';
 const providerCaChain = process.env.REDIS_CA_CERT
   ? Buffer.from(process.env.REDIS_CA_CERT, 'base64').toString('utf8')
   : undefined;
-const tlsConfig =
-  redisUrl.startsWith('rediss://') && providerCaChain ? { tls: { ca: providerCaChain } } : {};
+const allowUnverifiedTls = process.env.REDIS_TLS_ALLOW_UNVERIFIED === 'true';
+
+let tlsConfig = {};
+if (redisUrl.startsWith('rediss://')) {
+  if (providerCaChain) {
+    tlsConfig = { tls: { ca: providerCaChain } };
+  } else if (allowUnverifiedTls) {
+    tlsConfig = { tls: { rejectUnauthorized: false } };
+  }
+}
+
+if (redisUrl.startsWith('rediss://') && !providerCaChain && allowUnverifiedTls) {
+  logger.warn(
+    'REDIS_TLS_ALLOW_UNVERIFIED is active: the Redis channel is encrypted but the server certificate is NOT verified. Supply REDIS_CA_CERT to restore full TLS verification.',
+  );
+}
 
 // Initialize singleton ioredis client
 export const redis =

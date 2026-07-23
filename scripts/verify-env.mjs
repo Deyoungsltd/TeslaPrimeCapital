@@ -107,17 +107,46 @@ async function checkRedis() {
   let client;
   try {
     const { default: Redis } = require('ioredis');
-    client = new Redis(url, { lazyConnect: true, connectTimeout: 8000, maxRetriesPerRequest: 0, retryStrategy: () => null });
+    const isTls = url.startsWith('rediss://');
+    const caChain = env.REDIS_CA_CERT ? Buffer.from(env.REDIS_CA_CERT, 'base64').toString('utf8') : undefined;
+    const allowUnverified = env.REDIS_TLS_ALLOW_UNVERIFIED === 'true';
+    // Mirror the app's client contract exactly: provider CA when supplied,
+    // the documented escape hatch when explicitly enabled, otherwise the
+    // driver's default CA verification (public chains like Upstash pass,
+    // private chains like Aiven correctly fail with guidance).
+    const tlsOpts = isTls
+      ? caChain
+        ? { ca: caChain }
+        : allowUnverified
+          ? { rejectUnauthorized: false }
+          : {}
+      : undefined;
+    client = new Redis(url, {
+      lazyConnect: true,
+      connectTimeout: 8000,
+      maxRetriesPerRequest: 0,
+      retryStrategy: () => null,
+      ...(tlsOpts ? { tls: tlsOpts } : {}),
+    });
     client.on('error', () => {}); // verdict is rendered by the PING path, not the driver's stderr
-    if (url.startsWith('rediss://')) {
-      client.options.tls = { rejectUnauthorized: false };
-    }
     await withTimeout(client.connect(), 8000, 'Redis connect');
     const pong = await withTimeout(client.ping(), 5000, 'Redis ping');
-    if (pong === 'PONG') pass('REDIS_URL', 'Connected — PING returned PONG.');
-    else fail('REDIS_URL', `Unexpected PING reply: ${pong}`);
+    if (pong === 'PONG') {
+      if (isTls && allowUnverified && !caChain) {
+        warn('REDIS_URL', 'Connected via REDIS_TLS_ALLOW_UNVERIFIED (encrypted, unverified) — replace with REDIS_CA_CERT before launch.');
+      } else {
+        pass('REDIS_URL', 'Connected — PING returned PONG.');
+      }
+    } else {
+      fail('REDIS_URL', `Unexpected PING reply: ${pong}`);
+    }
   } catch (err) {
-    fail('REDIS_URL', `Cannot reach Redis. Verify the endpoint/password (use the rediss:// TLS URL on Upstash). (${String(err.message).slice(0, 80)})`);
+    const msg = String(err.message);
+    if (/certificate|self.signed|unable to verify|UNABLE_TO_GET_ISSUER/i.test(msg)) {
+      fail('REDIS_URL', 'TLS verification failed (private CA provider). Fix: npm run fetch:aiven-ca -- <project> <token>  → writes REDIS_CA_CERT for you, or temporarily set REDIS_TLS_ALLOW_UNVERIFIED=true.');
+    } else {
+      fail('REDIS_URL', `Cannot reach Redis. Verify the endpoint/password (use the rediss:// TLS URL on Upstash). (${msg.slice(0, 80)})`);
+    }
   } finally {
     client?.disconnect();
   }
