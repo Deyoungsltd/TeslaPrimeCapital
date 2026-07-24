@@ -4,6 +4,7 @@ import { buildMarketingMetadata } from '@/lib/seo';
 import { MarketingHeader } from '@/components/organisms/marketing/MarketingHeader';
 import { MarketingFooter } from '@/components/organisms/marketing/MarketingFooter';
 import { BreadcrumbJsonLd } from '@/components/atoms/BreadcrumbJsonLd';
+import { ManagedImage } from '@/components/atoms/ManagedImage';
 import { INSIGHT_ARTICLES } from '@/content/insights/articles';
 
 export const metadata: Metadata = buildMarketingMetadata(
@@ -35,7 +36,7 @@ export default function InsightsIndexPage() {
               Intelligence Briefings
             </span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05] max-w-3xl">
+          <h1 className="font-display text-4xl sm:text-6xl font-medium tracking-tight leading-[1.05] max-w-3xl">
             How the machine actually works
           </h1>
           <p className="max-w-2xl text-sm text-gray-400 leading-relaxed">
@@ -51,8 +52,20 @@ export default function InsightsIndexPage() {
             <a
               key={article.slug}
               href={`/insights/${article.slug}`}
-              className="group relative flex flex-col bg-[#0A0D14] p-8 sm:p-10 transition-colors duration-300 hover:bg-[#111520]"
+              className="group relative flex flex-col bg-[#0A0D14] transition-colors duration-300 hover:bg-[#111520]"
             >
+              <div className="relative h-44 w-full overflow-hidden bg-black sm:h-52">
+                <ManagedImage
+                  slotKey={`insights.${article.slug}`}
+                  alt={article.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover object-center opacity-90 transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0D14] via-transparent to-transparent" />
+              </div>
+
+              <div className="flex flex-1 flex-col p-8 sm:p-10">
               <div className="flex items-center justify-between gap-4">
                 <span className="rounded-md border border-[#2C354C] bg-[#080A0F] px-3 py-1.5 font-mono text-[9px] font-extrabold uppercase tracking-[0.2em] text-gray-400 transition-colors group-hover:border-[#EF4444]/50 group-hover:text-[#EF4444]">
                   {article.category}
@@ -82,6 +95,7 @@ export default function InsightsIndexPage() {
                 >
                   <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
+              </div>
               </div>
             </a>
           ))}

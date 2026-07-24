@@ -1,8 +1,7 @@
-import { SafeImage } from '@/components/atoms/SafeImage';
 import React from 'react';
 import type { Metadata } from 'next';
+import { ManagedImage } from '@/components/atoms/ManagedImage';
 import { buildMarketingMetadata } from '@/lib/seo';
-import { APP_CONFIG } from '@/config/app.config';
 import { MarketingHeader } from '@/components/organisms/marketing/MarketingHeader';
 import { MarketingFooter } from '@/components/organisms/marketing/MarketingFooter';
 import { BreadcrumbJsonLd } from '@/components/atoms/BreadcrumbJsonLd';
@@ -47,100 +46,123 @@ export default function AboutPage() {
 
       <main>
         {/* Statement band */}
-        <section className="mx-auto max-w-7xl px-6 sm:px-12 pt-20 pb-14 space-y-4">
+        <section className="mx-auto max-w-7xl px-6 pb-16 pt-24 sm:px-12">
           <div className="flex items-center gap-3">
             <span className="h-px w-10 bg-[#EF4444]" />
             <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
               The Firm
             </span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05] max-w-3xl">
-            A capital engine, not a casino
+          <h1 className="mt-7 max-w-3xl font-display text-4xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl">
+            A capital engine, not a casino.
           </h1>
-          <p className="max-w-2xl text-sm text-gray-400 leading-relaxed">
-            TeslaPrimeCapital was built by engineers, not marketers. The platform behaves like a clearing house: deterministic ledgers, human custody over every release, and settlement that arrives on the exact day it was promised.
+          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-gray-400">
+            TeslaPrimeCapital was built by engineers, not marketers. The platform behaves like a
+            clearing house: deterministic ledgers, human custody over every release, and
+            settlement that arrives on the exact day it was promised.
           </p>
         </section>
 
-        {/* Boardroom image + standards */}
-        <section className="mx-auto max-w-7xl px-6 sm:px-12 pb-20">
-          <div className="relative h-[320px] sm:h-[440px] rounded-2xl overflow-hidden border border-[#1E2433] bg-black shadow-tesla">
-            <SafeImage
-              src="/branding/boardroom.jpg"
-              alt="TeslaPrimeCapital operations floor"
+        {/* Tower statement */}
+        <section className="mx-auto max-w-7xl px-6 pb-24 sm:px-12">
+          <div className="relative h-[320px] overflow-hidden rounded-2xl border border-[#1E2433] bg-black shadow-tesla sm:h-[460px]">
+            <ManagedImage
+              slotKey="about.story"
+              alt="TeslaPrimeCapital headquarters tower at dusk"
               fill
-              sizes="(max-width: 1280px) 100vw, 1180px"
-              className="object-cover opacity-95"
+              priority
+              sizes="(max-width: 1280px) 100vw, 1200px"
+              className="object-cover object-center"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-transparent to-transparent" />
-            <div className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 rounded-xl border border-[#1E2433] bg-[#0A0D14]/95 px-6 py-5 backdrop-blur-md">
-              <div className="font-mono text-2xl font-extrabold text-white">NUMERIC(20,8)</div>
-              <div className="mt-1 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">
-                Fixed-Point Ledger Precision
+            <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F]/85 via-transparent to-transparent" />
+          </div>
+          <div className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[#1E2433] bg-[#1E2433] lg:grid-cols-4">
+            {STANDARDS.map((stat) => (
+              <div key={stat.label} className="bg-[#0C0F16] px-6 py-8 text-center">
+                <div className="font-display text-2xl tracking-tight text-white sm:text-3xl">{stat.value}</div>
+                <div className="mt-2 font-mono text-[8.5px] font-bold uppercase leading-relaxed tracking-[0.18em] text-gray-500">
+                  {stat.label}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </section>
 
-        <section className="border-y border-[#1E2433] bg-[#080A0F]">
-          <div className="mx-auto max-w-7xl px-6 sm:px-12 grid grid-cols-2 lg:grid-cols-4">
-            {STANDARDS.map((stat, i) => (
-              <div
-                key={stat.label}
-                className={`py-10 px-4 sm:px-6 text-center ${i !== 0 ? 'border-l border-[#1E2433]' : ''} ${i >= 2 ? 'border-t lg:border-t-0 border-[#1E2433]' : ''}`}
-              >
-                <div className="font-mono text-2xl sm:text-3xl font-extrabold tracking-tight text-white">{stat.value}</div>
-                <div className="mt-2 font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 leading-relaxed">{stat.label}</div>
+        {/* Governance band — human custody */}
+        <section className="border-y border-[#1E2433] bg-[#0A0D14]">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-6 py-24 sm:px-12 lg:grid-cols-2 lg:gap-20">
+            <div className="relative overflow-hidden rounded-2xl border border-[#1E2433] shadow-tesla">
+              <div className="relative h-[300px] w-full sm:h-[380px]">
+                <ManagedImage
+                  slotKey="about.leadership"
+                  alt="Governance boardroom — executives reviewing settlement ledgers"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F]/75 via-transparent to-transparent" />
               </div>
-            ))}
+            </div>
+            <div>
+              <div className="flex items-center gap-3">
+                <span className="h-px w-10 bg-[#EF4444]" />
+                <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
+                  The Governance Standard
+                </span>
+              </div>
+              <h2 className="mt-7 font-display text-3xl font-medium leading-[1.08] tracking-tight text-white sm:text-5xl">
+                Machines keep the books. Humans sign the releases.
+              </h2>
+              <p className="mt-6 text-sm leading-relaxed text-gray-400">
+                Automation is trusted with arithmetic and nothing more. Accrual math, ledger
+                integrity, settlement cadence — deterministic and machine-perfect. But the
+                moment capital leaves the platform, a person answers for it: a finance manager,
+                a TOTP attestation, an immutable signature in the audit log.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-gray-400">
+                That is the entire philosophy. Software earns your efficiency; governance earns
+                your trust. We deliberately built both.
+              </p>
+            </div>
           </div>
         </section>
 
         {/* Pillars */}
-        <section className="mx-auto max-w-7xl px-6 sm:px-12 py-20">
-          <div className="mb-12 space-y-4">
-            <div className="flex items-center gap-3">
-              <span className="h-px w-10 bg-[#EF4444]" />
-              <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
-                Operating Principles
-              </span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">How the platform is run</h2>
+        <section className="mx-auto max-w-7xl px-6 py-24 sm:px-12 sm:py-32">
+          <div className="flex items-center gap-3">
+            <span className="h-px w-10 bg-[#EF4444]" />
+            <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
+              Operating Pillars
+            </span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <h2 className="mt-7 max-w-2xl font-display text-3xl font-medium leading-[1.08] tracking-tight text-white sm:text-5xl">
+            Four rules the platform will not break.
+          </h2>
+
+          <div className="mt-16 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-[#1E2433] bg-[#1E2433] md:grid-cols-2">
             {PILLARS.map((pillar, i) => (
-              <div key={pillar.title} className="rounded-2xl border border-[#1E2433] bg-[#111520] p-8 hover:border-white/25 hover:bg-[#131826] transition-colors">
-                <span className="font-mono text-xs font-extrabold tracking-[0.3em] text-[#EF4444]/70">{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="mt-4 text-lg font-extrabold tracking-tight text-white">{pillar.title}</h3>
-                <p className="mt-3 text-xs text-gray-400 leading-relaxed">{pillar.body}</p>
+              <div key={pillar.title} className="group bg-[#0C0F16] p-9 transition-colors duration-500 hover:bg-[#111520] sm:p-12">
+                <span className="font-display text-3xl italic tracking-tight text-[#EF4444]/85">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="mt-6 font-display text-2xl font-medium tracking-tight text-white">{pillar.title}</h3>
+                <p className="mt-4 text-[13px] leading-relaxed text-gray-400">{pillar.body}</p>
               </div>
             ))}
           </div>
-        </section>
 
-        {/* Legal + contact band */}
-        <section className="border-t border-[#1E2433] bg-[#0A0D14]">
-          <div className="mx-auto max-w-7xl px-6 sm:px-12 py-16 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
-            <div className="space-y-3 max-w-xl">
-              <h2 className="text-2xl font-extrabold tracking-tight">Read the fine print. We insist.</h2>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Our Terms of Service, Privacy Policy, and Risk Disclosure are written to be read. Questions reach a human compliance desk at {APP_CONFIG.supportEmail}.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <a href="/terms">
-                <button className="h-11 px-6 rounded-lg border border-white/15 bg-white/5 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-white transition hover:bg-white/10 hover:border-white/40">Terms</button>
-              </a>
-              <a href="/privacy">
-                <button className="h-11 px-6 rounded-lg border border-white/15 bg-white/5 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-white transition hover:bg-white/10 hover:border-white/40">Privacy</button>
-              </a>
-              <a href="/risk">
-                <button className="h-11 px-6 rounded-lg border border-white/15 bg-white/5 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-white transition hover:bg-white/10 hover:border-white/40">Risk</button>
-              </a>
-              <a href="/register">
-                <button className="h-11 px-7 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-white shadow-[0_4px_25px_rgba(239,68,68,0.4)] transition-all duration-300 hover:shadow-[0_8px_35px_rgba(239,68,68,0.7)] hover:-translate-y-0.5">Open an Account</button>
-              </a>
-            </div>
+          <div className="mt-16 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <a href="/register">
+              <button
+                type="button"
+                className="h-12 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] px-10 font-mono text-[11px] font-extrabold uppercase tracking-[0.15em] text-white shadow-[0_4px_25px_rgba(239,68,68,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_35px_rgba(239,68,68,0.65)] active:translate-y-0"
+              >
+                Open Your Terminal
+              </button>
+            </a>
+            <a href="/insights" className="font-mono text-[10px] font-extrabold uppercase tracking-[0.2em] text-gray-400 transition-colors hover:text-white">
+              Read the engineering briefings
+            </a>
           </div>
         </section>
       </main>

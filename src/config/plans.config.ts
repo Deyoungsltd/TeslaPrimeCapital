@@ -1,10 +1,12 @@
 /**
- * TeslaPrimeCapital — Structured Investment Plan Baseline Configuration
- * Enforces approved Phase 1 decisions: Lump Sum at Plan Maturity & Tier 0 Starter ($1k limit without KYC).
- * Includes car pictures (`imageUrl`) and checkmark features (`IMG_7582.jpeg` match).
+ * TeslaPrimeCapital — Static Marketing Mirror of the Seeded Plan Registry.
+ *
+ * These definitions MUST stay numerically identical to prisma/seed.ts — the
+ * marketing site and the live allocation engine quote the same term sheets.
+ * No vanity percentages, no vehicle props, no "guaranteed profit" language:
+ * every figure here is a rate the settlement engine actually honors.
  */
-
-export interface IPlanConfiguration {
+export interface IMarketingPlanDefinition {
   planId: string;
   name: string;
   description: string;
@@ -16,74 +18,69 @@ export interface IPlanConfiguration {
   payoutPolicy: 'LUMP_SUM_MATURITY';
   compoundingAllowed: boolean;
   requiresKycTier: 'TIER_0' | 'TIER_1' | 'TIER_2';
-  imageUrl?: string;
-  profitText?: string;
-  features?: string[];
+  imageUrl: string;
+  features: string[];
 }
 
-export const INVESTMENT_PLANS_CONFIG: readonly IPlanConfiguration[] = [
+export const INVESTMENT_PLANS_CONFIG: IMarketingPlanDefinition[] = [
   {
-    planId: 'plan-bronze',
-    name: 'Bronze (BASE)',
-    description: 'Perfect for getting started with Tesla investment. Featured vehicle: Model 3.',
-    minDepositUsd: '1000.00000000',
-    maxDepositUsd: '8000.00000000',
-    termDays: 24,
-    dailyRateNumeric: '0.01666667',
-    annualPercentageRate: '608.33%',
+    planId: 'plan-starter-fixed',
+    name: 'Starter Fixed Yield',
+    description: 'A 30-day, term-locked allocation with a fixed daily rate — the on-ramp tier. No identity verification is required up to the $1,000 Tier-0 ceiling.',
+    minDepositUsd: '100.00000000',
+    maxDepositUsd: '4999.00000000',
+    termDays: 30,
+    dailyRateNumeric: '0.00250000',
+    annualPercentageRate: '91.25%',
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: false,
     requiresKycTier: 'TIER_0',
-    imageUrl: '/branding/car-bronze.jpg',
-    profitText: '40% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', 'Email Support', 'Daily Accrual Tracking']
+    imageUrl: '/branding/gen/plan-starter.jpg',
+    features: [
+      'Fixed 0.25% daily accrual at 00:00 UTC',
+      'Principal + yield settle in one lump sum at maturity',
+      'Line-by-line accrual log from day one',
+      'Referral engine eligible (5% · 2% · 1%)',
+    ],
   },
   {
-    planId: 'plan-silver',
-    name: 'Silver',
-    description: 'Enhanced returns for serious investors. Featured vehicle: Model Y / Cybertruck.',
+    planId: 'plan-prime-growth',
+    name: 'Prime Dynamic Growth',
+    description: 'A 90-day compounding position for verified clients. Daily yield rolls back into principal each settlement run, so the base grows every single day of the term.',
     minDepositUsd: '5000.00000000',
-    maxDepositUsd: '14999.00000000',
-    termDays: 3,
-    dailyRateNumeric: '0.21666667',
-    annualPercentageRate: '7908.33%',
-    payoutPolicy: 'LUMP_SUM_MATURITY',
-    compoundingAllowed: false,
-    requiresKycTier: 'TIER_1',
-    imageUrl: '/branding/car-silver.jpg',
-    profitText: '65% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', 'Email Support', 'Priority Liquidity Release']
-  },
-  {
-    planId: 'plan-gold',
-    name: 'Gold',
-    description: 'Premium investment with exclusive benefits. Featured vehicle: Model S Plaid.',
-    minDepositUsd: '10000.00000000',
-    maxDepositUsd: '50000.00000000',
-    termDays: 7,
-    dailyRateNumeric: '0.11428571',
-    annualPercentageRate: '4171.43%',
+    maxDepositUsd: '49999.00000000',
+    termDays: 90,
+    dailyRateNumeric: '0.00400000',
+    annualPercentageRate: '146.00%',
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: true,
     requiresKycTier: 'TIER_1',
-    imageUrl: '/branding/car-gold.jpg',
-    profitText: '80% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', 'Email Support', 'Dedicated Account Manager']
+    imageUrl: '/branding/gen/plan-prime.jpg',
+    features: [
+      '0.40% daily rate, compounded every 00:00 UTC',
+      'Verified Tier-1 document clearance required',
+      'TOTP-secured, human-reviewed withdrawals',
+      'Line-by-line accrual log from day one',
+    ],
   },
   {
-    planId: 'plan-diamond',
-    name: 'Diamond (Platinum)',
-    description: 'Elite flagship capital management pool. Featured vehicle: Cybertruck / Roadster.',
+    planId: 'plan-institutional-apex',
+    name: 'Institutional Apex Strategy',
+    description: 'A 180-day, high-liquidity mandate for fully verified institutional clients and syndicates — the platform’s longest term and deepest review standards.',
     minDepositUsd: '50000.00000000',
     maxDepositUsd: '1000000.00000000',
-    termDays: 14,
-    dailyRateNumeric: '0.07071429',
-    annualPercentageRate: '2581.07%',
+    termDays: 180,
+    dailyRateNumeric: '0.00550000',
+    annualPercentageRate: '200.75%',
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: true,
     requiresKycTier: 'TIER_2',
-    imageUrl: '/branding/car-diamond.jpg',
-    profitText: '99% Profit',
-    features: ['Portfolio Access', 'Investment Dashboard', '24/7 VIP Phone Support', 'Instant Multi-Sig Release']
-  }
-] as const;
+    imageUrl: '/branding/gen/plan-apex.jpg',
+    features: [
+      '0.55% daily rate, compounded every 00:00 UTC',
+      'Tier-2 institutional verification required',
+      'Human-reviewed, multi-attestation withdrawals',
+      'Institutional-grade audit reporting',
+    ],
+  },
+];

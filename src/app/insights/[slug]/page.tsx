@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { MarketingHeader } from '@/components/organisms/marketing/MarketingHeader';
 import { MarketingFooter } from '@/components/organisms/marketing/MarketingFooter';
 import { BreadcrumbJsonLd } from '@/components/atoms/BreadcrumbJsonLd';
+import { ManagedImage } from '@/components/atoms/ManagedImage';
 import { JsonLd } from '@/components/atoms/JsonLd';
 import { SITE_CONFIG } from '@/config/site.config';
 import { INSIGHT_ARTICLES, INSIGHT_ARTICLE_MAP } from '@/content/insights/articles';
@@ -103,13 +104,26 @@ export default function InsightArticlePage({ params }: IInsightArticlePageProps)
               {formatDate(article.publishedAt)} · {article.readingMinutes} min read
             </span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.08]">
+          <h1 className="font-display text-3xl sm:text-5xl font-medium tracking-tight leading-[1.08]">
             {article.title}
           </h1>
           <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
             {article.description}
           </p>
         </header>
+
+        {/* Cover */}
+        <div className="relative mt-12 h-[260px] overflow-hidden rounded-2xl border border-[#1E2433] bg-black sm:h-[400px]">
+          <ManagedImage
+            slotKey={`insights.${article.slug}`}
+            alt={article.title}
+            fill
+            priority
+            sizes="(max-width: 1280px) 100vw, 1024px"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F]/70 via-transparent to-transparent" />
+        </div>
 
         {/* Sections */}
         <div className="space-y-14 pt-12">

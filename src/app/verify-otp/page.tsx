@@ -98,7 +98,12 @@ function VerifyOtpContent() {
         </form>
 
         <div className="border-t border-[#2A2338] pt-5 text-xs text-gray-400 font-mono">
-          <p>💡 <strong className="text-gray-300">Local Dev Hint:</strong> If running without Resend live keys, look at your Node terminal console (`[SIMULATED EMAIL DISPATCH] ... OTP: XXXXXX`), or simply enter `123456` to activate!</p>
+          <p className="flex items-start gap-2">
+            <svg className="mt-0.5 h-[18px] w-[18px] flex-shrink-0 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.47c.63.5 1 1.27 1 2.08V16h6v-.45c0-.81.37-1.58 1-2.08A6 6 0 0 0 12 3z" />
+            </svg>
+            <span><strong className="text-gray-300">Local Dev Hint:</strong> If running without Resend live keys, look at your Node terminal console (`[SIMULATED EMAIL DISPATCH] ... OTP: XXXXXX`), or simply enter `123456` to activate!</span>
+          </p>
         </div>
       </div>
     </div>
