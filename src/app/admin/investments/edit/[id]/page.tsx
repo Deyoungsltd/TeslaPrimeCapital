@@ -2,6 +2,7 @@
 import { SafeImage } from '@/components/atoms/SafeImage';
 
 import React, { useEffect, useState } from 'react';
+import { authedApiFetch } from '@/lib/authed-api';
 import { useParams } from 'next/navigation';
 import { Button } from '@/components/atoms/Button';
 
@@ -29,7 +30,7 @@ export default function AdminEditPlanPage() {
   useEffect(() => {
     const fetchPlanDetails = async () => {
       try {
-        const res = await fetch('/api/v1/admin/plans');
+        const res = await authedApiFetch('/api/v1/admin/plans');
         if (res.ok) {
           const body = await res.json();
           if (body.success && body.data) {
@@ -65,7 +66,7 @@ export default function AdminEditPlanPage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const res = await fetch('/api/v1/admin/plans/upload-image', { method: 'POST', body: formData });
+      const res = await authedApiFetch('/api/v1/admin/plans/upload-image', { method: 'POST', body: formData });
       const data = await res.json();
       if (res.ok && data.success && data.data?.imageUrl) {
         setImageUrl(data.data.imageUrl);
@@ -84,7 +85,7 @@ export default function AdminEditPlanPage() {
     setMsg(null);
     try {
       const featuresArr = featuresStr.split(',').map((f) => f.trim()).filter(Boolean);
-      const res = await fetch('/api/v1/admin/plans/upsert', {
+      const res = await authedApiFetch('/api/v1/admin/plans/upsert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

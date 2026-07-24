@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { authedApiFetch } from '@/lib/authed-api';
 import { Badge } from '@/components/atoms/Badge';
 import { Button } from '@/components/atoms/Button';
 import { CurrencyDisplay } from '@/components/atoms/CurrencyDisplay';
@@ -18,17 +19,13 @@ export default function AdminWithdrawalsQueuePage() {
   const fetchPending = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/v1/admin/withdrawals/queue?page=1&limit=25');
+      const res = await authedApiFetch('/api/v1/admin/withdrawals/queue?page=1&limit=25');
       if (res.ok) {
         const body = await res.json();
-        if (body.success && body.data?.transactions) {
-          setTransactions(body.data.transactions);
-        }
+        if (body.success && body.data?.transactions) setTransactions(body.data.transactions);
       } else {
-        setTransactions([
-          { id: 'wth1', transactionId: 'TXN_WTH_20260720_481923', amount: '15000.00000000', currency: 'USD', status: 'PENDING_REVIEW', metadata: { destinationAddressOrBank: 'IBAN US88239018239018230' }, user: { email: 'vip.client@example.com', firstName: 'Alexander', lastName: 'Hamilton', kycTier: 'TIER_1' }, createdAt: new Date(Date.now() - 3600000).toISOString() },
-          { id: 'wth2', transactionId: 'TXN_WTH_20260719_112233', amount: '1200.00000000', currency: 'USD', status: 'PENDING_REVIEW', metadata: { destinationAddressOrBank: '0x71C8823...9988' }, user: { email: 'investor.retail@example.com', firstName: 'Marcus', lastName: 'Aurelius', kycTier: 'TIER_1' }, createdAt: new Date(Date.now() - 172800000).toISOString() },
-        ]);
+        setTransactions([]);
+        setMsg('The live treasury queue could not be loaded — refresh to retry. No queued requests are affected.');
       }
     } finally {
       setLoading(false);
@@ -53,7 +50,7 @@ export default function AdminWithdrawalsQueuePage() {
     setIsProcessing(true);
     setMsg(null);
     try {
-      const res = await fetch('/api/v1/admin/withdrawals/action', {
+      const res = await authedApiFetch('/api/v1/admin/withdrawals/action', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transactionId: selectedTx.transactionId, action, totpCode, notes }),

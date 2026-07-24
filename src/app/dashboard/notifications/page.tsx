@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
+import { authedApiFetch } from '@/lib/authed-api';
 import { NotificationCenter } from '@/components/organisms/NotificationCenter';
 
 export default function NotificationCenterPage() {
@@ -9,16 +10,10 @@ export default function NotificationCenterPage() {
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const res = await fetch('/api/v1/notifications/list?page=1&limit=30');
+      const res = await authedApiFetch('/api/v1/notifications/list?page=1&limit=30');
       if (res.ok) {
         const body = await res.json();
         if (body.success && body.data) setNotifications(body.data);
-      } else {
-        setNotifications([
-          { id: 'notif1', type: 'SECURITY', title: 'New Terminal Login Intercepted', message: 'Successful session established from IP 192.168.1.1 (Ubuntu / Linux). If unrecognized, log out all devices immediately.', read: false, createdAt: new Date().toISOString() },
-          { id: 'notif2', type: 'INVESTMENT', title: 'Capital Allocation Confirmed', message: 'Locked $5,000.00000000 USD into Prime Dynamic Growth. Yield will accrue daily (`Lump Sum at Plan Maturity`).', read: false, createdAt: new Date(Date.now() - 3600000).toISOString() },
-          { id: 'notif3', type: 'TRANSACTION', title: 'Deposit Confirmed & Credited', message: 'Incoming deposit of $10,000.00000000 USD verified via Stripe gateway.', read: true, createdAt: new Date(Date.now() - 86400000).toISOString() },
-        ]);
       }
     } finally {
       setLoading(false);
@@ -47,7 +42,7 @@ export default function NotificationCenterPage() {
   }, [fetchNotifications]);
 
   const handleMarkRead = async (ids: string[]) => {
-    await fetch('/api/v1/notifications/mark-read', {
+    await authedApiFetch('/api/v1/notifications/mark-read', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ notificationIds: ids }),
@@ -56,7 +51,7 @@ export default function NotificationCenterPage() {
   };
 
   const handleMarkAllRead = async () => {
-    await fetch('/api/v1/notifications/mark-all-read', { method: 'POST' });
+    await authedApiFetch('/api/v1/notifications/mark-all-read', { method: 'POST' });
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   };
 

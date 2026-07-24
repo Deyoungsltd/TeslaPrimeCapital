@@ -11,6 +11,8 @@ const FOOTER_COLUMNS = [
     links: [
       { label: 'Investment Plans', href: '/plans' },
       { label: 'How to Invest', href: '/how-to-invest' },
+      { label: 'Fee Schedule', href: '/fees' },
+      { label: 'Platform Status', href: '/status' },
       { label: 'Insights', href: '/insights' },
       { label: 'Live Markets', href: '/#markets' },
     ],
@@ -19,6 +21,7 @@ const FOOTER_COLUMNS = [
     heading: 'Company',
     links: [
       { label: 'About the Firm', href: '/about' },
+      { label: 'Security Practices', href: '/security' },
       { label: 'FAQ', href: '/faq' },
       { label: 'Create Account', href: '/register' },
       { label: 'Sign In', href: '/login' },

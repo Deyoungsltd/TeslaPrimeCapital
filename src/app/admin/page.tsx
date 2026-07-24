@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { authedApiFetch } from '@/lib/authed-api';
 import { StatCard } from '@/components/molecules/StatCard';
 import { CurrencyDisplay } from '@/components/atoms/CurrencyDisplay';
 import { Button } from '@/components/atoms/Button';
@@ -12,7 +13,7 @@ export default function AdminOverviewPage() {
   useEffect(() => {
     const fetchOverview = async () => {
       try {
-        const res = await fetch('/api/v1/admin/overview');
+        const res = await authedApiFetch('/api/v1/admin/overview');
         if (res.ok) {
           const body = await res.json();
           if (body.success && body.data) setMetrics(body.data);

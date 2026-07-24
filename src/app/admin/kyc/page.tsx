@@ -2,6 +2,7 @@
 import { SafeImage } from '@/components/atoms/SafeImage';
 
 import React, { useEffect, useState } from 'react';
+import { authedApiFetch } from '@/lib/authed-api';
 import { Badge } from '@/components/atoms/Badge';
 import { Button } from '@/components/atoms/Button';
 
@@ -20,15 +21,13 @@ export default function AdminKycReviewDeskPage() {
   const fetchPendingQueue = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/v1/kyc/review/queue?page=1&limit=25');
+      const res = await authedApiFetch('/api/v1/kyc/review/queue?page=1&limit=25');
       if (res.ok) {
         const body = await res.json();
         if (body.success && body.data?.documents) setDocuments(body.data.documents);
       } else {
-        setDocuments([
-          { id: 'doc1', documentType: 'PASSPORT', status: 'PENDING_REVIEW', user: { id: 'u1', email: 'investor.retail@example.com', firstName: 'Marcus', lastName: 'Aurelius', kycTier: 'TIER_0' }, createdAt: new Date(Date.now() - 3600000).toISOString() },
-          { id: 'doc2', documentType: 'PROOF_OF_ADDRESS', status: 'PENDING_REVIEW', user: { id: 'u2', email: 'vip.client@example.com', firstName: 'Alexander', lastName: 'Hamilton', kycTier: 'TIER_1' }, createdAt: new Date(Date.now() - 86400000).toISOString() },
-        ]);
+        setDocuments([]);
+        setMsg('The live compliance queue could not be loaded — refresh to retry. No submissions are affected.');
       }
     } finally {
       setLoading(false);
@@ -47,7 +46,7 @@ export default function AdminKycReviewDeskPage() {
     setMsg(null);
 
     // Fetch ephemeral 300-second (5-minute) signed URL with watermark overlay
-    const res = await fetch(`/api/v1/kyc/review/${doc.id}/url`);
+    const res = await authedApiFetch(`/api/v1/kyc/review/${doc.id}/url`);
     if (res.ok) {
       const body = await res.json();
       if (body.success && body.data) {
@@ -66,7 +65,7 @@ export default function AdminKycReviewDeskPage() {
     setIsProcessing(true);
     setMsg(null);
     try {
-      const res = await fetch('/api/v1/kyc/review/action', {
+      const res = await authedApiFetch('/api/v1/kyc/review/action', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ documentId: selectedDoc.id, action, targetTier, notes }),

@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/atoms/Button';
 import { CurrencyDisplay } from '@/components/atoms/CurrencyDisplay';
+import { QrCodeImage } from '@/components/atoms/QrCodeImage';
+import { authedApiFetch } from '@/lib/authed-api';
 
 export default function DepositPortalPage() {
   const [walletType, setWalletType] = useState('BTC');
@@ -26,10 +28,12 @@ export default function DepositPortalPage() {
     { sn: 3, wallet: 'SOLANA D7vkh7pfG...', amount: '$ 1,000', transac: 'BTC' },
   ]);
 
-  const handleCopy = () => {
+  const [copiedAt, setCopiedAt] = useState<number | null>(null);
+
+  const handleCopy = async () => {
     try {
-      navigator.clipboard.writeText(currentAddress);
-      alert('Copied wallet address to clipboard!');
+      await navigator.clipboard.writeText(currentAddress);
+      setCopiedAt(Date.now());
     } catch {}
   };
 
@@ -42,7 +46,7 @@ export default function DepositPortalPage() {
     setLoading(true);
     setMsg(null);
     try {
-      await fetch('/api/v1/wallet/deposit', {
+      await authedApiFetch('/api/v1/wallet/deposit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: `${amount}.00000000`, currency: walletType === 'SOLANA' ? 'USDT' : walletType, gateway: 'COINPAYMENTS' }),
@@ -81,21 +85,47 @@ export default function DepositPortalPage() {
             <option value="SOLANA">Select a wallet address — Solana (SOL)</option>
           </select>
 
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              readOnly
-              value={currentAddress}
-              className="w-full rounded-lg border border-[#2C354C] bg-black px-4 py-3 text-xs font-mono text-gray-300 select-all focus:outline-none"
-            />
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="flex-shrink-0 rounded-lg border border-[#2C354C] bg-[#181D2D] px-3.5 py-3 text-gray-300 hover:border-white hover:text-white transition shadow-sm"
-              title="Copy Address"
-            >
-              📋
-            </button>
+          <div className="flex items-start gap-4">
+            <div className="flex-1 space-y-2">
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={currentAddress}
+                  className="w-full rounded-lg border border-[#2C354C] bg-black px-4 py-3 text-xs font-mono text-gray-300 select-all focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-lg border border-[#2C354C] bg-[#181D2D] text-gray-300 transition hover:border-white hover:text-white"
+                  title="Copy Address"
+                  aria-label="Copy treasury address to clipboard"
+                >
+                  {copiedAt && Date.now() - copiedAt < 2500 ? (
+                    <svg className="h-[18px] w-[18px] text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <rect x="9" y="9" width="12" height="12" rx="2" />
+                      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" strokeLinecap="round" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+              <p className="text-[11px] leading-relaxed text-gray-500">
+                Send only <span className="font-semibold text-gray-300">{walletType === 'SOLANA' ? 'SOL' : walletType}</span> to this address.
+                Assets sent on the wrong network cannot be recovered by the treasury.
+              </p>
+            </div>
+            <div className="hidden flex-col items-center gap-1.5 sm:flex">
+              <QrCodeImage text={currentAddress} size={104} label={`${walletType} treasury deposit address as QR code`} />
+              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-gray-600">Scan to send</span>
+            </div>
+          </div>
+          <div className="mt-3 flex flex-col items-start gap-1.5 sm:hidden">
+            <QrCodeImage text={currentAddress} size={104} label={`${walletType} treasury deposit address as QR code`} />
+            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-gray-600">Scan to send</span>
           </div>
         </div>
 

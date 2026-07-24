@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { authedApiFetch } from '@/lib/authed-api';
 
 export default function AdminAuditLogsLedgerPage() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -12,7 +13,7 @@ export default function AdminAuditLogsLedgerPage() {
     const fetchAuditLogs = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/v1/admin/audit-logs?page=${currentPage}&limit=25`);
+        const res = await authedApiFetch(`/api/v1/admin/audit-logs?page=${currentPage}&limit=25`);
         if (res.ok) {
           const body = await res.json();
           if (body.success && body.data?.logs) {

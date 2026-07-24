@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { BrandLogo } from '@/components/atoms/BrandLogo';
+import { AnnouncementBar } from '@/components/organisms/marketing/AnnouncementBar';
 import { TradingViewTickerTape } from '@/components/organisms/tradingview/TradingViewTickerTape';
 
 const NAV_LINKS = [
@@ -28,6 +29,8 @@ export const MarketingHeader: React.FC<{ activePath?: string }> = ({ activePath 
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#1E2433] bg-[#080A0F]/90 backdrop-blur-xl">
+      {/* Admin-governed site-wide advisory — hidden unless the desk publishes one */}
+      <AnnouncementBar />
       <div className="flex h-[72px] w-full items-center justify-between px-6 sm:px-12">
         <a href="/" className="flex items-center" aria-label="TeslaPrimeCapital home">
           <BrandLogo size="sm" />

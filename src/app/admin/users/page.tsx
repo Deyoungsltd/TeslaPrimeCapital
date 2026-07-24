@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { authedApiFetch } from '@/lib/authed-api';
 import { Badge } from '@/components/atoms/Badge';
 import { Button } from '@/components/atoms/Button';
 
@@ -18,7 +19,7 @@ export default function AdminUsersManagementPage() {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/v1/admin/users?page=1&limit=25');
+      const res = await authedApiFetch('/api/v1/admin/users?page=1&limit=25');
       if (res.ok) {
         const body = await res.json();
         if (body.success && body.data) {
@@ -55,7 +56,7 @@ export default function AdminUsersManagementPage() {
     setIsUpdating(true);
     setMsg(null);
     try {
-      const res = await fetch('/api/v1/admin/users/update', {
+      const res = await authedApiFetch('/api/v1/admin/users/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ targetUserId: selectedUser.id, role: newRole, status: newStatus, reason }),
