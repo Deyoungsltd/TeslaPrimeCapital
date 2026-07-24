@@ -19,6 +19,8 @@ export type PermissionScope =
   | 'wallet:deposit'
   | 'wallet:withdraw_req'
   | 'withdrawals:approve'
+  | 'deposits:approve'
+  | 'messaging:broadcast'
   | 'referrals:read_all'
   | 'audit_logs:read';
 
@@ -35,6 +37,8 @@ const RolePermissionMatrix: Record<UserRole, PermissionScope[]> = {
     'accrual:trigger_worker',
     'wallet:deposit',
     'withdrawals:approve',
+    'deposits:approve',
+    'messaging:broadcast',
     'referrals:read_all',
     'audit_logs:read',
   ],
@@ -49,6 +53,7 @@ const RolePermissionMatrix: Record<UserRole, PermissionScope[]> = {
     'users:read_basic',
     'accrual:trigger_worker',
     'withdrawals:approve',
+    'deposits:approve',
     'audit_logs:read',
   ],
   [UserRole.SUPPORT_AGENT]: [

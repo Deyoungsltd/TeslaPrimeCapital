@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { authedApiFetch } from '@/lib/authed-api';
 import { WalletSummary } from '@/components/organisms/WalletSummary';
 import { DataTable } from '@/components/organisms/DataTable';
 
@@ -10,28 +11,43 @@ export default function MultiCurrencyWalletPage() {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [statementState, setStatementState] = useState<'idle' | 'generating' | 'error'>('idle');
+
+  const handleDownloadStatement = async () => {
+    if (statementState === 'generating') return;
+    setStatementState('generating');
+    try {
+      const from = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      const to = new Date().toISOString().slice(0, 10);
+      const res = await authedApiFetch(`/api/v1/reporting/export/statement.pdf?from=${from}&to=${to}`);
+      if (!res.ok) throw new Error('statement_unavailable');
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = objectUrl;
+      anchor.download = `teslaprime_statement_${to}.pdf`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(objectUrl);
+      setStatementState('idle');
+    } catch {
+      setStatementState('error');
+    }
+  };
 
   useEffect(() => {
     const fetchWalletData = async () => {
       setLoading(true);
       try {
         const [balRes, txRes] = await Promise.all([
-          fetch('/api/v1/wallet/balances'),
-          fetch(`/api/v1/wallet/transactions?page=${currentPage}&limit=15`),
+          authedApiFetch('/api/v1/wallet/balances'),
+          authedApiFetch(`/api/v1/wallet/transactions?page=${currentPage}&limit=15`),
         ]);
 
         if (balRes.ok) {
           const balData = await balRes.json();
           if (balData.success && balData.data) setBalances(balData.data);
-        } else {
-          setBalances([
-            { id: '1', currency: 'USD', availableBalance: '12500.00000000', lockedBalance: '5000.00000000', totalDeposited: '17500.00000000', totalWithdrawn: '0.00000000' },
-            { id: '2', currency: 'EUR', availableBalance: '2500.00000000', lockedBalance: '0.00000000', totalDeposited: '2500.00000000', totalWithdrawn: '0.00000000' },
-            { id: '3', currency: 'BTC', availableBalance: '0.45000000', lockedBalance: '0.10000000', totalDeposited: '0.55000000', totalWithdrawn: '0.00000000' },
-            { id: '4', currency: 'ETH', availableBalance: '3.20000000', lockedBalance: '0.00000000', totalDeposited: '3.20000000', totalWithdrawn: '0.00000000' },
-            { id: '5', currency: 'USDT', availableBalance: '4500.000000', lockedBalance: '0.000000', totalDeposited: '4500.000000', totalWithdrawn: '0.000000' },
-            { id: '6', currency: 'USDC', availableBalance: '1000.000000', lockedBalance: '0.000000', totalDeposited: '1000.000000', totalWithdrawn: '0.000000' },
-          ]);
         }
 
         if (txRes.ok) {
@@ -40,15 +56,6 @@ export default function MultiCurrencyWalletPage() {
             setAllTransactions(txData.data);
             setTotalCount(txData.meta?.pagination?.totalCount || txData.data.length);
           }
-        } else {
-          setAllTransactions([
-            { id: 'tx1', transactionId: 'TXN_DEP_20260720_481923', type: 'DEPOSIT', amount: '10000.00000000', currency: 'USD', status: 'COMPLETED', createdAt: new Date().toISOString() },
-            { id: 'tx2', transactionId: 'TXN_INV_20260720_998877', type: 'INVESTMENT_LOCK', amount: '5000.00000000', currency: 'USD', status: 'COMPLETED', createdAt: new Date(Date.now() - 3600000).toISOString() },
-            { id: 'tx3', transactionId: 'TXN_DEP_20260719_112233', type: 'DEPOSIT', amount: '0.45000000', currency: 'BTC', status: 'COMPLETED', createdAt: new Date(Date.now() - 86400000).toISOString() },
-            { id: 'tx4', transactionId: 'TXN_WTH_20260718_554433', type: 'WITHDRAWAL', amount: '1500.00000000', currency: 'USD', status: 'PENDING_REVIEW', createdAt: new Date(Date.now() - 172800000).toISOString() },
-            { id: 'tx5', transactionId: 'TXN_COM_20260717_889900', type: 'COMMISSION', amount: '250.00000000', currency: 'USD', status: 'COMPLETED', createdAt: new Date(Date.now() - 259200000).toISOString() },
-          ]);
-          setTotalCount(5);
         }
       } finally {
         setLoading(false);
@@ -83,7 +90,18 @@ export default function MultiCurrencyWalletPage() {
             Segregated sub-balances for fiat (`USD`, `EUR`, `GBP`, `JPY`) and crypto (`BTC`, `ETH`, `USDT`, `USDC`) assets.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={handleDownloadStatement}
+            disabled={statementState === 'generating'}
+            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition hover:opacity-90 shadow-lg disabled:opacity-50"
+          >
+            <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+            </svg>
+            {statementState === 'generating' ? 'Generating PDF…' : statementState === 'error' ? 'Retry Statement' : 'Statement (PDF)'}
+          </button>
           <a href="/dashboard/deposit">
             <button className="rounded-md bg-brand-gold px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-black transition hover:bg-brand-goldHover shadow-lg">
               + Initiate Deposit

@@ -25,6 +25,24 @@ export const AdminQuerySchema = z.object({
   status: z.string().optional(),
 });
 
+export const DepositApprovalSchema = z.object({
+  transactionId: z.string().min(1, 'Transaction ID is required.'),
+  action: z.enum(['APPROVE', 'REJECT']),
+  totpCode: z.string().length(6, 'Mandatory 6-digit TOTP Two-Factor code is required to credit client balances.'),
+  notes: z.string().max(1000).optional(),
+});
+
+export const BroadcastMessageSchema = z.object({
+  desk: z.enum(['Compliance Desk', 'Treasury Desk', 'Portfolio Desk', 'Security Desk', 'Client Services Desk']),
+  subject: z.string().trim().min(4, 'Subject must be at least 4 characters.').max(140, 'Subject must not exceed 140 characters.'),
+  message: z.string().trim().min(10, 'Message must be at least 10 characters.').max(2000, 'Message must not exceed 2,000 characters.'),
+  audience: z.enum(['ALL_INVESTORS', 'TIER_1_AND_ABOVE', 'TIER_2_ONLY']),
+  sendEmail: z.boolean().default(false),
+  totpCode: z.string().length(6, 'Mandatory 6-digit TOTP Two-Factor code is required to authorize a platform-wide dispatch.'),
+});
+
 export type UserGovernanceUpdateInput = z.infer<typeof UserGovernanceUpdateSchema>;
 export type WithdrawalApprovalInput = z.infer<typeof WithdrawalApprovalSchema>;
+export type DepositApprovalInput = z.infer<typeof DepositApprovalSchema>;
+export type BroadcastMessageInput = z.infer<typeof BroadcastMessageSchema>;
 export type AdminQueryInput = z.infer<typeof AdminQuerySchema>;

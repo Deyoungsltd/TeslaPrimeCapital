@@ -103,6 +103,110 @@ export class AdminRepository {
     return { transactions, totalCount };
   }
 
+  public async getPendingDeposits(options: { page: number; limit: number }): Promise<{ transactions: (Transaction & { user: { email: string; firstName: string; lastName: string; kycTier: string } })[]; totalCount: number }> {
+    const where = { type: TransactionType.DEPOSIT, status: TransactionStatus.PENDING_REVIEW };
+    const [transactions, totalCount] = await Promise.all([
+      prisma.transaction.findMany({
+        where,
+        include: { user: { select: { email: true, firstName: true, lastName: true, kycTier: true } } },
+        orderBy: { createdAt: 'asc' },
+        skip: (options.page - 1) * options.limit,
+        take: options.limit,
+      }),
+      prisma.transaction.count({ where }),
+    ]);
+    return { transactions, totalCount };
+  }
+
+  /**
+   * Executes deposit settlement sign-off inside an atomic Prisma transaction.
+   * If APPROVED: credits availableBalance + totalDeposited, sets status COMPLETED.
+   * If REJECTED: leaves all balances untouched, sets status REJECTED.
+   */
+  public async executeDepositDecision(adminId: string, data: {
+    transactionId: string;
+    action: 'APPROVE' | 'REJECT';
+    notes?: string;
+  }): Promise<Transaction & { user: { email: string; firstName: string } }> {
+    return await prisma.$transaction(async (tx: any) => {
+      const transaction = await tx.transaction.findUnique({
+        where: { transactionId: data.transactionId },
+        include: { user: { select: { email: true, firstName: true } } },
+      });
+
+      if (!transaction || transaction.type !== TransactionType.DEPOSIT || transaction.status !== TransactionStatus.PENDING_REVIEW) {
+        throw new Error('ERR_TRANSACTION_NOT_PENDING: Deposit is not in PENDING_REVIEW state.');
+      }
+
+      const wallet = await tx.wallet.findUnique({ where: { id: transaction.walletId } });
+      if (!wallet) throw new Error('ERR_WALLET_NOT_FOUND: Associated wallet not found.');
+
+      const amtStr = transaction.amount.toString();
+
+      if (data.action === 'APPROVE') {
+        await tx.wallet.update({
+          where: { id: wallet.id },
+          data: {
+            availableBalance: DecimalUtil.add(wallet.availableBalance.toString(), amtStr),
+            totalDeposited: DecimalUtil.add(wallet.totalDeposited.toString(), amtStr),
+          },
+        });
+      }
+
+      const newStatus = data.action === 'APPROVE' ? TransactionStatus.COMPLETED : TransactionStatus.REJECTED;
+      const updatedTx = await tx.transaction.update({
+        where: { id: transaction.id },
+        data: {
+          status: newStatus,
+          approvedById: adminId,
+          metadata: {
+            ...((transaction.metadata as object) || {}),
+            adminAction: data.action,
+            adminNotes: data.notes || 'Treasury settlement review finalized',
+            reviewedAt: new Date().toISOString(),
+          },
+        },
+        include: { user: { select: { email: true, firstName: true } } },
+      });
+
+      await tx.auditLog.create({
+        data: {
+          userId: adminId,
+          actorRole: 'FINANCE_MANAGER',
+          actionType: `DEPOSIT_${data.action}`,
+          resourceId: transaction.transactionId,
+          oldValue: { status: 'PENDING_REVIEW', amount: amtStr, currency: transaction.currency },
+          newValue: { status: newStatus, notes: data.notes },
+        },
+      });
+
+      return updatedTx;
+    });
+  }
+
+  /**
+   * Resolves the recipient set for a platform broadcast, segmented by audience.
+   * Only ACTIVE retail investors are ever addressable.
+   */
+  public async getBroadcastAudienceContacts(audience: 'ALL_INVESTORS' | 'TIER_1_AND_ABOVE' | 'TIER_2_ONLY'): Promise<{ id: string; email: string; firstName: string }[]> {
+    const kycFilter =
+      audience === 'TIER_2_ONLY'
+        ? { kycTier: 'TIER_2' as const }
+        : audience === 'TIER_1_AND_ABOVE'
+          ? { kycTier: { in: ['TIER_1' as const, 'TIER_2' as const] } }
+          : {};
+
+    return await prisma.user.findMany({
+      where: {
+        role: UserRole.INVESTOR,
+        status: AccountStatus.ACTIVE,
+        ...kycFilter,
+      },
+      select: { id: true, email: true, firstName: true },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
   /**
    * Executes multi-sig treasury withdrawal disbursement sign-off inside atomic Prisma transaction.
    * If APPROVED: deducts lockedBalance, adds totalWithdrawn, sets status COMPLETED.

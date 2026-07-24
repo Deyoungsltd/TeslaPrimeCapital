@@ -7,7 +7,7 @@ import { adminService } from '../services/admin.service';
 import { validateInput } from '../middlewares/validate.middleware';
 import { extractAuthenticatedUser } from '../middlewares/authenticate.middleware';
 import { checkPermission } from '../middlewares/authorize.middleware';
-import { UserGovernanceUpdateSchema, WithdrawalApprovalSchema, AdminQuerySchema } from '../validators/admin.validator';
+import { UserGovernanceUpdateSchema, WithdrawalApprovalSchema, DepositApprovalSchema, BroadcastMessageSchema, AdminQuerySchema } from '../validators/admin.validator';
 import { logger } from '@/utils/logger.util';
 import { IApiResponse } from '@/contracts/api.envelope';
 import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
@@ -130,6 +130,58 @@ export class AdminController {
       return AdminController.makeEnvelope(true, result, undefined, 200);
     } catch (err: any) {
       return AdminController.makeEnvelope(false, undefined, { code: 'ERR_GET_AUDIT_LOGS_FAILED', message: sanitizeErrorMessage(err) }, 500);
+    }
+  }
+
+  public async getDepositsQueue(req: NextRequest): Promise<NextResponse> {
+    const user = await extractAuthenticatedUser(req);
+    if (!user || !checkPermission(user, 'deposits:approve')) return AdminController.makeEnvelope(false, undefined, { code: 'ERR_FORBIDDEN', message: 'Treasury permissions required.' }, 403);
+
+    try {
+      const url = new URL(req.url);
+      const page = parseInt(url.searchParams.get('page') || '1', 10);
+      const limit = parseInt(url.searchParams.get('limit') || '20', 10);
+      const result = await adminService.getPendingDepositsQueue(page, limit);
+      return AdminController.makeEnvelope(true, result, undefined, 200);
+    } catch (err: any) {
+      return AdminController.makeEnvelope(false, undefined, { code: 'ERR_GET_DEPOSITS_QUEUE_FAILED', message: sanitizeErrorMessage(err) }, 500);
+    }
+  }
+
+  public async executeDepositAction(req: NextRequest): Promise<NextResponse> {
+    const user = await extractAuthenticatedUser(req);
+    if (!user || !checkPermission(user, 'deposits:approve')) return AdminController.makeEnvelope(false, undefined, { code: 'ERR_FORBIDDEN', message: 'Treasury permissions required.' }, 403);
+
+    try {
+      const body = await req.json().catch(() => ({}));
+      const validation = validateInput(DepositApprovalSchema, body);
+      if (!validation.success || !validation.data) return AdminController.makeEnvelope(false, undefined, validation.error, 400);
+
+      const result = await adminService.executeDepositReview(user.id, validation.data);
+      return AdminController.makeEnvelope(true, result, undefined, 200);
+    } catch (err: any) {
+      const isMfa = err.message.includes('ERR_ADMIN_MFA') || err.message.includes('ERR_INVALID_TOTP');
+      return AdminController.makeEnvelope(false, undefined, { code: isMfa ? 'ERR_INVALID_TOTP' : 'ERR_DEPOSIT_REVIEW_FAILED', message: sanitizeErrorMessage(err) }, isMfa ? 403 : 500);
+    }
+  }
+
+  public async sendBroadcast(req: NextRequest): Promise<NextResponse> {
+    const user = await extractAuthenticatedUser(req);
+    if (!user || !checkPermission(user, 'messaging:broadcast')) return AdminController.makeEnvelope(false, undefined, { code: 'ERR_FORBIDDEN', message: 'SUPER_ADMIN broadcast permissions required.' }, 403);
+
+    try {
+      const body = await req.json().catch(() => ({}));
+      const validation = validateInput(BroadcastMessageSchema, body);
+      if (!validation.success || !validation.data) return AdminController.makeEnvelope(false, undefined, validation.error, 400);
+
+      const result = await adminService.deliverBroadcast(user.id, {
+        ...validation.data,
+        sendEmail: validation.data.sendEmail ?? false,
+      });
+      return AdminController.makeEnvelope(true, result, undefined, 200);
+    } catch (err: any) {
+      const isMfa = err.message.includes('ERR_ADMIN_MFA') || err.message.includes('ERR_INVALID_TOTP');
+      return AdminController.makeEnvelope(false, undefined, { code: isMfa ? 'ERR_INVALID_TOTP' : 'ERR_BROADCAST_FAILED', message: sanitizeErrorMessage(err) }, isMfa ? 403 : 500);
     }
   }
 }

@@ -15,6 +15,8 @@ export async function GET(req: NextRequest, { params }: { params: { route: strin
       return await adminController.getUsers(req);
     case 'withdrawals/queue':
       return await adminController.getWithdrawalsQueue(req);
+    case 'deposits/queue':
+      return await adminController.getDepositsQueue(req);
     case 'audit-logs':
       return await adminController.getAuditLogs(req);
     case 'media/list':
@@ -31,6 +33,10 @@ export async function POST(req: NextRequest, { params }: { params: { route: stri
       return await adminController.updateUser(req);
     case 'withdrawals/action':
       return await adminController.executeWithdrawalAction(req);
+    case 'deposits/action':
+      return await adminController.executeDepositAction(req);
+    case 'broadcast/send':
+      return await adminController.sendBroadcast(req);
     case 'media/signature':
       return await mediaController.signature(req);
     case 'media/record':

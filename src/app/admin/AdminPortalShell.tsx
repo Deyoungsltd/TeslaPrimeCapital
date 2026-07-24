@@ -29,12 +29,14 @@ const NAV_SECTIONS = [
     items: [
       { label: 'User & Roles', href: '/admin/users', roles: ['SUPER_ADMIN'], icon: 'M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-8 0a4 4 0 1 0-4-4M2 21a8 8 0 0 1 12 0m6-10a4 4 0 0 1 0 5.6M14 21a8 8 0 0 1 8 0' },
       { label: 'KYC Review Desk', href: '/admin/kyc', roles: ['SUPER_ADMIN', 'COMPLIANCE_OFFICER'], icon: 'M9 12l2 2 4-4m1-3H8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2ZM9 7V5a3 3 0 0 1 6 0v2' },
+      { label: 'Deposit Desk', href: '/admin/deposits', roles: ['SUPER_ADMIN', 'FINANCE_MANAGER'], icon: 'M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2' },
       { label: 'Treasury Queue', href: '/admin/withdrawals', roles: ['SUPER_ADMIN', 'FINANCE_MANAGER'], icon: 'M12 8c-2.2 0-4 1.12-4 2.5S9.8 13 12 13s4 1.12 4 2.5S14.2 18 12 18m0-10V6m0 12v2m6-8a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z' },
     ],
   },
   {
     section: 'Stewardship',
     items: [
+      { label: 'Broadcast Center', href: '/admin/broadcast', roles: ['SUPER_ADMIN'], icon: 'M15.5 4.7 21 2l-2.7 5.5M21 2 11.6 11.4M10.2 12.6 7.5 21l2.4-5.9M10.2 12.6 3 10.3l5.9-2.4' },
       { label: 'Brand Library', href: '/admin/media', roles: ['SUPER_ADMIN'], icon: 'M4 5h16v11H4zM4 5V3m16 2V3M8 21h8m-9-5 2.5-3 2 2.4L14 13l3 3' },
       { label: 'Audit Ledger', href: '/admin/audit-logs', roles: ADMIN_ROLES, icon: 'M9 5h6M9 9h6M9 13h4M7 3h10a2 2 0 0 1 2 2v14l-3-2-2.5 2L11 17l-2 2-2-2V5a2 2 0 0 1 2-2Z' },
     ],
