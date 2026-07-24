@@ -18,8 +18,9 @@
  * flow before `prisma db push`, before deploys, and after rotating any key.
  */
 import fs from 'node:fs';
+import net from 'node:net';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 
 const require = createRequire(path.join(process.cwd(), 'package.json'));
@@ -72,9 +73,42 @@ async function withTimeout(promise, ms, label) {
   ]);
 }
 
+/**
+ * Layer-1 raw TCP probe: is ANY listener at host:port? Separates "endpoint
+ * dead / network blocked" (wrong host:port, service down, ISP port filter)
+ * from "reached the server but auth/protocol failed" — the two failures look
+ * identical in Prisma's P1001 but have totally different remediations.
+ */
+function probeTcp(host, port, timeoutMs = 5000) {
+  return new Promise((resolve) => {
+    let settled = false;
+    const socket = net.connect({ host, port });
+    const done = (ok, detail) => {
+      if (settled) return;
+      settled = true;
+      socket.destroy();
+      resolve({ ok, detail });
+    };
+    socket.once('connect', () => done(true, 'open'));
+    socket.once('timeout', () => done(false, 'connection timed out'));
+    socket.once('error', (err) => done(false, err.code || err.message));
+    socket.setTimeout(timeoutMs);
+  });
+}
+
 /* ------------------------------------------------------------------ checks */
 async function checkDatabase() {
+  // Static DIRECT_URL validation first — early returns below must not skip it.
   const url = env.DATABASE_URL ?? '';
+  const direct = env.DIRECT_URL ?? '';
+  if (!direct) {
+    warn('DIRECT_URL', 'Missing — prisma db push/migrate needs the non-pooled (direct) endpoint.');
+  } else if (direct.includes('aivencloud.com') && !/[?&]sslmode=/.test(direct)) {
+    fail('DIRECT_URL', 'Aiven endpoint WITHOUT sslmode — npm run db:push will die with P1001. Append ?sslmode=require.');
+  } else if (direct === url && direct.includes('-pooler')) {
+    warn('DIRECT_URL', 'Equals the POOLED url — strip "-pooler" from the host for schema operations.');
+  }
+
   if (!url) return fail('DATABASE_URL', 'Missing — create a free Neon project and paste the pooled connection string.');
   if (!/^postgres(ql)?:\/\//.test(url)) return fail('DATABASE_URL', 'Must start with postgresql:// — copy the full string from Neon.');
   // Provider-specific trap: Aiven PostgreSQL terminates non-SSL startup packets
@@ -83,26 +117,40 @@ async function checkDatabase() {
   if (url.includes('aivencloud.com') && !/[?&]sslmode=/.test(url)) {
     return fail('DATABASE_URL', 'Aiven endpoint WITHOUT sslmode — Prisma will die with P1001. Re-copy the FULL "Service URI" (it ends in ?sslmode=require) or append it.');
   }
+  let host = '';
+  let port = 5432;
   try {
-    const bin = path.join(process.cwd(), 'node_modules', '.bin', process.platform === 'win32' ? 'prisma.cmd' : 'prisma');
-    execFileSync(bin, ['db', 'execute', '--url', url, '--stdin'], {
+    const u = new URL(url);
+    host = u.hostname;
+    port = Number(u.port || 5432);
+  } catch {
+    return fail('DATABASE_URL', 'Not a parseable URL — re-copy the full connection string (watch for stray spaces or a truncated password).');
+  }
+
+  const tcp = await probeTcp(host, port);
+  if (!tcp.ok) {
+    return fail('DATABASE_URL', `TCP unreachable at ${host}:${port} (${tcp.detail}) — nothing accepts your connection there. Fixes, in order: 1) provider console shows the service "Running", 2) host + port EXACTLY match the current Service URI (recreated services get NEW endpoints), 3) retry over mobile hotspot/WARP to rule out ISP port filtering.`);
+  }
+
+  // Layer-2 full engine handshake (PG startup + SSL negotiation + auth).
+  // The CLI boots through node itself: Windows refuses to exec .cmd batch
+  // launchers directly (EINVAL since the Node 18.20.2/20.12.2 security patch).
+  try {
+    const prismaCli = require.resolve('prisma');
+    const probe = spawnSync(process.execPath, [prismaCli, 'db', 'execute', '--url', url, '--stdin'], {
       input: 'SELECT 1;',
       stdio: ['pipe', 'ignore', 'pipe'],
       timeout: 30000,
-      env: { ...process.env, CHECKPOINT_DISABLE: '1' },
+      env: { ...process.env, CHECKPOINT_DISABLE: '1', NO_COLOR: '1' },
     });
-    pass('DATABASE_URL', 'Connected — SELECT 1 executed cleanly.');
+    if (probe.error) throw probe.error;
+    if (probe.status !== 0) {
+      const detail = String(probe.stderr || '').replace(/\s+/g, ' ').trim().slice(0, 150);
+      return fail('DATABASE_URL', `Server IS listening at ${host}:${port} but the full handshake failed — credentials, database name, or sslmode value. Engine said: ${detail}`);
+    }
+    pass('DATABASE_URL', `Connected to ${host}:${port} — SELECT 1 executed cleanly.`);
   } catch (err) {
-    fail('DATABASE_URL', `Cannot reach/query the database. Verify host, credentials and that your IP is allowed. (${String(err.message).slice(0, 90)}…)`);
-  }
-
-  const direct = env.DIRECT_URL ?? '';
-  if (!direct) return warn('DIRECT_URL', 'Missing — prisma db push/migrate needs the non-pooled (direct) endpoint.');
-  if (direct.includes('aivencloud.com') && !/[?&]sslmode=/.test(direct)) {
-    return fail('DIRECT_URL', 'Aiven endpoint WITHOUT sslmode — npm run db:push will die with P1001. Append ?sslmode=require.');
-  }
-  if (direct === url && direct.includes('-pooler')) {
-    warn('DIRECT_URL', 'Equals the POOLED url — strip "-pooler" from the host for schema operations.');
+    fail('DATABASE_URL', `Verifier could not launch the engine probe. (${String(err.message).slice(0, 100)})`);
   }
 }
 
@@ -191,9 +239,14 @@ async function checkResend() {
     warn('RESEND_API_KEY', 'Looks like a TEST key — emails will be simulated, use the live key in production.');
     return;
   }
+  let verifiedDomains = null; // null = the API never gave us a list to gate on
   try {
     const res = await withTimeout(fetch('https://api.resend.com/domains', { headers: { Authorization: `Bearer ${key}` } }), 10000, 'Resend API');
     if (res.status === 200) {
+      const body = await res.json().catch(() => ({}));
+      verifiedDomains = Array.isArray(body?.data)
+        ? body.data.filter((d) => d && d.status === 'verified').map((d) => String(d.name || '').toLowerCase())
+        : [];
       pass('RESEND_API_KEY', 'API key authenticated against the Resend live API.');
     } else if (res.status === 401 || res.status === 403) {
       fail('RESEND_API_KEY', 'Key rejected by Resend (401/403) — regenerate it in the Resend dashboard.');
@@ -204,14 +257,27 @@ async function checkResend() {
     fail('RESEND_API_KEY', `Could not reach api.resend.com (${String(err.message).slice(0, 70)})`);
   }
 
+  // EMAIL_FROM deliverability gate: Resend hard-REJECTS any sender whose
+  // domain is not verified on the account (a gmail/yahoo address can never
+  // be), which previously passed this check and then silently killed every
+  // OTP dispatch at send time.
   const from = env.EMAIL_FROM ?? '';
   if (!from) {
-    warn('EMAIL_FROM', 'Missing — falls back to app.config default. Set "TeslaPrimeCapital <no-reply@yourdomain>".');
-  } else if (from.includes('onboarding@resend.dev')) {
-    warn('EMAIL_FROM', 'Using onboarding@resend.dev — delivers ONLY to your own Resend account email. Verify your domain for production.');
-  } else {
-    pass('EMAIL_FROM', from);
+    return warn('EMAIL_FROM', 'Missing — falls back to the app default. For local dev set "TeslaPrimeCapital <onboarding@resend.dev>".');
   }
+  const addrMatch = from.match(/<([^<>\s]+@[^<>\s]+)>\s*$/) || from.match(/^\s*([^\s]+@[^\s]+)\s*$/);
+  const addr = addrMatch ? addrMatch[1] : '';
+  const domain = addr.includes('@') ? addr.split('@')[1].toLowerCase() : '';
+  if (!domain) {
+    return fail('EMAIL_FROM', 'Not a parseable mailbox — use "TeslaPrimeCapital <onboarding@resend.dev>" or a bare email.');
+  }
+  if (domain === 'resend.dev') {
+    return warn('EMAIL_FROM', 'onboarding@resend.dev — delivers ONLY to your own Resend account email. Correct for local dev; verify your domain for production.');
+  }
+  if (verifiedDomains && !verifiedDomains.includes(domain)) {
+    return fail('EMAIL_FROM', `Resend will REJECT sending from "${addr}" — domain "${domain}" is not verified on this API key. Set EMAIL_FROM="TeslaPrimeCapital <onboarding@resend.dev>" for local dev, or verify the domain in Resend first.`);
+  }
+  pass('EMAIL_FROM', from);
 }
 
 async function checkCloudinary() {

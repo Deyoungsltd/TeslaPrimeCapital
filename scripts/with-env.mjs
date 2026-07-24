@@ -57,7 +57,11 @@ for (const [key, value] of Object.entries(layered)) {
   }
 }
 
-const child = spawn(command, args, { stdio: 'inherit', env, shell: true, cwd: process.cwd() });
+// Single string + shell avoids the DEP0190 "args with shell" deprecation and
+// resolves .cmd launchers on Windows. Commands here are internal fixed tokens
+// from package.json, never user input.
+const cmdline = [command, ...args].map((a) => (/\s/.test(a) ? `"${a}"` : a)).join(' ');
+const child = spawn(cmdline, { stdio: 'inherit', env, shell: true, cwd: process.cwd() });
 child.on('error', (err) => {
   console.error(`Failed to launch "${command}": ${err.message}`);
   process.exit(1);
