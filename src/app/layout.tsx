@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import '@/styles/globals.css';
 import { SITE_CONFIG, ACTIVE_SOCIAL_LINKS } from '@/config/site.config';
 import { JsonLd } from '@/components/atoms/JsonLd';
+import { MediaProvider } from '@/components/providers/MediaProvider';
 
 /**
  * Self-hosted variable font pipeline (next/font/local).
@@ -22,6 +23,16 @@ const interVariable = localFont({
 const jetBrainsMonoVariable = localFont({
   src: [{ path: '../fonts/JetBrainsMonoVariable.woff2', style: 'normal' }],
   variable: '--font-jetbrains-mono',
+  display: 'swap',
+  preload: true,
+});
+
+const frauncesVariable = localFont({
+  src: [
+    { path: '../fonts/FrauncesVariable.woff2', style: 'normal' },
+    { path: '../fonts/FrauncesVariable-Italic.woff2', style: 'italic' },
+  ],
+  variable: '--font-display',
   display: 'swap',
   preload: true,
 });
@@ -93,7 +104,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${interVariable.variable} ${jetBrainsMonoVariable.variable} min-h-screen bg-brand-dark text-gray-100 antialiased selection:bg-brand-gold selection:text-black`}>
+      <body className={`${interVariable.variable} ${jetBrainsMonoVariable.variable} ${frauncesVariable.variable} min-h-screen bg-brand-dark text-gray-100 antialiased selection:bg-brand-gold selection:text-black`}>
         {/* Entity graph: Organization + WebSite, rendered into the initial HTML
             so crawlers resolve the brand entity without executing a line of JS. */}
         <JsonLd
@@ -128,7 +139,7 @@ export default function RootLayout({
           }}
         />
         <div className="flex flex-col min-h-screen">
-          {children}
+          <MediaProvider>{children}</MediaProvider>
         </div>
       </body>
     </html>

@@ -4,6 +4,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { adminController } from '@/server/controllers/admin.controller';
+import { mediaController } from '@/server/controllers/media.controller';
 
 export async function GET(req: NextRequest, { params }: { params: { route: string[] } }): Promise<NextResponse> {
   const route = params.route.join('/');
@@ -16,6 +17,8 @@ export async function GET(req: NextRequest, { params }: { params: { route: strin
       return await adminController.getWithdrawalsQueue(req);
     case 'audit-logs':
       return await adminController.getAuditLogs(req);
+    case 'media/list':
+      return await mediaController.list(req);
     default:
       return NextResponse.json({ success: false, error: { code: 'ERR_ENDPOINT_NOT_FOUND', message: `Admin route [${route}] not found.` }, meta: { timestamp: new Date().toISOString(), requestId: 'req_404' } }, { status: 404 });
   }
@@ -28,6 +31,12 @@ export async function POST(req: NextRequest, { params }: { params: { route: stri
       return await adminController.updateUser(req);
     case 'withdrawals/action':
       return await adminController.executeWithdrawalAction(req);
+    case 'media/signature':
+      return await mediaController.signature(req);
+    case 'media/record':
+      return await mediaController.record(req);
+    case 'media/revert':
+      return await mediaController.revert(req);
     default:
       return NextResponse.json({ success: false, error: { code: 'ERR_ENDPOINT_NOT_FOUND', message: `Admin route [${route}] not found.` }, meta: { timestamp: new Date().toISOString(), requestId: 'req_404' } }, { status: 404 });
   }

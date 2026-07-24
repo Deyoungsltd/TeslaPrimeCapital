@@ -53,6 +53,7 @@ export default function AdminPortalShell({ children }: { children: React.ReactNo
     { label: 'User & Role Governance', href: '/admin/users', roles: ['SUPER_ADMIN'] },
     { label: 'Treasury Withdrawal Queue (`100% Admin`)', href: '/admin/withdrawals', roles: ['SUPER_ADMIN', 'FINANCE_MANAGER'] },
     { label: 'KYC Document Review Desk (`300s URLs`)', href: '/admin/kyc', roles: ['SUPER_ADMIN', 'COMPLIANCE_OFFICER'] },
+    { label: 'Brand Library (`CMS Imagery`)', href: '/admin/media', roles: ['SUPER_ADMIN'] },
     { label: 'Immutable Audit Ledger (`AuditLogs`)', href: '/admin/audit-logs', roles: ['SUPER_ADMIN', 'COMPLIANCE_OFFICER', 'FINANCE_MANAGER'] },
   ];
 

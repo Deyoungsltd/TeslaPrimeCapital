@@ -414,3 +414,27 @@ model SupportMessage {
   @@index([senderId])
   @@map("support_messages")
 }
+
+// ==============================================================================
+// BRAND MEDIA GOVERNANCE
+// CMS-managed imagery: every key maps to one media slot in the public registry
+// (src/content/media-registry.ts). Rows exist ONLY for slots whose default art
+// has been overridden by an admin upload from the Brand Library console.
+// ==============================================================================
+
+model SiteMediaAsset {
+  id                 String   @id @default(uuid())
+  key                String   @unique @db.VarChar(120) // registry slot key, e.g. 'home.hero', 'plan.plan-starter-fixed'
+  cloudinaryPublicId String   @db.VarChar(500)
+  altText            String   @db.VarChar(300)
+  format             String?  @db.VarChar(10)
+  width              Int?
+  height             Int?
+  bytes              Int?
+  updatedByUserId    String?  @db.VarChar(64)
+  createdAt          DateTime @default(now()) @db.Timestamptz()
+  updatedAt          DateTime @updatedAt @db.Timestamptz()
+
+  @@index([updatedAt])
+  @@map("site_media_assets")
+}
