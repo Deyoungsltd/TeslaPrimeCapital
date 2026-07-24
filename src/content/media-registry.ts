@@ -112,6 +112,15 @@ export const MEDIA_SLOTS: IMediaSlotDefinition[] = [
     usedOn: '/plans, dashboard allocations',
   },
   {
+    key: 'leadership.portrait',
+    label: 'Leadership — Executive Portrait',
+    description: 'Portrait frame for the leadership section. 4:5 crop, dark studio exposure, subject facing camera or three-quarter. Ships as abstract brand texture until the real portrait is uploaded.',
+    defaultSrc: '/branding/gen/brand-backdrop.jpg',
+    defaultAlt: 'Leadership portrait placeholder — abstract brand texture',
+    aspect: '4:5',
+    usedOn: '/, /about',
+  },
+  {
     key: 'insights.understanding-lump-sum-maturity-settlement',
     label: 'Insights Cover — Lump-Sum Maturity Settlement',
     description: 'Vault/settlement motif for the settlement-policy article.',
@@ -155,4 +164,55 @@ export const MEDIA_SLOT_MAP: Record<string, IMediaSlotDefinition> = Object.fromE
 
 export function isMediaSlotKey(key: string): boolean {
   return Object.prototype.hasOwnProperty.call(MEDIA_SLOT_MAP, key);
+}
+
+/* --------------------------------------------------------------------------
+ * TEXT SLOTS — CMS-managed copy keyed like the image slots.
+ * Leadership identity lives here: the section ships complete with truthful
+ * office-grade defaults and becomes personal the instant the admin publishes
+ * a name through the Brand Library. Never seed a fabricated person.
+ * ------------------------------------------------------------------------ */
+
+export interface ITextSlotDefinition {
+  key: string;
+  label: string;
+  description: string;
+  defaultValue: string;
+  maxLength: number;
+  usedOn: string;
+}
+
+export const TEXT_SLOTS: ITextSlotDefinition[] = [
+  {
+    key: 'leadership.name',
+    label: 'Leadership — Display Name',
+    description: 'The name rendered under the leadership portrait. Default publishes the office, not a person.',
+    defaultValue: 'The Founding Team',
+    maxLength: 120,
+    usedOn: '/, /about',
+  },
+  {
+    key: 'leadership.title',
+    label: 'Leadership — Title Line',
+    description: 'Small-cap line beneath the name (e.g. Founder & Chief Executive).',
+    defaultValue: 'Office of Executive Leadership',
+    maxLength: 120,
+    usedOn: '/, /about',
+  },
+  {
+    key: 'leadership.signature',
+    label: 'Leadership — Signature Line',
+    description: 'The operating creed quoted beside the portrait. Shorten for the best typographic balance (≤ 200 chars is ideal).',
+    defaultValue: 'Deterministic ledgers. Human custody. Settlement on the exact day promised.',
+    maxLength: 600,
+    usedOn: '/, /about',
+  },
+];
+
+export const TEXT_SLOT_MAP: Record<string, ITextSlotDefinition> = Object.fromEntries(
+  TEXT_SLOTS.map((slot) => [slot.key, slot]),
+);
+
+export function isTextSlotKey(key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(TEXT_SLOT_MAP, key);
 }

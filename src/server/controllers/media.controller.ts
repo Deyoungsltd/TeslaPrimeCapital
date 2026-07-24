@@ -8,7 +8,7 @@ import { mediaService } from '../services/media.service';
 import { extractAuthenticatedUser } from '../middlewares/authenticate.middleware';
 import { checkPermission } from '../middlewares/authorize.middleware';
 import { validateInput } from '../middlewares/validate.middleware';
-import { MediaRecordRequestSchema, MediaRevertRequestSchema } from '../validators/media.validator';
+import { MediaRecordRequestSchema, MediaRevertRequestSchema, MediaTextSetRequestSchema, MediaTextRevertRequestSchema } from '../validators/media.validator';
 import { sanitizeErrorMessage } from '@/utils/error-sanitizer.util';
 import { logger } from '@/utils/logger.util';
 import { IApiResponse } from '@/contracts/api.envelope';
@@ -91,6 +91,39 @@ export class MediaController {
     } catch (err: any) {
       logger.error(`Media revert controller error: ${err.message}`);
       return MediaController.makeEnvelope(false, undefined, { code: 'ERR_MEDIA_REVERT_FAILED', message: sanitizeErrorMessage(err) }, 500);
+    }
+  }
+
+  /** POST /api/v1/admin/media/text */
+  public async setText(req: NextRequest): Promise<NextResponse> {
+    const user = await MediaController.requireGovernanceScope(req);
+    if (!user) return MediaController.makeEnvelope(false, undefined, { code: 'ERR_FORBIDDEN', message: 'Media governance permissions required.' }, 403);
+    try {
+      const body = await req.json();
+      const validation = validateInput(MediaTextSetRequestSchema, body);
+      if (!validation.success || !validation.data) return MediaController.makeEnvelope(false, undefined, validation.error, 400);
+      const result = await mediaService.recordText(user.id, validation.data.key, validation.data.value);
+      return MediaController.makeEnvelope(true, result, undefined, 200);
+    } catch (err: any) {
+      logger.error(`Media text-set controller error: ${err.message}`);
+      const isDomain = err.message.startsWith('ERR_MEDIA_');
+      return MediaController.makeEnvelope(false, undefined, { code: isDomain ? err.message.split(':')[0] : 'ERR_MEDIA_TEXT_FAILED', message: sanitizeErrorMessage(err) }, isDomain ? 400 : 500);
+    }
+  }
+
+  /** POST /api/v1/admin/media/text/revert */
+  public async revertText(req: NextRequest): Promise<NextResponse> {
+    const user = await MediaController.requireGovernanceScope(req);
+    if (!user) return MediaController.makeEnvelope(false, undefined, { code: 'ERR_FORBIDDEN', message: 'Media governance permissions required.' }, 403);
+    try {
+      const body = await req.json();
+      const validation = validateInput(MediaTextRevertRequestSchema, body);
+      if (!validation.success || !validation.data) return MediaController.makeEnvelope(false, undefined, validation.error, 400);
+      const result = await mediaService.revertText(user.id, validation.data.key);
+      return MediaController.makeEnvelope(true, result, undefined, 200);
+    } catch (err: any) {
+      logger.error(`Media text-revert controller error: ${err.message}`);
+      return MediaController.makeEnvelope(false, undefined, { code: 'ERR_MEDIA_TEXT_REVERT_FAILED', message: sanitizeErrorMessage(err) }, 500);
     }
   }
 }

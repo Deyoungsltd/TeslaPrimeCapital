@@ -14,9 +14,9 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(): Promise<NextResponse> {
   try {
-    const assets = await mediaService.getPublicAssetMap();
+    const [assets, texts] = await Promise.all([mediaService.getPublicAssetMap(), mediaService.getPublicTextMap()]);
     return NextResponse.json(
-      { success: true, data: { assets }, meta: { timestamp: new Date().toISOString() } },
+      { success: true, data: { assets, texts }, meta: { timestamp: new Date().toISOString() } },
       { status: 200, headers: { 'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120' } },
     );
   } catch (err: any) {

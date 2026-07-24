@@ -17,6 +17,132 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { SafeImage } from '@/components/atoms/SafeImage';
 import { useSessionStore } from '@/lib/store/session.store';
 import { useMediaManifest } from '@/components/providers/MediaProvider';
+import { TEXT_SLOTS } from '@/content/media-registry';
+
+type TAuthedFetch = (path: string, init?: RequestInit) => Promise<{ res: Response; body: any }>;
+
+/**
+ * Leadership Identity panel — name / title / signature lines rendered by the
+ * public leadership section. Clearing a field restores the office default
+ * (never an invented persona); saving publishes instantly platform-wide.
+ */
+function LeadershipIdentityPanel({
+  authedFetch,
+  refreshManifest,
+}: {
+  authedFetch: TAuthedFetch;
+  refreshManifest: () => void;
+}) {
+  const { texts } = useMediaManifest();
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<{ tone: 'ok' | 'err'; message: string } | null>(null);
+
+  // Seed drafts from the manifest once it resolves (overrides or defaults).
+  useEffect(() => {
+    setDrafts((prev) => {
+      const next = { ...prev };
+      for (const slot of TEXT_SLOTS) {
+        if (next[slot.key] === undefined) {
+          next[slot.key] = texts[slot.key]?.value ?? slot.defaultValue;
+        }
+      }
+      return next;
+    });
+  }, [texts]);
+
+  const publish = async () => {
+    setBusy(true);
+    setNotice(null);
+    try {
+      for (const slot of TEXT_SLOTS) {
+        const value = (drafts[slot.key] ?? '').trim();
+        const endpoint = value === '' ? '/api/v1/admin/media/text/revert' : '/api/v1/admin/media/text';
+        const payload = value === '' ? { key: slot.key } : { key: slot.key, value };
+        const { res, body } = await authedFetch(endpoint, { method: 'POST', body: JSON.stringify(payload) });
+        if (!res.ok || !body?.success) {
+          throw new Error(body?.error?.message ?? `Failed to publish ${slot.label}.`);
+        }
+      }
+      refreshManifest();
+      setNotice({ tone: 'ok', message: 'Leadership identity published — live across the site within a minute.' });
+    } catch (err: any) {
+      setNotice({ tone: 'err', message: err.message || 'Publish failed.' });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <section className="mb-10 rounded-2xl border border-[#1E2433] bg-[#111520] p-6 shadow-tesla sm:p-8">
+      <div className="flex items-center gap-3">
+        <span className="h-px w-10 bg-[#EF4444]" />
+        <span className="font-mono text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#EF4444]">
+          Leadership Identity
+        </span>
+      </div>
+      <p className="mt-3 max-w-2xl text-[12px] leading-relaxed text-gray-400">
+        The name, title, and creed rendered beside the leadership portrait on the homepage and
+        About. The portrait itself is the first image slot below. Clear a field to restore the
+        office-grade default — the site never ships a fabricated person.
+      </p>
+
+      <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
+        {TEXT_SLOTS.map((slot) => (
+          <label key={slot.key} className={slot.key === 'leadership.signature' ? 'md:col-span-2' : ''}>
+            <span className="mb-1.5 flex items-center justify-between font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">
+              {slot.label}
+              <span className="text-gray-600">
+                {(drafts[slot.key] ?? '').length}/{slot.maxLength}
+              </span>
+            </span>
+            {slot.key === 'leadership.signature' ? (
+              <textarea
+                rows={2}
+                value={drafts[slot.key] ?? ''}
+                onChange={(e) => setDrafts((prev) => ({ ...prev, [slot.key]: e.target.value }))}
+                maxLength={slot.maxLength}
+                className="w-full resize-none rounded-lg border border-[#1E2433] bg-[#0A0D14] px-3 py-2.5 text-[13px] text-gray-200 outline-none transition-colors focus:border-[#EF4444]/60"
+              />
+            ) : (
+              <input
+                type="text"
+                value={drafts[slot.key] ?? ''}
+                onChange={(e) => setDrafts((prev) => ({ ...prev, [slot.key]: e.target.value }))}
+                maxLength={slot.maxLength}
+                className="h-10 w-full rounded-lg border border-[#1E2433] bg-[#0A0D14] px-3 text-[13px] text-gray-200 outline-none transition-colors focus:border-[#EF4444]/60"
+              />
+            )}
+            <span className="mt-1 block text-[10.5px] leading-relaxed text-gray-600">{slot.description}</span>
+          </label>
+        ))}
+      </div>
+
+      {notice && (
+        <p
+          className={`mt-4 rounded-lg border px-3 py-2 text-[11px] font-semibold ${
+            notice.tone === 'ok'
+              ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'
+              : 'border-red-500/30 bg-red-500/10 text-red-300'
+          }`}
+        >
+          {notice.message}
+        </p>
+      )}
+
+      <div className="mt-6">
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => void publish()}
+          className="h-10 rounded-lg bg-gradient-to-r from-[#EF4444] via-[#E53E3E] to-[#DC2626] px-8 font-mono text-[10px] font-extrabold uppercase tracking-[0.15em] text-white shadow-[0_4px_25px_rgba(239,68,68,0.35)] transition-all duration-300 hover:shadow-[0_8px_35px_rgba(239,68,68,0.6)] disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {busy ? 'Publishing…' : 'Publish identity'}
+        </button>
+      </div>
+    </section>
+  );
+}
 
 interface ISlotOverride {
   url: string;
@@ -185,6 +311,9 @@ export default function AdminMediaLibraryPage() {
           Aim for the stated aspect ratio; dark exposures keep headline text legible.
         </p>
       </header>
+
+      {/* ── Leadership Identity ─────────────────────────────────── */}
+      <LeadershipIdentityPanel authedFetch={authedFetch} refreshManifest={refreshManifest} />
 
       {loading && (
         <div className="rounded-2xl border border-[#1E2433] bg-[#111520] p-10 text-center font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-gray-500">

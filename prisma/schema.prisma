@@ -438,3 +438,18 @@ model SiteMediaAsset {
   @@index([updatedAt])
   @@map("site_media_assets")
 }
+
+// CMS-managed TEXT slots (Leadership identity: name / title / signature line).
+// Same governance contract as SiteMediaAsset — a row exists only after an
+// admin overrides the registry default through the Brand Library.
+model SiteTextAsset {
+  id              String   @id @default(uuid())
+  key             String   @unique @db.VarChar(120) // e.g. 'leadership.name'
+  textValue       String   @db.VarChar(600)
+  updatedByUserId String?  @db.VarChar(64)
+  createdAt       DateTime @default(now()) @db.Timestamptz()
+  updatedAt       DateTime @updatedAt @db.Timestamptz()
+
+  @@index([updatedAt])
+  @@map("site_text_assets")
+}

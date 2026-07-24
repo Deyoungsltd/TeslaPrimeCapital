@@ -37,6 +37,10 @@ export async function POST(req: NextRequest, { params }: { params: { route: stri
       return await mediaController.record(req);
     case 'media/revert':
       return await mediaController.revert(req);
+    case 'media/text':
+      return await mediaController.setText(req);
+    case 'media/text/revert':
+      return await mediaController.revertText(req);
     default:
       return NextResponse.json({ success: false, error: { code: 'ERR_ENDPOINT_NOT_FOUND', message: `Admin route [${route}] not found.` }, meta: { timestamp: new Date().toISOString(), requestId: 'req_404' } }, { status: 404 });
   }

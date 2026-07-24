@@ -36,6 +36,24 @@ export class MediaRepository {
   public async deleteByKey(key: string): Promise<void> {
     await prisma.siteMediaAsset.deleteMany({ where: { key } });
   }
+
+  /* -------------------------------------------------- text overrides (CMS) */
+
+  public async upsertTextByKey(key: string, textValue: string, updatedByUserId?: string): Promise<void> {
+    await prisma.siteTextAsset.upsert({
+      where: { key },
+      update: { textValue, updatedByUserId },
+      create: { key, textValue, updatedByUserId },
+    });
+  }
+
+  public async listTexts(): Promise<{ key: string; textValue: string }[]> {
+    return prisma.siteTextAsset.findMany({ select: { key: true, textValue: true } });
+  }
+
+  public async deleteTextByKey(key: string): Promise<void> {
+    await prisma.siteTextAsset.deleteMany({ where: { key } });
+  }
 }
 
 export const mediaRepository = new MediaRepository();

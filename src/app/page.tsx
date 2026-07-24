@@ -5,6 +5,7 @@ import { INSIGHT_ARTICLES } from '@/content/insights/articles';
 import { PlanCard } from '@/components/molecules/PlanCard';
 import { MarketingHeader } from '@/components/organisms/marketing/MarketingHeader';
 import { MarketingFooter } from '@/components/organisms/marketing/MarketingFooter';
+import { LeadershipSection } from '@/components/organisms/marketing/LeadershipSection';
 import { TradingViewTickerTape } from '@/components/organisms/tradingview/TradingViewTickerTape';
 
 const EYEBROW = (text: string) => (
@@ -287,6 +288,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════ 7b. LEADERSHIP — the chair ═══════════════ */}
+      <LeadershipSection />
 
       {/* ═══════════════ 8. FROM THE DESK — insights preview ═══════════════ */}
       <section className="border-t border-[#1E2433] bg-[#0A0D14]">

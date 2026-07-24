@@ -4,6 +4,7 @@ import { ManagedImage } from '@/components/atoms/ManagedImage';
 import { buildMarketingMetadata } from '@/lib/seo';
 import { MarketingHeader } from '@/components/organisms/marketing/MarketingHeader';
 import { MarketingFooter } from '@/components/organisms/marketing/MarketingFooter';
+import { LeadershipSection } from '@/components/organisms/marketing/LeadershipSection';
 import { BreadcrumbJsonLd } from '@/components/atoms/BreadcrumbJsonLd';
 
 export const metadata: Metadata = buildMarketingMetadata(
@@ -126,6 +127,9 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+
+        {/* Leadership — the chair */}
+        <LeadershipSection />
 
         {/* Pillars */}
         <section className="mx-auto max-w-7xl px-6 py-24 sm:px-12 sm:py-32">

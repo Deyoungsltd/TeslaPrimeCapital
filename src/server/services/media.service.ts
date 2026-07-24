@@ -20,8 +20,9 @@
  */
 import { v2 as cloudinary } from 'cloudinary';
 import { mediaRepository } from '../repositories/media.repository';
-import { MEDIA_SLOTS, MEDIA_SLOT_MAP, isMediaSlotKey } from '@/content/media-registry';
+import { MEDIA_SLOTS, MEDIA_SLOT_MAP, TEXT_SLOTS, isMediaSlotKey, isTextSlotKey, TEXT_SLOT_MAP } from '@/content/media-registry';
 import type { MediaRecordRequestInput } from '../validators/media.validator';
+import { textValueWithinSlotLimit } from '../validators/media.validator';
 import { logger } from '@/utils/logger.util';
 
 const MEDIA_FOLDER = 'teslaprime/site-media';
@@ -156,6 +157,48 @@ export class MediaService {
   private buildDeliveryUrl(publicId: string): string {
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME || '';
     return `${DELIVERY_HOST}/${cloudName}/image/upload/f_auto,q_auto,w_2400,c_limit/${publicId}`;
+  }
+
+  /* --------------------------------------------------- text slots (CMS) --- */
+
+  /**
+   * Publishes a text override for a registered slot. Values are trimmed and
+   * capped at the slot's declared ceiling so a paste accident can't wreck the
+   * public layout.
+   */
+  public async recordText(adminUserId: string, key: string, value: string) {
+    if (!isTextSlotKey(key)) {
+      throw new Error('ERR_MEDIA_SLOT_UNKNOWN: The supplied text slot is not defined in the registry.');
+    }
+    const trimmed = value.trim();
+    if (!textValueWithinSlotLimit(key, trimmed)) {
+      throw new Error(`ERR_MEDIA_TEXT_TOO_LONG: This slot allows at most ${TEXT_SLOT_MAP[key].maxLength} characters.`);
+    }
+    await mediaRepository.upsertTextByKey(key, trimmed, adminUserId);
+    logger.info(`Text slot [${key}] overridden by admin ${adminUserId}.`);
+    return { key, value: trimmed, isOverride: true };
+  }
+
+  /** Removes a text override; the slot falls back to its registry default. */
+  public async revertText(adminUserId: string, key: string) {
+    if (!isTextSlotKey(key)) {
+      throw new Error('ERR_MEDIA_SLOT_UNKNOWN: The supplied text slot is not defined in the registry.');
+    }
+    await mediaRepository.deleteTextByKey(key);
+    logger.info(`Text slot [${key}] reverted to default by admin ${adminUserId}.`);
+    return { key, reverted: true };
+  }
+
+  /** Public render map consumed by <ManagedText> via /api/v1/media. */
+  public async getPublicTextMap(): Promise<Record<string, { value: string; isOverride: boolean }>> {
+    const rows = await mediaRepository.listTexts();
+    const rowMap = new Map(rows.map((r) => [r.key, r.textValue]));
+    const map: Record<string, { value: string; isOverride: boolean }> = {};
+    for (const slot of TEXT_SLOTS) {
+      const override = rowMap.get(slot.key);
+      map[slot.key] = override ? { value: override, isOverride: true } : { value: slot.defaultValue, isOverride: false };
+    }
+    return map;
   }
 }
 

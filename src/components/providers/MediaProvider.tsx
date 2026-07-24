@@ -20,16 +20,25 @@ export interface IMediaManifestAsset {
 
 export type TMediaManifest = Record<string, IMediaManifestAsset>;
 
+export interface IMediaManifestText {
+  value: string;
+  isOverride: boolean;
+}
+
+export type TMediaTextManifest = Record<string, IMediaManifestText>;
+
 interface IMediaContextValue {
   assets: TMediaManifest;
+  texts: TMediaTextManifest;
   /** Force a manifest reload (used by the Brand Library after an override). */
   refresh: () => void;
 }
 
-const MediaContext = createContext<IMediaContextValue>({ assets: {}, refresh: () => {} });
+const MediaContext = createContext<IMediaContextValue>({ assets: {}, texts: {}, refresh: () => {} });
 
 export function MediaProvider({ children }: { children: React.ReactNode }) {
   const [assets, setAssets] = useState<TMediaManifest>({});
+  const [texts, setTexts] = useState<TMediaTextManifest>({});
 
   const load = useCallback(async () => {
     try {
@@ -38,6 +47,7 @@ export function MediaProvider({ children }: { children: React.ReactNode }) {
       const body = await res.json();
       if (body?.success && body?.data?.assets) {
         setAssets(body.data.assets);
+        if (body.data.texts) setTexts(body.data.texts);
       }
     } catch {
       // default art stays on screen — nothing to surface to the user
@@ -48,7 +58,7 @@ export function MediaProvider({ children }: { children: React.ReactNode }) {
     load();
   }, [load]);
 
-  return <MediaContext.Provider value={{ assets, refresh: load }}>{children}</MediaContext.Provider>;
+  return <MediaContext.Provider value={{ assets, texts, refresh: load }}>{children}</MediaContext.Provider>;
 }
 
 export function useMediaManifest(): IMediaContextValue {
