@@ -6,7 +6,8 @@ import { PlanCard } from '@/components/molecules/PlanCard';
 import { MarketingHeader } from '@/components/organisms/marketing/MarketingHeader';
 import { MarketingFooter } from '@/components/organisms/marketing/MarketingFooter';
 import { LeadershipSection } from '@/components/organisms/marketing/LeadershipSection';
-import { TradingViewTickerTape } from '@/components/organisms/tradingview/TradingViewTickerTape';
+import { TradingViewSymbolOverview } from '@/components/organisms/tradingview/TradingViewSymbolOverview';
+import { TradingViewMarketOverview } from '@/components/organisms/tradingview/TradingViewMarketOverview';
 
 const EYEBROW = (text: string) => (
   <div className="flex items-center gap-3">
@@ -80,10 +81,10 @@ export default function LandingPage() {
 
         <div className="relative z-10 mx-auto flex min-h-[88vh] max-w-7xl flex-col justify-end px-6 pb-24 pt-40 sm:px-12">
           {EYEBROW('Structured Capital Allocations')}
-          <h1 className="mt-7 max-w-3xl font-display text-[44px] font-medium leading-[1.04] tracking-tight text-white sm:text-6xl lg:text-7xl">
+          <h1 className="mt-8 max-w-3xl font-display text-[50px] font-medium leading-[1.03] tracking-tight text-white sm:text-7xl lg:text-[86px]">
             Capital discipline, engineered for the digital era.
           </h1>
-          <p className="mt-7 max-w-xl text-sm leading-relaxed text-gray-300 sm:text-base">
+          <p className="mt-8 max-w-xl text-[15px] leading-[1.8] text-gray-300 sm:text-[17px]">
             Term-defined allocations with daily 00:00&nbsp;UTC accrual, lump-sum maturity
             settlement, and human-reviewed withdrawals — every entry auditable to the
             eighth decimal.
@@ -119,11 +120,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* ═══════════════ 2. LIVE QUOTE RAIL ═══════════════ */}
-      <div className="border-y border-[#1E2433] bg-[#0A0D14]">
-        <TradingViewTickerTape />
-      </div>
 
       {/* ═══════════════ 3. PLATFORM STANDARDS ═══════════════ */}
       <section className="border-b border-[#1E2433] bg-[#080A0F]">
@@ -168,6 +164,43 @@ export default function LandingPage() {
               <p className="mt-4 text-[13px] leading-relaxed text-gray-400">{step.body}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ═══════════════ 4b. LIVE MARKET CANVAS ═══════════════ */}
+      <section className="border-t border-[#1E2433] bg-[#080A0F]">
+        <div className="mx-auto max-w-7xl px-6 py-28 sm:px-12 sm:py-36">
+          {EYEBROW('Live Market Canvas')}
+          <div className="mt-7 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <h2 className="max-w-xl font-display text-4xl font-medium leading-[1.06] tracking-tight text-white sm:text-5xl">
+              The market never blinks. Neither does your terminal.
+            </h2>
+            <p className="max-w-md text-sm leading-relaxed text-gray-400">
+              Live instruments streamed directly into the page — the same feeds your
+              allocation desk watches while settlement runs.
+            </p>
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 gap-7 lg:grid-cols-2">
+            <div className="overflow-hidden rounded-2xl border border-[#1E2433] bg-[#0C0F16] shadow-tesla">
+              <div className="flex items-center justify-between border-b border-[#1E2433] px-6 py-4">
+                <span className="font-mono text-[9px] font-extrabold uppercase tracking-[0.22em] text-gray-400">Flagship Instrument</span>
+                <span className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-emerald-400">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" /> Live
+                </span>
+              </div>
+              <TradingViewSymbolOverview height={420} />
+            </div>
+            <div className="overflow-hidden rounded-2xl border border-[#1E2433] bg-[#0C0F16] shadow-tesla">
+              <div className="flex items-center justify-between border-b border-[#1E2433] px-6 py-4">
+                <span className="font-mono text-[9px] font-extrabold uppercase tracking-[0.22em] text-gray-400">Sector Heatmap</span>
+                <span className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-emerald-400">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" /> Live
+                </span>
+              </div>
+              <TradingViewMarketOverview height={420} />
+            </div>
+          </div>
         </div>
       </section>
 

@@ -35,7 +35,7 @@ export const INVESTMENT_PLANS_CONFIG: IMarketingPlanDefinition[] = [
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: false,
     requiresKycTier: 'TIER_0',
-    imageUrl: '/branding/gen/plan-starter.jpg',
+    imageUrl: '/branding/car-bronze.jpg',
     features: [
       'Fixed 0.25% daily accrual at 00:00 UTC',
       'Principal + yield settle in one lump sum at maturity',
@@ -55,7 +55,7 @@ export const INVESTMENT_PLANS_CONFIG: IMarketingPlanDefinition[] = [
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: true,
     requiresKycTier: 'TIER_1',
-    imageUrl: '/branding/gen/plan-prime.jpg',
+    imageUrl: '/branding/car-gold.jpg',
     features: [
       '0.40% daily rate, compounded every 00:00 UTC',
       'Verified Tier-1 document clearance required',
@@ -75,7 +75,7 @@ export const INVESTMENT_PLANS_CONFIG: IMarketingPlanDefinition[] = [
     payoutPolicy: 'LUMP_SUM_MATURITY',
     compoundingAllowed: true,
     requiresKycTier: 'TIER_2',
-    imageUrl: '/branding/gen/plan-apex.jpg',
+    imageUrl: '/branding/car-diamond.jpg',
     features: [
       '0.55% daily rate, compounded every 00:00 UTC',
       'Tier-2 institutional verification required',

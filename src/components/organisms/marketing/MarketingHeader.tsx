@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { TeslaLogo } from '@/components/atoms/TeslaLogo';
+import { BrandLogo } from '@/components/atoms/BrandLogo';
+import { TradingViewTickerTape } from '@/components/organisms/tradingview/TradingViewTickerTape';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
@@ -29,7 +30,7 @@ export const MarketingHeader: React.FC<{ activePath?: string }> = ({ activePath 
     <header className="sticky top-0 z-50 w-full border-b border-[#1E2433] bg-[#080A0F]/90 backdrop-blur-xl">
       <div className="flex h-[72px] w-full items-center justify-between px-6 sm:px-12">
         <a href="/" className="flex items-center" aria-label="TeslaPrimeCapital home">
-          <TeslaLogo size="sm" />
+          <BrandLogo size="sm" />
         </a>
 
         <nav className="hidden items-center gap-9 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 lg:flex">
@@ -104,6 +105,11 @@ export const MarketingHeader: React.FC<{ activePath?: string }> = ({ activePath 
           </div>
         </nav>
       )}
+
+      {/* Live quote rail — permanently docked to the header on every surface */}
+      <div className="border-t border-[#1E2433] bg-[#0A0D14]">
+        <TradingViewTickerTape />
+      </div>
     </header>
   );
 };

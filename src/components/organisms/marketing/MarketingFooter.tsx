@@ -1,7 +1,8 @@
 import React from 'react';
 import { APP_CONFIG } from '@/config/app.config';
 import { SITE_CONFIG, ACTIVE_SOCIAL_LINKS } from '@/config/site.config';
-import { TeslaLogo } from '@/components/atoms/TeslaLogo';
+import { BrandLogo } from '@/components/atoms/BrandLogo';
+import { ManagedText } from '@/components/atoms/ManagedText';
 import { SmartsuppChat } from '@/components/organisms/SmartsuppChat';
 
 const FOOTER_COLUMNS = [
@@ -71,7 +72,7 @@ export const MarketingFooter: React.FC = () => {
     <footer className="border-t border-[#1E2433] bg-[#080A0F]">
       <div className="mx-auto max-w-7xl px-6 sm:px-12 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12">
         <div className="space-y-4">
-          <TeslaLogo size="sm" />
+          <BrandLogo size="sm" />
           <p className="text-xs text-gray-500 leading-relaxed">
             Enterprise digital wealth management. Structured high-yield allocations on double-entry rails with fixed-point ledger precision.
           </p>
@@ -119,7 +120,7 @@ export const MarketingFooter: React.FC = () => {
       <div className="border-t border-[#1E2433]">
         <div className="mx-auto max-w-7xl px-6 sm:px-12 py-8 flex flex-col lg:flex-row items-center justify-between gap-6">
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-            TeslaPrimeCapital &copy; 2026 — All Rights Reserved
+            <ManagedText slotKey="brand.displayName" /> &copy; 2026 — All Rights Reserved
           </span>
           <p className="max-w-2xl text-center lg:text-right font-mono text-[9px] leading-relaxed text-gray-600">
             Structured allocations are subject to term and market risk. Compounded yield is calculated daily and settled only at plan maturity under the Lump-Sum Payout Policy. Figures presented in plan materials are targets, not guarantees of future performance.

@@ -85,7 +85,7 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-[#1E2433] bg-[#111520] shadow-tesla transition-all duration-500 hover:-translate-y-1 hover:border-[#EF4444]/40 hover:shadow-[0_24px_60px_-20px_rgba(0,0,0,0.9)]">
       {/* ── CMS-managed tier artwork ─────────────────────────────── */}
-      <div className="relative h-40 w-full overflow-hidden bg-black">
+      <div className="relative h-48 w-full overflow-hidden bg-black sm:h-52">
         <ManagedImage
           slotKey={`plan.${planId}`}
           alt={`${name} tier artwork`}
@@ -106,15 +106,15 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
       </div>
 
       {/* ── Term sheet ───────────────────────────────────────────── */}
-      <div className="flex flex-1 flex-col p-6 sm:p-7">
-        <h3 className="font-display text-[22px] font-medium leading-snug tracking-tight text-white">
+      <div className="flex flex-1 flex-col p-6 sm:p-8">
+        <h3 className="font-display text-[26px] font-medium leading-snug tracking-tight text-white">
           {name}
         </h3>
-        <p className="mt-2 text-[12px] leading-relaxed text-gray-400 min-h-[54px]">{description}</p>
+        <p className="mt-3 text-[13px] leading-[1.7] text-gray-400 min-h-[66px]">{description}</p>
 
         {/* The numeral */}
         <div className="mt-6 flex items-end gap-4 border-b border-[#1E2433] pb-6">
-          <span className="font-display text-[44px] font-medium leading-none tracking-tight text-white">
+          <span className="font-display text-[52px] font-medium leading-none tracking-tight text-white">
             {annualPercentageRate.replace(/\s*%$/, '')}
             <span className="text-[24px] text-gray-400">%</span>
           </span>
@@ -147,7 +147,7 @@ export const PlanCard: React.FC<IPlanCardProps> = ({
 
         {/* System truths */}
         {features.length > 0 && (
-          <ul className="mt-6 space-y-2.5 border-t border-[#1E2433] pt-5">
+          <ul className="mt-7 space-y-3 border-t border-[#1E2433] pt-6">
             {features.map((feat) => (
               <li key={feat} className="flex items-start gap-3 text-[11.5px] font-medium text-gray-300">
                 <span className="mt-0.5 flex h-[16px] w-[16px] flex-shrink-0 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
