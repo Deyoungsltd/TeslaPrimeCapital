@@ -5,6 +5,7 @@
 
 import { walletRepository } from '../repositories/wallet.repository';
 import { userRepository } from '../repositories/user.repository';
+import { adminMessagingService } from './admin-messaging.service';
 import { withWalletLock } from '@/lib/redis';
 import { DecimalUtil } from '@/utils/decimal.util';
 import { CryptoUtil } from '@/utils/crypto.util';
@@ -62,7 +63,7 @@ export class WalletService {
    * Enforces our approved policy: Tier 0 Starter ($1,000 limit without KYC).
    */
   public async initiateDeposit(userId: string, input: DepositInitiationInput) {
-    return await withWalletLock(userId, async () => {
+    const result = await withWalletLock(userId, async () => {
       const user = await userRepository.findById(userId);
       if (!user) throw new Error('ERR_USER_NOT_FOUND: User identity not found.');
 
@@ -128,6 +129,23 @@ export class WalletService {
         paymentReference: `REF_${randomRef}`,
       };
     });
+
+    // Treasury Desk intake acknowledgement — delivered outside the wallet lock
+    // window. Creates the conversation thread the settlement decision will land in.
+    await adminMessagingService.deliverDeskMessage({
+      userId,
+      category: 'DEPOSIT_WITHDRAWAL',
+      deskLabel: 'Treasury Desk',
+      subject: `Deposit Instructions Issued — ${result.amount} ${result.currency}`,
+      priority: 'MEDIUM',
+      body: `Your deposit of ${result.amount} ${result.currency} via ${result.gateway} has been registered and queued for treasury confirmation.\n\nReference: ${result.transactionId}. Once settlement is confirmed by the Treasury Desk you will receive a signed message in this thread and your available balance updates immediately.\n\nIf anything looks different from what you intended, reply here before settlement completes.`,
+      notification: {
+        type: 'TRANSACTION',
+        title: 'Treasury Desk: Deposit Registered',
+      },
+    });
+
+    return result;
   }
 
   /**
@@ -136,7 +154,7 @@ export class WalletService {
    * debits available, credits locked, and sets status to `PENDING_REVIEW` per our 100% Mandatory Admin Review rule.
    */
   public async initiateWithdrawal(userId: string, input: WithdrawalInitiationInput) {
-    return await withWalletLock(userId, async () => {
+    const result = await withWalletLock(userId, async () => {
       const user = await userRepository.findById(userId);
       if (!user) throw new Error('ERR_USER_NOT_FOUND: User identity not found.');
 
@@ -206,6 +224,23 @@ export class WalletService {
         message: 'Withdrawal request submitted successfully. Per platform treasury rules (`100% Mandatory Admin Review`), your request has been placed in the review queue for compliance and finance officer inspection.',
       };
     });
+
+    // Treasury Desk intake acknowledgement — delivered outside the wallet lock
+    // window. The disbursement/decline verdict will continue in the same thread.
+    await adminMessagingService.deliverDeskMessage({
+      userId,
+      category: 'DEPOSIT_WITHDRAWAL',
+      deskLabel: 'Treasury Desk',
+      subject: `Withdrawal Queued for Review — ${result.amount} ${result.currency}`,
+      priority: 'HIGH',
+      body: `Your withdrawal request for ${result.amount} ${result.currency} has been received and locked under mandatory treasury review.\n\nReference: ${result.transactionId}. An officer is now inspecting the destination details. You will receive a signed Treasury Desk message in this thread the moment the disbursement is approved — or, if anything is flagged, the exact correction needed with your funds returned to your available balance.`,
+      notification: {
+        type: 'TRANSACTION',
+        title: 'Treasury Desk: Withdrawal Queued for Review',
+      },
+    });
+
+    return result;
   }
 
   /**

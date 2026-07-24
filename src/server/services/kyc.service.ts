@@ -4,8 +4,7 @@
  */
 
 import { kycRepository } from '../repositories/kyc.repository';
-import { userRepository } from '../repositories/user.repository';
-import { emailService } from './email.service';
+import { adminMessagingService } from './admin-messaging.service';
 import { prisma } from '@/lib/prisma';
 import { logger } from '@/utils/logger.util';
 import { UploadSignatureRequestInput, DocumentRecordRequestInput, AdminReviewActionInput } from '../validators/kyc.validator';
@@ -136,15 +135,26 @@ export class KYCService {
       adminId,
     });
 
-    // Dispatch notification email
-    await emailService.sendSecurityAlertEmail(
-      doc.user.email,
-      doc.user.firstName,
-      `KYC Compliance Verification ${input.action === 'APPROVE' ? 'Approved' : 'Updated'}`,
-      input.action === 'APPROVE'
-        ? `Your identity document (${doc.documentType}) has been verified and approved. Your account tier is now elevated to ${input.targetTier}.`
-        : `Your identity document (${doc.documentType}) verification requires attention. Review note from compliance team: "${input.notes || 'Please resubmit document with clearer visibility.'}"`
-    );
+    // Fan out the verdict as a personal Compliance Desk message across
+    // notification + support thread + email. Messaging is fail-safe and can
+    // never roll back the recorded review decision.
+    const approved = input.action === 'APPROVE';
+    await adminMessagingService.deliverDeskMessage({
+      userId: doc.userId,
+      adminId,
+      category: 'KYC_VERIFICATION',
+      deskLabel: 'Compliance Desk',
+      subject: approved ? 'Identity Verification Approved' : 'Identity Verification Requires Attention',
+      priority: 'HIGH',
+      body: approved
+        ? `Your ${doc.documentType.replace(/_/g, ' ').toLowerCase()} has been reviewed and approved by the Compliance Desk. Your account tier is now elevated to ${input.targetTier}, unlocking the corresponding allocation and settlement ceilings.\n\nNo further action is required. Thank you for completing verification.`
+        : `Your ${doc.documentType.replace(/_/g, ' ').toLowerCase()} could not be approved at this time.\n\nReview note: "${input.notes || 'Please resubmit the document with clearer visibility.'}"\n\nPlease capture a fresh, unedited photo in good lighting — all four corners visible, no glare — and resubmit from the KYC Verification page. Reply in this thread if you need the Compliance Desk to review a specific detail.`,
+      notification: {
+        type: 'KYC',
+        title: approved ? 'Compliance Desk: KYC Approved' : 'Compliance Desk: Action Required on Your KYC',
+      },
+      emailRecipient: { email: doc.user.email, firstName: doc.user.firstName },
+    });
 
     logger.info(`Compliance officer ${adminId} ${input.action}D document ${doc.id} for user ${doc.userId}`);
     return result;

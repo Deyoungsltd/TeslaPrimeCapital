@@ -5,7 +5,7 @@
 
 import { adminRepository } from '../repositories/admin.repository';
 import { userRepository } from '../repositories/user.repository';
-import { emailService } from './email.service';
+import { adminMessagingService } from './admin-messaging.service';
 import { CryptoUtil } from '@/utils/crypto.util';
 import { logger } from '@/utils/logger.util';
 import { UserGovernanceUpdateInput, WithdrawalApprovalInput, AdminQueryInput } from '../validators/admin.validator';
@@ -59,14 +59,28 @@ export class AdminService {
       notes: input.notes,
     });
 
-    await emailService.sendSecurityAlertEmail(
-      updatedTx.user.email,
-      updatedTx.user.firstName,
-      `Withdrawal Request ${input.action === 'APPROVE' ? 'Processed & Disbursed' : 'Rejected'}`,
-      input.action === 'APPROVE'
-        ? `Good news! Your withdrawal request (${updatedTx.transactionId}) for ${updatedTx.amount} ${updatedTx.currency} has been approved by our treasury panel and disbursed to your destination address.`
-        : `Your withdrawal request (${updatedTx.transactionId}) was rejected by treasury review. Reason: "${input.notes || 'Destination verification discrepancy.'}". The locked funds have been returned cleanly to your available balance.`
-    );
+    // Fan out the treasury verdict as a personal Treasury Desk message across
+    // notification + support thread + email. Messaging is fail-safe and can
+    // never roll back the settled treasury decision.
+    const approved = input.action === 'APPROVE';
+    await adminMessagingService.deliverDeskMessage({
+      userId: updatedTx.userId,
+      adminId,
+      category: 'DEPOSIT_WITHDRAWAL',
+      deskLabel: 'Treasury Desk',
+      subject: approved
+        ? `Withdrawal Disbursed — ${updatedTx.amount} ${updatedTx.currency}`
+        : `Withdrawal Declined — ${updatedTx.amount} ${updatedTx.currency}`,
+      priority: 'HIGH',
+      body: approved
+        ? `Your withdrawal request ${updatedTx.transactionId} for ${updatedTx.amount} ${updatedTx.currency} has been approved and disbursed by the Treasury Desk to your registered destination.\n\nReference: ${updatedTx.transactionId}. Settlement confirmation appears in your ledger once the network/banking rail completes finalization.`
+        : `Your withdrawal request ${updatedTx.transactionId} for ${updatedTx.amount} ${updatedTx.currency} was declined during treasury review.\n\nReview note: "${input.notes || 'Destination verification discrepancy.'}"\n\nThe full amount has been returned to your available balance — no funds were deducted. You may resubmit after correcting the flagged detail, or reply in this thread and the Treasury Desk will assist directly.`,
+      notification: {
+        type: 'TRANSACTION',
+        title: approved ? 'Treasury Desk: Withdrawal Disbursed' : 'Treasury Desk: Withdrawal Declined',
+      },
+      emailRecipient: { email: updatedTx.user.email, firstName: updatedTx.user.firstName },
+    });
 
     logger.info(`Treasury admin ${adminId} ${input.action}D withdrawal ${updatedTx.transactionId} (${updatedTx.amount} ${updatedTx.currency})`);
     return updatedTx;

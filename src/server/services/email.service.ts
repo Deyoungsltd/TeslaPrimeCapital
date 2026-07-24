@@ -11,6 +11,7 @@ import { render } from '@react-email/components';
 import { WelcomeOtpEmail } from './templates/WelcomeOtpEmail';
 import { TwoFactorLoginEmail } from './templates/TwoFactorLoginEmail';
 import { SecurityAlertEmail } from './templates/SecurityAlertEmail';
+import { DeskMessageEmail } from './templates/DeskMessageEmail';
 
 const resendApiKey = process.env.RESEND_API_KEY || '';
 const resend = new Resend(resendApiKey || 're_unconfigured_placeholder');
@@ -134,6 +135,51 @@ export class EmailService {
       return true;
     } catch (err: any) {
       logger.error(`Fatal exception inside EmailService.sendSecurityAlertEmail: ${err.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Delivers a governance-desk decision letter (e.g., KYC declined, withdrawal approved/rejected)
+   * as a personal 1:1 email from the responsible desk, mirroring the in-app Support Desk thread.
+   */
+  public async sendDeskMessageEmail(
+    recipient: string,
+    firstName: string,
+    deskLabel: string,
+    subject: string,
+    message: string,
+    ctaLabel?: string,
+    ctaHref?: string
+  ): Promise<boolean> {
+    try {
+      const html = render(React.createElement(DeskMessageEmail, { firstName, deskLabel, subject, message, ctaLabel, ctaHref }) as React.ReactElement);
+
+      if (EmailService.shouldSimulateDelivery()) {
+        logger.info(`[DEV-ONLY EMAIL LOG] To: ${recipient} | Desk: ${deskLabel} | Subject: ${subject}`);
+        return true;
+      }
+      if (EmailService.unconfiguredInProduction()) {
+        logger.error(`PRODUCTION EMAIL FAILURE: RESEND_API_KEY is not configured. Desk message to ${recipient} was NOT sent.`);
+        return false;
+      }
+
+      const { error } = await resend.emails.send({
+        from: EmailService.FROM_ADDRESS,
+        to: [recipient],
+        subject: `${APP_CONFIG.platformName} ${deskLabel}: ${subject}`,
+        html,
+      });
+
+      if (error) {
+        logger.error(`Resend API delivery error for sendDeskMessageEmail: ${error.message}`);
+        return false;
+      }
+
+      logger.info(`DeskMessageEmail (${deskLabel}) successfully dispatched to ${recipient}`);
+      return true;
+    } catch (err: any) {
+      logger.error(`Fatal exception inside EmailService.sendDeskMessageEmail: ${err.message}`);
       return false;
     }
   }
